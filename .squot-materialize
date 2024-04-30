@@ -1,0 +1,10 @@
+[
+	SquotTonelMapper {
+		#package : MCPackage {
+			#name : 'SustainableSimulations'
+		},
+		#path : FSAbsolutePath [
+			'src'
+		]
+	}
+]
