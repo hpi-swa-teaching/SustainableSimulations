@@ -1,4 +1,4 @@
 Package {
-	#'squeak_changestamp' : true,
-	#name : #SustainableSimulations
+	#name : #SustainableSimulations,
+	#'squeak_changestamp' : true
 }
