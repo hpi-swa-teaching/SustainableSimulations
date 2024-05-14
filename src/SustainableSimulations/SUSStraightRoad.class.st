@@ -34,21 +34,19 @@ SUSStraightRoad class >> newFrom: startPoint To: endPoint SpeedLimit: speedLimit
 
 {
 	#category : #connecting,
-	#'squeak_changestamp' : 'GoChriNo 5/14/2024 12:14'
+	#'squeak_changestamp' : 'GoChriNo 5/14/2024 18:56'
 }
-SUSStraightRoad >> connectNextStraightRoadFromRoad: road [
-
+SUSStraightRoad >> connectNextStraightRoadFromRoad: road [ 
 	| direction length roadLength |
-
-	self nextRoad: road.
-	road prevRoad: self.
-
-	roadLength := ((road endPoint x - road startPoint x) squared + (road endPoint y - road startPoint y) 		squared) sqrt.
-	length := ((self endPoint x - self startPoint x) squared + (self endPoint y - self startPoint y) 		squared) sqrt.
-	direction := (self endPoint - self startPoint) / length.
-	
-	road startPoint: self endPoint.
-	road endPoint: self endPoint + (direction * roadLength)
+	self nextRoad
+		ifNil: [self nextRoad: road.
+			road prevRoad: self.
+			roadLength := ((road endPoint x - road startPoint x) squared + (road endPoint y - road startPoint y) squared) sqrt.
+			length := ((self endPoint x - self startPoint x) squared + (self endPoint y - self startPoint y) squared) sqrt.
+			direction := self endPoint - self startPoint / length.
+			road startPoint: self endPoint.
+			road endPoint: self endPoint + (direction * roadLength).
+			self nextRoad updateConnectionForward]
 ]
 
 {
@@ -62,38 +60,29 @@ SUSStraightRoad >> connectNextStraightRoadWithLength: length [
 
 {
 	#category : #connecting,
-	#'squeak_changestamp' : 'GoChriNo 5/14/2024 12:16'
+	#'squeak_changestamp' : 'GoChriNo 5/14/2024 18:35'
 }
 SUSStraightRoad >> connectNextStraightRoadWithLength: length SpeedLimit: speedLimit [
 
-	| newRoad direction|
-	
-	direction := (self endPoint - self startPoint) / 
-		((self endPoint x - self startPoint x) squared +  (self endPoint y - self startPoint y) squared) sqrt.
-		
-	newRoad := (SUSStraightRoad newFrom: (self endPoint) To: (self endPoint + (direction * length)) 		SpeedLimit: speedLimit) prevRoad: self.
-		
-	self nextRoad: newRoad
+	self connectNextStraightRoadFromRoad: (SUSStraightRoad newFrom: (0@0) To: (length@0) SpeedLimit: speedLimit)
 	
 ]
 
 {
 	#category : #connecting,
-	#'squeak_changestamp' : 'GoChriNo 5/14/2024 12:22'
+	#'squeak_changestamp' : 'GoChriNo 5/14/2024 18:57'
 }
-SUSStraightRoad >> connectPrevStraightRoadFromRoad: road [
-
+SUSStraightRoad >> connectPrevStraightRoadFromRoad: road [ 
 	| direction length roadLength |
-
-	self prevRoad: road.
-	road nextRoad: self.
-
-	roadLength := ((road endPoint x - road startPoint x) squared + (road endPoint y - road startPoint y) 		squared) sqrt.
-	length := ((self endPoint x - self startPoint x) squared + (self endPoint y - self startPoint y) 		squared) sqrt.
-	direction := (self startPoint - self endPoint) / length.
-	
-	road endPoint: self startPoint.
-	road startPoint: self startPoint + (direction * roadLength)
+	self prevRoad
+		ifNotNil: [self prevRoad: road.
+			road nextRoad: self.
+			roadLength := ((road endPoint x - road startPoint x) squared + (road endPoint y - road startPoint y) squared) sqrt.
+			length := ((self endPoint x - self startPoint x) squared + (self endPoint y - self startPoint y) squared) sqrt.
+			direction := self startPoint - self endPoint / length.
+			road endPoint: self startPoint.
+			road startPoint: self startPoint + (direction * roadLength).
+			self prevRoad updateConnectionBackwards]
 ]
 
 {
@@ -107,18 +96,11 @@ SUSStraightRoad >> connectPrevStraightRoadWithLength: length [
 
 {
 	#category : #connecting,
-	#'squeak_changestamp' : 'GoChriNo 5/14/2024 12:25'
+	#'squeak_changestamp' : 'GoChriNo 5/14/2024 13:31'
 }
 SUSStraightRoad >> connectPrevStraightRoadWithLength: length SpeedLimit: speedLimit [
 
-	| newRoad direction|
-	
-	direction := (self startPoint - self endPoint) / 
-		((self startPoint x - self endPoint x) squared +  (self startPoint y - self endPoint y) squared) sqrt.
-		
-	newRoad := (SUSStraightRoad newFrom: (self startPoint + (direction * length)) To: (self startPoint) 		SpeedLimit: speedLimit) nextRoad: self.
-		
-	self prevRoad: newRoad
+	self connectPrevStraightRoadFromRoad: (SUSStraightRoad newFrom: (0@0) To: (length@0) SpeedLimit: speedLimit)
 	
 ]
 
@@ -200,4 +182,26 @@ SUSStraightRoad >> startPoint [
 }
 SUSStraightRoad >> startPoint: anObject [
 	startPoint := anObject
+]
+
+{
+	#category : #connecting,
+	#'squeak_changestamp' : 'GoChriNo 5/14/2024 18:55'
+}
+SUSStraightRoad >> updateConnectionBackwards [
+
+	self prevRoad ifNotNil: [
+		self prevRoad endPoint: self startPoint.
+		self nextRoad updateConnectionBackwards]
+]
+
+{
+	#category : #connecting,
+	#'squeak_changestamp' : 'GoChriNo 5/14/2024 18:54'
+}
+SUSStraightRoad >> updateConnectionForward [
+
+	self nextRoad ifNotNil: [
+		self nextRoad startPoint: self endPoint.
+		self nextRoad updateConnectionForward]
 ]
