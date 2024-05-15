@@ -34,19 +34,20 @@ SUSStraightRoad class >> newFrom: startPoint To: endPoint SpeedLimit: speedLimit
 
 {
 	#category : #connecting,
-	#'squeak_changestamp' : 'GoChriNo 5/14/2024 18:56'
+	#'squeak_changestamp' : 'GoChriNo 5/15/2024 08:01'
 }
 SUSStraightRoad >> connectNextStraightRoadFromRoad: road [ 
 	| direction length roadLength |
 	self nextRoad
-		ifNil: [self nextRoad: road.
-			road prevRoad: self.
-			roadLength := ((road endPoint x - road startPoint x) squared + (road endPoint y - road startPoint y) squared) sqrt.
-			length := ((self endPoint x - self startPoint x) squared + (self endPoint y - self startPoint y) squared) sqrt.
-			direction := self endPoint - self startPoint / length.
-			road startPoint: self endPoint.
-			road endPoint: self endPoint + (direction * roadLength).
-			self nextRoad updateConnectionForward]
+		ifNil: [road prevRoad
+				ifNil: [self nextRoad: road.
+					road prevRoad: self.
+					roadLength := ((road endPoint x - road startPoint x) squared + (road endPoint y - road startPoint y) squared) sqrt.
+					length := ((self endPoint x - self startPoint x) squared + (self endPoint y - self startPoint y) squared) sqrt.
+					direction := self endPoint - self startPoint / length.
+					road startPoint: self endPoint.
+					road endPoint: self endPoint + (direction * roadLength).
+					self nextRoad updateConnectionFrom: self]]
 ]
 
 {
@@ -70,19 +71,20 @@ SUSStraightRoad >> connectNextStraightRoadWithLength: length SpeedLimit: speedLi
 
 {
 	#category : #connecting,
-	#'squeak_changestamp' : 'GoChriNo 5/14/2024 18:57'
+	#'squeak_changestamp' : 'GoChriNo 5/15/2024 08:02'
 }
 SUSStraightRoad >> connectPrevStraightRoadFromRoad: road [ 
 	| direction length roadLength |
 	self prevRoad
-		ifNotNil: [self prevRoad: road.
-			road nextRoad: self.
-			roadLength := ((road endPoint x - road startPoint x) squared + (road endPoint y - road startPoint y) squared) sqrt.
-			length := ((self endPoint x - self startPoint x) squared + (self endPoint y - self startPoint y) squared) sqrt.
-			direction := self startPoint - self endPoint / length.
-			road endPoint: self startPoint.
-			road startPoint: self startPoint + (direction * roadLength).
-			self prevRoad updateConnectionBackwards]
+		ifNotNil: [road nextRoad
+				ifNotNil: [self prevRoad: road.
+					road nextRoad: self.
+					roadLength := ((road endPoint x - road startPoint x) squared + (road endPoint y - road startPoint y) squared) sqrt.
+					length := ((self endPoint x - self startPoint x) squared + (self endPoint y - self startPoint y) squared) sqrt.
+					direction := self startPoint - self endPoint / length.
+					road endPoint: self startPoint.
+					road startPoint: self startPoint + (direction * roadLength).
+					self prevRoad updateConnectionFrom: self]]
 ]
 
 {
@@ -186,22 +188,22 @@ SUSStraightRoad >> startPoint: anObject [
 
 {
 	#category : #connecting,
-	#'squeak_changestamp' : 'GoChriNo 5/14/2024 18:55'
+	#'squeak_changestamp' : 'GoChriNo 5/15/2024 07:59'
 }
-SUSStraightRoad >> updateConnectionBackwards [
-
-	self prevRoad ifNotNil: [
-		self prevRoad endPoint: self startPoint.
-		self nextRoad updateConnectionBackwards]
-]
-
-{
-	#category : #connecting,
-	#'squeak_changestamp' : 'GoChriNo 5/14/2024 18:54'
-}
-SUSStraightRoad >> updateConnectionForward [
-
-	self nextRoad ifNotNil: [
-		self nextRoad startPoint: self endPoint.
-		self nextRoad updateConnectionForward]
+SUSStraightRoad >> updateConnectionFrom: lastRoad [ 
+	| direction length roadLength |
+	roadLength := ((lastRoad endPoint x - lastRoad startPoint x) squared + (lastRoad endPoint y - lastRoad startPoint y) squared) sqrt.
+	length := ((self endPoint x - self startPoint x) squared + (self endPoint y - self startPoint y) squared) sqrt.
+	direction := lastRoad endPoint - lastRoad startPoint / roadLength.
+	self prevRoad == lastRoad
+		ifTrue: [self endPoint: self startPoint + (direction * length)]
+		ifFalse: [self startPoint: self endPoint - (direction * length)].
+	self prevRoad == lastRoad
+		ifFalse: [self prevRoad
+				ifNotNil: [self prevRoad endPoint: self startPoint.
+					self prevRoad updateConnectionFrom: self]].
+	self nextRoad == lastRoad
+		ifFalse: [self nextRoad
+				ifNotNil: [self nextRoad startPoint: self endPoint.
+					self nextRoad updateConnectionFrom: self]]
 ]
