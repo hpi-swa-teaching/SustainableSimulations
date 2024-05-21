@@ -29,6 +29,26 @@ SUSCar >> color: aColor [
 
 {
 	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'MK 5/19/2024 13:00'
+}
+SUSCar >> drawFrontMarkerOn: aCanvas [
+    | frontMarkerBounds |
+    frontMarkerBounds := (self bounds origin x + self width - 10 @ self bounds origin y extent: 10 @ self height).
+    aCanvas fillRectangle: frontMarkerBounds color: Color yellow.
+    aCanvas frameRectangle: frontMarkerBounds width: 2 color: Color black.
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'MK 5/19/2024 13:00'
+}
+SUSCar >> drawOn: aCanvas [
+    super drawOn: aCanvas.
+    self drawFrontMarkerOn: aCanvas.
+]
+
+{
+	#category : #'as yet unclassified',
 	#'squeak_changestamp' : 'ek 5/19/2024 16:45'
 }
 SUSCar >> driver [
@@ -67,16 +87,15 @@ SUSCar >> fuelLevel: aNumber [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'ek 5/19/2024 16:37'
+	#'squeak_changestamp' : 'PM 5/21/2024 11:13'
 }
 SUSCar >> initialize [
-
 	super initialize.
 	maxSpeed := 200.
 	acceleration := 10.
 	lengh := 1.
 	driver := 'Unknown'.
 	fuelLevel := 100.
-	color := Color red.
-	
+    	self bounds: (0@0 corner: 30@15).
+    	self color: Color red.
 ]
