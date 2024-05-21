@@ -3,8 +3,7 @@ Class {
 	#superclass : #SUSVehicle,
 	#instVars : [
 		'driver',
-		'fuelLevel',
-		'color'
+		'fuelLevel'
 	],
 	#category : #SustainableSimulations
 }
@@ -87,15 +86,15 @@ SUSCar >> fuelLevel: aNumber [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 5/21/2024 11:13'
+	#'squeak_changestamp' : 'PM 5/21/2024 11:18'
 }
 SUSCar >> initialize [
 	super initialize.
 	maxSpeed := 200.
 	acceleration := 10.
-	lengh := 1.
+	length := 1.
 	driver := 'Unknown'.
 	fuelLevel := 100.
-    	self bounds: (0@0 corner: 30@15).
+	self extent: 30@15.
     	self color: Color red.
 ]

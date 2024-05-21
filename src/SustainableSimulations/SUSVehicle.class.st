@@ -1,11 +1,11 @@
 Class {
 	#name : #SUSVehicle,
-	#superclass : #Object,
+	#superclass : #RectangleMorph,
 	#instVars : [
 		'maxSpeed',
 		'acceleration',
-		'lengh',
-		'position'
+		'position',
+		'length'
 	],
 	#category : #SustainableSimulations
 }
@@ -30,33 +30,33 @@ SUSVehicle >> acceleration: aNumber [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'ek 5/19/2024 16:18'
+	#'squeak_changestamp' : 'PM 5/21/2024 11:19'
 }
 SUSVehicle >> initialize [
-
+	super initialize.
 	maxSpeed := 100.
 	acceleration := 1.
-	lengh := 1.
+	length := 1.
 	position := 0 @ 0.
 	
 ]
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'ek 5/19/2024 16:46'
+	#'squeak_changestamp' : 'PM 5/21/2024 11:16'
 }
 SUSVehicle >> lengh [
 	
-	^ lengh.
+	^ length.
 ]
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'ek 5/19/2024 16:23'
+	#'squeak_changestamp' : 'PM 5/21/2024 11:16'
 }
 SUSVehicle >> lengh: aNumber [
 	
-	lengh := aNumber.
+	length := aNumber.
 ]
 
 {
