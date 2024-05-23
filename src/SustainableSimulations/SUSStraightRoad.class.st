@@ -235,8 +235,18 @@ SUSStraightRoad >> swap: node [
 ]
 
 {
+	#category : #utility,
+	#'squeak_changestamp' : 'GoChriNo 5/23/2024 18:05'
+}
+SUSStraightRoad >> updateButtons [
+	self buttons
+		doWithIndex: [:each :index | each position: (self points at: index)
+					- (20 @ 20)]
+]
+
+{
 	#category : #connecting,
-	#'squeak_changestamp' : 'GoChriNo 5/22/2024 14:41'
+	#'squeak_changestamp' : 'GoChriNo 5/23/2024 18:04'
 }
 SUSStraightRoad >> updateConnectionFrom: node [ 
 	self points
@@ -258,5 +268,6 @@ SUSStraightRoad >> updateConnectionFrom: node [
 	self adjacentRoads
 		doWithIndex: [:each :index | (each notNil and: index ~= node)
 				ifTrue: [each
-						updateConnectionFrom: (self otherNodes at: index)]]
+						updateConnectionFrom: (self otherNodes at: index)]].
+	self updateButtons
 ]
