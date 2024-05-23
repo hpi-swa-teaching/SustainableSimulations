@@ -3,11 +3,13 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'speedLimit',
-		'startPoint',
-		'endPoint',
 		'points',
 		'adjacentRoads',
-		'length'
+		'length',
+		'directions',
+		'otherNodes',
+		'buttons',
+		'lastClicked'
 	],
 	#category : #SustainableSimulations
 }
@@ -23,14 +25,38 @@ SUSStraightRoad class >> newFrom: startPoint To: endPoint [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'GoChriNo 5/21/2024 12:22'
+	#'squeak_changestamp' : 'GoChriNo 5/22/2024 15:00'
 }
 SUSStraightRoad class >> newFrom: startPoint To: endPoint SpeedLimit: speedLimit [ 
+	| length |
+	length := ((endPoint x - startPoint x) squared + (endPoint y - startPoint y) squared) sqrt.
+	
+	
+	
 	^ SUSStraightRoad new 
 		 speedLimit: speedLimit;
 		 points: {startPoint. endPoint} asOrderedCollection;
 		 adjacentRoads: {nil. nil} asOrderedCollection;
-		 length: ((endPoint x - startPoint x) squared + (endPoint y - startPoint y) squared) sqrt.
+		otherNodes: {nil. nil} asOrderedCollection;
+		 length: length;
+		directions: {startPoint - endPoint / length. endPoint - startPoint / length};
+		addButtons.
+]
+
+{
+	#category : #utility,
+	#'squeak_changestamp' : 'GoChriNo 5/23/2024 13:30'
+}
+SUSStraightRoad >> addButtons [
+	self buttons: {SUSConnectButton new position: (self points at: 1)
+				- (20 @ 20);
+			 extent: 40 @ 40;
+			 color: Color red. SUSConnectButton new position: (self points at: 2)
+				- (20 @ 20);
+			 extent: 40 @ 40;
+			 color: Color red} asOrderedCollection.
+	self buttons
+		doWithIndex: [:each :index | each road: self; node: index; openInWorld]
 ]
 
 {
@@ -50,71 +76,78 @@ SUSStraightRoad >> adjacentRoads: anObject [
 ]
 
 {
-	#category : #connecting,
-	#'squeak_changestamp' : 'GoChriNo 5/21/2024 12:15'
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 5/22/2024 14:54'
 }
-SUSStraightRoad >> connectNextStraightRoadFromRoad: road [ 
-	(self adjacentRoads at: 2)
-		ifNil: [(road adjacentRoads at: 1)
-				ifNil: [self adjacentRoads at: 2 put: road.
-					road adjacentRoads at: 1 put: self.
-					road points at: 1 put: (self points at: 2).
-					road points at: 2 put: (self points at: 2) + ((self points at: 2) - (self points at: 1) / self length * road length).
-					(self adjacentRoads at: 2)
-						updateConnectionFrom: self]]
+SUSStraightRoad >> buttons [
+	^ buttons
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 5/22/2024 14:54'
+}
+SUSStraightRoad >> buttons: anObject [
+	buttons := anObject
 ]
 
 {
 	#category : #connecting,
-	#'squeak_changestamp' : 'GoChriNo 5/14/2024 11:57'
+	#'squeak_changestamp' : 'GoChriNo 5/22/2024 14:23'
 }
-SUSStraightRoad >> connectNextStraightRoadWithLength: length [
-
-	self connectNextStraightRoadWithLength: length SpeedLimit: 50
+SUSStraightRoad >> connectToRoad: road From: ownNode To: otherNode [ 
+	(self adjacentRoads at: ownNode)
+		ifNil: [(road adjacentRoads at: otherNode)
+				ifNil: [self adjacentRoads at: ownNode put: road.
+					self otherNodes at: ownNode put: otherNode.
+					road adjacentRoads at: otherNode put: self.
+					road otherNodes at: otherNode put: ownNode.
+					road updateConnectionFrom: otherNode]]
 ]
 
 {
 	#category : #connecting,
-	#'squeak_changestamp' : 'GoChriNo 5/14/2024 18:35'
+	#'squeak_changestamp' : 'GoChriNo 5/23/2024 13:33'
 }
-SUSStraightRoad >> connectNextStraightRoadWithLength: length SpeedLimit: speedLimit [
+SUSStraightRoad >> connectWith: aRoad [
 
-	self connectNextStraightRoadFromRoad: (SUSStraightRoad newFrom: (0@0) To: (length@0) SpeedLimit: speedLimit)
-	
+	aRoad lastClicked ifNotNil: [
+		self lastClicked ifNotNil: [
+			self connectToRoad: aRoad From: self lastClicked To: aRoad lastClicked.
+			]
+		]
 ]
 
 {
-	#category : #connecting,
-	#'squeak_changestamp' : 'GoChriNo 5/21/2024 12:15'
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 5/22/2024 13:42'
 }
-SUSStraightRoad >> connectPrevStraightRoadFromRoad: road [ 
-	(self adjacentRoads at: 1)
-		ifNil: [(road adjacentRoads at: 2)
-				ifNil: [self adjacentRoads at: 1 put: road.
-					road adjacentRoads at: 2 put: self.
-					road points at: 2 put: (self points at: 1).
-					road points at: 1 put: (self points at: 1) + ((self points at: 2) - (self points at: 1) / self length * road length).
-					(self adjacentRoads at: 1)
-						updateConnectionFrom: self]]
+SUSStraightRoad >> directions [
+	^ directions
 ]
 
 {
-	#category : #connecting,
-	#'squeak_changestamp' : 'GoChriNo 5/14/2024 12:21'
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 5/22/2024 13:42'
 }
-SUSStraightRoad >> connectPrevStraightRoadWithLength: length [
-
-	self connectPrevStraightRoadWithLength: length SpeedLimit: 50
+SUSStraightRoad >> directions: anObject [
+	directions := anObject
 ]
 
 {
-	#category : #connecting,
-	#'squeak_changestamp' : 'GoChriNo 5/14/2024 13:31'
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 5/22/2024 14:54'
 }
-SUSStraightRoad >> connectPrevStraightRoadWithLength: length SpeedLimit: speedLimit [
+SUSStraightRoad >> lastClicked [
+	^ lastClicked
+]
 
-	self connectPrevStraightRoadFromRoad: (SUSStraightRoad newFrom: (0@0) To: (length@0) SpeedLimit: speedLimit)
-	
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 5/22/2024 14:54'
+}
+SUSStraightRoad >> lastClicked: anObject [
+	lastClicked := anObject
 ]
 
 {
@@ -135,6 +168,22 @@ SUSStraightRoad >> length: anObject [
 
 {
 	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 5/22/2024 14:14'
+}
+SUSStraightRoad >> otherNodes [
+	^ otherNodes
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 5/22/2024 14:14'
+}
+SUSStraightRoad >> otherNodes: anObject [
+	otherNodes := anObject
+]
+
+{
+	#category : #accessing,
 	#'squeak_changestamp' : 'GoChriNo 5/21/2024 11:38'
 }
 SUSStraightRoad >> points [
@@ -147,6 +196,16 @@ SUSStraightRoad >> points [
 }
 SUSStraightRoad >> points: anObject [
 	points := anObject
+]
+
+{
+	#category : #utility,
+	#'squeak_changestamp' : 'GoChriNo 5/23/2024 13:32'
+}
+SUSStraightRoad >> roadClickedAt: node [
+
+	self lastClicked: node.
+	"notifyRoadSelected: self"
 ]
 
 {
@@ -166,26 +225,38 @@ SUSStraightRoad >> speedLimit: anObject [
 ]
 
 {
-	#category : #connecting,
-	#'squeak_changestamp' : 'GoChriNo 5/21/2024 12:19'
+	#category : #utility,
+	#'squeak_changestamp' : 'GoChriNo 5/22/2024 14:00'
 }
-SUSStraightRoad >> updateConnectionFrom: lastRoad [ 
-	(self adjacentRoads at: 1)
-			== lastRoad
-		ifTrue: [self points at: 2 put: (self points at: 1) + ((lastRoad points at: 2) - (lastRoad points at: 1) / lastRoad length * self length)]
-		ifFalse: [self points at: 1 put: (self points at: 2) - ((lastRoad points at: 2) - (lastRoad points at: 1) / lastRoad length * self length)].
-	(self adjacentRoads at: 1)
-			== lastRoad
-		ifFalse: [(self adjacentRoads at: 1)
-				ifNotNil: [(self adjacentRoads at: 1)
-						points at: 2 put: (self points at: 1).
-					(self adjacentRoads at: 1)
-						updateConnectionFrom: self]].
-	(self adjacentRoads at: 2)
-			== lastRoad
-		ifFalse: [(self adjacentRoads at: 2)
-				ifNotNil: [(self adjacentRoads at: 2)
-						points at: 1 put: (self points at: 2).
-					(self adjacentRoads at: 2)
-						updateConnectionFrom: self]]
+SUSStraightRoad >> swap: node [ 
+	node == 1
+		ifTrue: [^ 2]
+		ifFalse: [^ 1]
+]
+
+{
+	#category : #connecting,
+	#'squeak_changestamp' : 'GoChriNo 5/22/2024 14:41'
+}
+SUSStraightRoad >> updateConnectionFrom: node [ 
+	self points
+		at: node
+		put: ((self adjacentRoads at: node) points
+				at: (self otherNodes at: node)).
+	self points
+		at: (self swap: node)
+		put: ((self adjacentRoads at: node) directions
+				at: (self otherNodes at: node))
+				* self length
+				+ ((self adjacentRoads at: node) points
+						at: (self otherNodes at: node)).
+	self directions at: node put: ((self adjacentRoads at: node) directions
+			at: (self otherNodes at: node)) negated.
+	self directions
+		at: (self swap: node)
+		put: (self directions at: node) negated.
+	self adjacentRoads
+		doWithIndex: [:each :index | (each notNil and: index ~= node)
+				ifTrue: [each
+						updateConnectionFrom: (self otherNodes at: index)]]
 ]
