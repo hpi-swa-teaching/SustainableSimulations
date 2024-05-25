@@ -1,10 +1,8 @@
 Class {
 	#name : #SUSStraightRoad,
-	#superclass : #Object,
+	#superclass : #SUSAbstractRoad,
 	#instVars : [
 		'speedLimit',
-		'points',
-		'adjacentRoads',
 		'length',
 		'directions',
 		'otherNodes',
@@ -25,7 +23,7 @@ SUSStraightRoad class >> newFrom: startPoint To: endPoint [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'GoChriNo 5/22/2024 15:00'
+	#'squeak_changestamp' : 'PM 5/25/2024 19:06'
 }
 SUSStraightRoad class >> newFrom: startPoint To: endPoint SpeedLimit: speedLimit [ 
 	| length |
@@ -35,7 +33,7 @@ SUSStraightRoad class >> newFrom: startPoint To: endPoint SpeedLimit: speedLimit
 	
 	^ SUSStraightRoad new 
 		 speedLimit: speedLimit;
-		 points: {startPoint. endPoint} asOrderedCollection;
+		 exitPoints: {startPoint. endPoint} asOrderedCollection;
 		 adjacentRoads: {nil. nil} asOrderedCollection;
 		otherNodes: {nil. nil} asOrderedCollection;
 		 length: length;
@@ -45,34 +43,18 @@ SUSStraightRoad class >> newFrom: startPoint To: endPoint SpeedLimit: speedLimit
 
 {
 	#category : #utility,
-	#'squeak_changestamp' : 'GoChriNo 5/23/2024 13:30'
+	#'squeak_changestamp' : 'PM 5/25/2024 19:06'
 }
 SUSStraightRoad >> addButtons [
-	self buttons: {SUSConnectButton new position: (self points at: 1)
+	self buttons: {SUSConnectButton new position: (self exitPoints at: 1)
 				- (20 @ 20);
 			 extent: 40 @ 40;
-			 color: Color red. SUSConnectButton new position: (self points at: 2)
+			 color: Color red. SUSConnectButton new position: (self exitPoints at: 2)
 				- (20 @ 20);
 			 extent: 40 @ 40;
 			 color: Color red} asOrderedCollection.
 	self buttons
 		doWithIndex: [:each :index | each road: self; node: index; openInWorld]
-]
-
-{
-	#category : #accessing,
-	#'squeak_changestamp' : 'GoChriNo 5/21/2024 11:36'
-}
-SUSStraightRoad >> adjacentRoads [
-	^ adjacentRoads
-]
-
-{
-	#category : #accessing,
-	#'squeak_changestamp' : 'GoChriNo 5/21/2024 11:36'
-}
-SUSStraightRoad >> adjacentRoads: anObject [
-	adjacentRoads := anObject
 ]
 
 {
@@ -183,22 +165,6 @@ SUSStraightRoad >> otherNodes: anObject [
 ]
 
 {
-	#category : #accessing,
-	#'squeak_changestamp' : 'GoChriNo 5/21/2024 11:38'
-}
-SUSStraightRoad >> points [
-	^ points
-]
-
-{
-	#category : #accessing,
-	#'squeak_changestamp' : 'GoChriNo 5/21/2024 11:38'
-}
-SUSStraightRoad >> points: anObject [
-	points := anObject
-]
-
-{
 	#category : #utility,
 	#'squeak_changestamp' : 'GoChriNo 5/23/2024 13:32'
 }
@@ -236,29 +202,29 @@ SUSStraightRoad >> swap: node [
 
 {
 	#category : #utility,
-	#'squeak_changestamp' : 'GoChriNo 5/23/2024 18:05'
+	#'squeak_changestamp' : 'PM 5/25/2024 19:06'
 }
 SUSStraightRoad >> updateButtons [
 	self buttons
-		doWithIndex: [:each :index | each position: (self points at: index)
+		doWithIndex: [:each :index | each position: (self exitPoints at: index)
 					- (20 @ 20)]
 ]
 
 {
 	#category : #connecting,
-	#'squeak_changestamp' : 'GoChriNo 5/23/2024 18:04'
+	#'squeak_changestamp' : 'PM 5/25/2024 19:06'
 }
 SUSStraightRoad >> updateConnectionFrom: node [ 
-	self points
+	self exitPoints
 		at: node
-		put: ((self adjacentRoads at: node) points
+		put: ((self adjacentRoads at: node) exitPoints
 				at: (self otherNodes at: node)).
-	self points
+	self exitPoints
 		at: (self swap: node)
 		put: ((self adjacentRoads at: node) directions
 				at: (self otherNodes at: node))
 				* self length
-				+ ((self adjacentRoads at: node) points
+				+ ((self adjacentRoads at: node) exitPoints
 						at: (self otherNodes at: node)).
 	self directions at: node put: ((self adjacentRoads at: node) directions
 			at: (self otherNodes at: node)) negated.
