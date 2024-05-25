@@ -1,6 +1,9 @@
 Class {
 	#name : #SUSDrawing,
 	#superclass : #Morph,
+	#instVars : [
+		'paths'
+	],
 	#category : #SustainableSimulations
 }
 
@@ -10,6 +13,15 @@ Class {
 }
 SUSDrawing class >> colorMark [
 	^ Color white
+]
+
+{
+	#category : #'class variables',
+	#'squeak_changestamp' : 'Len 5/21/2024 17:34'
+}
+SUSDrawing class >> colorPath [
+	"^ self colorRoad"
+	^ Color red
 ]
 
 {
@@ -38,14 +50,16 @@ SUSDrawing class >> midMarkLength [
 
 {
 	#category : #'instance creation',
-	#'squeak_changestamp' : 'Len 5/16/2024 11:35'
+	#'squeak_changestamp' : 'Len 5/21/2024 17:33'
 }
 SUSDrawing class >> newNormalRoadWithLength: aNumber [
 
 	^ (SUSDrawing new
 		extent: aNumber@(SUSDrawing normalLaneWidth * 2);
 		color: SUSDrawing colorRoad)
-		generateMarks
+		generateMarks;
+		generateStraightPathWithYValue: (SUSDrawing normalLaneWidth * 0.5);
+		generateStraightPathWithYValue: (SUSDrawing normalLaneWidth * 1.5)
 ]
 
 {
@@ -102,4 +116,28 @@ SUSDrawing >> generateMarks [
 		(self generateMarkWithLength: self extent x - (SUSDrawing markWidth)) 
 		position: 0@(self extent y - (SUSDrawing markWidth * 2))).
 	self addMidMark
+]
+
+{
+	#category : #drawing,
+	#'squeak_changestamp' : 'Len 5/21/2024 17:36'
+}
+SUSDrawing >> generateStraightPathWithYValue: aNumber [
+	| path |
+	path := CurveMorph vertices: {0@aNumber. self extent x@aNumber}
+			color: SUSDrawing colorPath 
+			borderWidth: 2 
+			borderColor: SUSDrawing colorPath.
+	self addMorphInLayer: path.
+	paths add: path
+]
+
+{
+	#category : #initialization,
+	#'squeak_changestamp' : 'Len 5/21/2024 17:36'
+}
+SUSDrawing >> initialize [
+
+	super initialize.
+	paths := OrderedCollection new
 ]
