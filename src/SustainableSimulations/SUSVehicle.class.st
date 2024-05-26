@@ -4,6 +4,7 @@ Class {
 	#instVars : [
 		'maxSpeed',
 		'acceleration',
+		'deceleration',
 		'position',
 		'length'
 	],
@@ -30,6 +31,24 @@ SUSVehicle >> acceleration: aNumber [
 
 {
 	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'ek 5/26/2024 13:51'
+}
+SUSVehicle >> deceleration [
+
+	^ deceleration.
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'ek 5/26/2024 13:51'
+}
+SUSVehicle >> deceleration: aNumber [
+	
+	deceleration := aNumber.
+]
+
+{
+	#category : #'as yet unclassified',
 	#'squeak_changestamp' : 'PM 5/21/2024 11:19'
 }
 SUSVehicle >> initialize [
@@ -43,18 +62,18 @@ SUSVehicle >> initialize [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 5/21/2024 11:16'
+	#'squeak_changestamp' : 'ek 5/26/2024 13:50'
 }
-SUSVehicle >> lengh [
+SUSVehicle >> length [
 	
 	^ length.
 ]
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 5/21/2024 11:16'
+	#'squeak_changestamp' : 'ek 5/26/2024 13:50'
 }
-SUSVehicle >> lengh: aNumber [
+SUSVehicle >> length: aNumber [
 	
 	length := aNumber.
 ]
