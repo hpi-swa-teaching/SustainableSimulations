@@ -30,14 +30,14 @@ SUSVehicle >> acceleration: aNumber [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 5/21/2024 11:19'
+	#'squeak_changestamp' : 'MK 5/21/2024 19:18'
 }
 SUSVehicle >> initialize [
 	super initialize.
 	maxSpeed := 100.
 	acceleration := 1.
 	length := 1.
-	position := 0 @ 0.
+	"position := 0 @ 0."
 	
 ]
 
@@ -75,22 +75,4 @@ SUSVehicle >> maxSpeed [
 SUSVehicle >> maxSpeed: aNumber [
 	
 	maxSpeed := aNumber.
-]
-
-{
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'ek 5/19/2024 16:46'
-}
-SUSVehicle >> position [
-	
-	^ position.
-]
-
-{
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'ek 5/19/2024 16:21'
-}
-SUSVehicle >> position: aPoint [
-	
-	position := aPoint.
 ]
