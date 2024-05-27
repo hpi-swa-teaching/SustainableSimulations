@@ -8,6 +8,16 @@ Class {
 }
 
 {
+	#category : #initializing,
+	#'squeak_changestamp' : 'PM 5/21/2024 11:35'
+}
+SUSWindow class >> newWithRoad: aRoad [
+	^ self new 
+		renderRoadNetwork: aRoad
+		yourself
+]
+
+{
 	#category : #initialization,
 	#'squeak_changestamp' : 'PM 5/14/2024 11:38'
 }
