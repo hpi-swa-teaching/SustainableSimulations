@@ -2,9 +2,13 @@ Class {
 	#name : #SUSSimulation,
 	#superclass : #PasteUpMorph,
 	#instVars : [
-		'roadToConnect'
+		'roadToConnect',
+		'cars',
+		'simulationSpeed',
+		'roads',
+		'bezierCurve'
 	],
-	#category : #SustainableSimulations
+	#category : 'SustainableSimulations'
 }
 
 {
@@ -36,15 +40,47 @@ SUSSimulation >> defaultSpeedLimit [
 ]
 
 {
-	#category : #initialization,
-	#'squeak_changestamp' : 'PM 5/27/2024 23:22'
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'MK 5/27/2024 22:08'
+}
+SUSSimulation >> demoRoadWithCar [
+	|car road|
+	
+	road := SUSDrawing newNormalRoadWithLength: 1000.
+	car := SUSCar new.
+	road openInWorld;
+		position: 100@100.
+			
+	
+	
+	bezierCurve := SUSBezierCurve new.
+	bezierCurve addControlPoint: (road position x)@(road position y + (2* road extent y / 3));
+		addControlPoint: (road position x + 1000 - car extent x)@(road position y + (2* road extent y / 3)).
+	
+	car openInWorld;
+		position: bezierCurve controlPoints first.
+	
+	cars add: car.
+	roads add: road.
+
+]
+
+{
+	#category : #'<<<<<<< current\ninitialization\n=======\nas yet unclassified\n>>>>>>> incoming',
+	#'squeak_changestamp' : 'MK 5/28/2024 18:21'
 }
 SUSSimulation >> initialize [
 	super initialize.
 	
 	roadToConnect := nil.
 	
-	self color: Color gray
+	self color: Color gray.
+	
+	cars := OrderedCollection new.
+	roads := OrderedCollection new.
+	simulationSpeed := 1.
+	
+	self demoRoadWithCar.
 ]
 
 {
@@ -70,6 +106,23 @@ SUSSimulation >> pauseSimulation [
 }
 SUSSimulation >> playSimulation [
 	Transcript show: 'Play Simulation'
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'MK 5/27/2024 21:59'
+}
+SUSSimulation >> step [
+
+	cars first moveAlongBezier: bezierCurve.
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'MK 5/27/2024 22:02'
+}
+SUSSimulation >> stepTime [
+	^10
 ]
 
 {

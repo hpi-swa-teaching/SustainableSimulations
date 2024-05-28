@@ -3,28 +3,11 @@ Class {
 	#superclass : #SUSVehicle,
 	#instVars : [
 		'driver',
-		'fuelLevel'
+		'fuelLevel',
+		'timeRoadStart'
 	],
 	#category : #SustainableSimulations
 }
-
-{
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'ek 5/19/2024 16:47'
-}
-SUSCar >> color [
-	
-	^ color.
-]
-
-{
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'ek 5/19/2024 16:40'
-}
-SUSCar >> color: aColor [
-	
-	color := aColor.
-]
 
 {
 	#category : #'as yet unclassified',
@@ -86,15 +69,31 @@ SUSCar >> fuelLevel: aNumber [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 5/21/2024 11:18'
+	#'squeak_changestamp' : 'MK 5/27/2024 21:34'
 }
 SUSCar >> initialize [
 	super initialize.
-	maxSpeed := 200.
+	self extent: 30@15;
+		color: Color red.
+
+	timeRoadStart := Time millisecondClock.
+	maxSpeed := 50.
 	acceleration := 10.
 	length := 1.
 	driver := 'Unknown'.
 	fuelLevel := 100.
-	self extent: 30@15.
-    	self color: Color red.
+	
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'MK 5/27/2024 21:44'
+}
+SUSCar >> moveAlongBezier: aBezierCurve [
+	|curTime| 
+
+	curTime := (Time millisecondClock) - timeRoadStart.
+
+	self position: (aBezierCurve pointAt: (curTime / (aBezierCurve length / (maxSpeed / 360)))).
+	
 ]
