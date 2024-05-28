@@ -2,55 +2,112 @@ Class {
 	#name : #SUSWindow,
 	#superclass : #SystemWindow,
 	#instVars : [
-		'playgroundMorph'
+		'simulation'
 	],
 	#category : #'SustainableSimulations-UI'
 }
 
 {
-	#category : #initializing,
-	#'squeak_changestamp' : 'PM 5/21/2024 11:35'
+	#category : #events,
+	#'squeak_changestamp' : 'PM 5/28/2024 01:54'
 }
-SUSWindow class >> newWithRoad: aRoad [
-	^ self new 
-		renderRoadNetwork: aRoad
-		yourself
+SUSWindow >> addButtons [
+	| row | 
+ 	row := AlignmentMorph newRow addAllMorphs: {self createAddRoadButton. self createAddCrossIntersectionButton}.
+	self addMorph:  row.
+	row position: 15@45.
+]
+
+{
+	#category : #events,
+	#'squeak_changestamp' : 'PM 5/28/2024 01:42'
+}
+SUSWindow >> addCrossIntersection [
+	simulation addMorph: ((SUSCrossIntersection
+			newOnSimulation: simulation) position: 100 @ 100 + simulation position;
+			 yourself)
+]
+
+{
+	#category : #events,
+	#'squeak_changestamp' : 'PM 5/28/2024 01:22'
+}
+SUSWindow >> addRoad [
+	simulation addMorph: ((SUSStraightRoad
+			newOnSimulation: simulation
+			withLength: self askForLength
+			withSpeedLimit: self askForSpeedLimit) position: 100 @ 100 + simulation position;
+			 yourself)
+]
+
+{
+	#category : #'user interface',
+	#'squeak_changestamp' : 'PM 5/28/2024 01:21'
+}
+SUSWindow >> askForLength [
+	^ (UIManager default request: 'Please enter length' initialAnswer: 200) asNumber
+]
+
+{
+	#category : #'user interface',
+	#'squeak_changestamp' : 'PM 5/28/2024 01:21'
+}
+SUSWindow >> askForSpeedLimit [
+	^ (UIManager default request: 'Please enter speed limit' initialAnswer: simulation defaultSpeedLimit) asNumber
 ]
 
 {
 	#category : #initialization,
-	#'squeak_changestamp' : 'PM 5/14/2024 11:38'
+	#'squeak_changestamp' : 'PM 5/28/2024 01:42'
+}
+SUSWindow >> createAddCrossIntersectionButton [
+	^ (PluggableButtonMorph
+		on: self
+		getState: nil
+		action: #addCrossIntersection
+		label: #labelAddIntersection) position: 20 @ 20;
+		 yourself
+]
+
+{
+	#category : #initialization,
+	#'squeak_changestamp' : 'PM 5/28/2024 01:30'
+}
+SUSWindow >> createAddRoadButton [
+	^ (PluggableButtonMorph
+		on: self
+		getState: nil
+		action: #addRoad
+		label: #labelAddRoad) position: 20 @ 20;
+		 yourself
+]
+
+{
+	#category : #initialization,
+	#'squeak_changestamp' : 'PM 5/28/2024 01:53'
 }
 SUSWindow >> initialize [
 	super initialize.
 	
-	self initializePlaygroundMorph;
-		setLabel: 'Sustainable Simulations';
-		addMorph: playgroundMorph frame: (0@0 corner: 1@1).
+	simulation := SUSSimulation new.
+	
+	self setLabel: 'Sustainable Simulations';
+		addMorph: simulation frame: (0@0 corner: 1@1);
+		addButtons
 ]
 
 {
-	#category : #initialization,
-	#'squeak_changestamp' : 'PM 5/14/2024 11:38'
+	#category : #accessing,
+	#'squeak_changestamp' : 'PM 5/28/2024 01:30'
 }
-SUSWindow >> initializePlaygroundMorph [
-	playgroundMorph := Morph new
-		color: Color gray muchLighter
+SUSWindow >> labelAddIntersection [
+	^ 'Add Intersection'
 ]
 
 {
-	#category : #layout,
-	#'squeak_changestamp' : 'PM 5/14/2024 11:38'
+	#category : #accessing,
+	#'squeak_changestamp' : 'PM 5/28/2024 01:30'
 }
-SUSWindow >> renderOneRoadInNetwork: aRoad atPosition: aPoint [
-	"Todo recursively add Road Morph to playgroundMorph and position it at aPoint"
-	"also call this method recursively on the former/latter roads with updated positions"
-]
-
-{
-	#category : #layout,
-	#'squeak_changestamp' : 'PM 5/14/2024 11:38'
-}
-SUSWindow >> renderRoadNetwork: aRoad [
-	self renderOneRoadInNetwork: aRoad atPosition: (playgroundMorph center)
+SUSWindow >> labelAddRoad [
+	^ 'Add Road'
 ]
