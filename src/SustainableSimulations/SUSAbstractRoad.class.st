@@ -6,7 +6,8 @@ Class {
 		'simulation',
 		'lastClickedAtConnectionPoint',
 		'adjacentRoads',
-		'isFixed'
+		'isFixed',
+		'lanes'
 	],
 	#category : #SustainableSimulations
 }
@@ -86,6 +87,15 @@ SUSAbstractRoad >> createDrawing [
 
 {
 	#category : #accessing,
+	#'squeak_changestamp' : 'MK 5/28/2024 19:13'
+}
+SUSAbstractRoad >> createLanes [
+
+	self subclassResponsibility
+]
+
+{
+	#category : #accessing,
 	#'squeak_changestamp' : 'PM 5/28/2024 01:15'
 }
 SUSAbstractRoad >> deltaPositionToConnectionPoint [
@@ -94,12 +104,13 @@ SUSAbstractRoad >> deltaPositionToConnectionPoint [
 
 {
 	#category : #initialization,
-	#'squeak_changestamp' : 'PM 5/28/2024 02:04'
+	#'squeak_changestamp' : 'MK 5/28/2024 19:16'
 }
 SUSAbstractRoad >> initialize [
 	super initialize.
 	
-	isFixed := false
+	isFixed := false.
+	lanes := OrderedCollection new.
 ]
 
 {

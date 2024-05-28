@@ -41,7 +41,7 @@ SUSSimulation >> defaultSpeedLimit [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'MK 5/27/2024 22:08'
+	#'squeak_changestamp' : 'MK 5/28/2024 18:25'
 }
 SUSSimulation >> demoRoadWithCar [
 	|car road|
@@ -50,12 +50,10 @@ SUSSimulation >> demoRoadWithCar [
 	car := SUSCar new.
 	road openInWorld;
 		position: 100@100.
-			
-	
 	
 	bezierCurve := SUSBezierCurve new.
 	bezierCurve addControlPoint: (road position x)@(road position y + (2* road extent y / 3));
-		addControlPoint: (road position x + 1000 - car extent x)@(road position y + (2* road extent y / 3)).
+		addControlPoint: (road position x + 1000)@(road position y + (2* road extent y / 3)).
 	
 	car openInWorld;
 		position: bezierCurve controlPoints first.
@@ -66,7 +64,7 @@ SUSSimulation >> demoRoadWithCar [
 ]
 
 {
-	#category : #'<<<<<<< current\ninitialization\n=======\nas yet unclassified\n>>>>>>> incoming',
+	#category : #initialization,
 	#'squeak_changestamp' : 'MK 5/28/2024 18:21'
 }
 SUSSimulation >> initialize [
