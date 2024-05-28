@@ -9,11 +9,11 @@ Class {
 
 {
 	#category : #events,
-	#'squeak_changestamp' : 'PM 5/28/2024 01:54'
+	#'squeak_changestamp' : 'PM 5/28/2024 09:16'
 }
 SUSWindow >> addButtons [
 	| row | 
- 	row := AlignmentMorph newRow addAllMorphs: {self createAddRoadButton. self createAddCrossIntersectionButton}.
+ 	row := AlignmentMorph newRow addAllMorphs: {self createAddRoadButton. self createAddCrossIntersectionButton . self createPlaySimulationButton . self createPauseSimulationButton . self createStopSimulationButton }.
 	self addMorph:  row.
 	row position: 15@45.
 ]
@@ -84,6 +84,45 @@ SUSWindow >> createAddRoadButton [
 
 {
 	#category : #initialization,
+	#'squeak_changestamp' : 'PM 5/28/2024 09:15'
+}
+SUSWindow >> createPauseSimulationButton [
+	^ (PluggableButtonMorph
+		on: self
+		getState: nil
+		action: #pauseSimulation
+		label: #labelPauseSimulation) position: 20 @ 20;
+		 yourself
+]
+
+{
+	#category : #initialization,
+	#'squeak_changestamp' : 'PM 5/28/2024 09:15'
+}
+SUSWindow >> createPlaySimulationButton [
+	^ (PluggableButtonMorph
+		on: self
+		getState: nil
+		action: #playSimulation
+		label: #labelPlaySimulation) position: 20 @ 20;
+		 yourself
+]
+
+{
+	#category : #initialization,
+	#'squeak_changestamp' : 'PM 5/28/2024 09:15'
+}
+SUSWindow >> createStopSimulationButton [
+	^ (PluggableButtonMorph
+		on: self
+		getState: nil
+		action: #stopSimulation
+		label: #labelStopSimulation) position: 20 @ 20;
+		 yourself
+]
+
+{
+	#category : #initialization,
 	#'squeak_changestamp' : 'PM 5/28/2024 01:53'
 }
 SUSWindow >> initialize [
@@ -110,4 +149,52 @@ SUSWindow >> labelAddIntersection [
 }
 SUSWindow >> labelAddRoad [
 	^ 'Add Road'
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'PM 5/28/2024 09:14'
+}
+SUSWindow >> labelPauseSimulation [
+	^ 'Pause'
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'PM 5/28/2024 09:14'
+}
+SUSWindow >> labelPlaySimulation [
+	^ 'Play'
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'PM 5/28/2024 09:14'
+}
+SUSWindow >> labelStopSimulation [
+	^ 'Stop'
+]
+
+{
+	#category : #simulation,
+	#'squeak_changestamp' : 'PM 5/28/2024 09:13'
+}
+SUSWindow >> pauseSimulation [
+	
+]
+
+{
+	#category : #simulation,
+	#'squeak_changestamp' : 'PM 5/28/2024 09:13'
+}
+SUSWindow >> playSimulation [
+	
+]
+
+{
+	#category : #simulation,
+	#'squeak_changestamp' : 'PM 5/28/2024 09:13'
+}
+SUSWindow >> stopSimulation [
+	
 ]
