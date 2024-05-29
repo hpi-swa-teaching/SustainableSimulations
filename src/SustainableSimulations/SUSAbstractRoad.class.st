@@ -5,8 +5,8 @@ Class {
 		'connectionPoints',
 		'simulation',
 		'lastClickedAtConnectionPoint',
-		'adjacentRoads',
-		'isFixed'
+		'isFixed',
+		'transformationMorph'
 	],
 	#category : #SustainableSimulations
 }
@@ -44,27 +44,47 @@ SUSAbstractRoad >> clickedAtConnectionPoint: aConnectionPoint [
 
 {
 	#category : #connection,
-	#'squeak_changestamp' : 'PM 5/28/2024 01:24'
+	#'squeak_changestamp' : 'GoChriNo 5/29/2024 12:08'
 }
-SUSAbstractRoad >> connectWith: aRoad [
-	aRoad position: (lastClickedAtConnectionPoint position + aRoad deltaPositionToConnectionPoint).
-	self connectionDoneWith: aRoad.
-	aRoad connectionDoneWith: self
+SUSAbstractRoad >> connectWith: aRoad [ 
+	self unselect.
+	aRoad unselect.
+	self lastClickedAtConnectionPoint visible: false.
+	self
+		connectWith: aRoad
+		FromConnectionPoint: self lastClickedAtConnectionPoint
+		ToConnectionPoint: aRoad lastClickedAtConnectionPoint.
+	self lastClickedAtConnectionPoint: nil.
+	aRoad lastClickedAtConnectionPoint: nil
 ]
 
 {
 	#category : #connection,
-	#'squeak_changestamp' : 'PM 5/28/2024 02:04'
+	#'squeak_changestamp' : 'GoChriNo 5/29/2024 12:08'
 }
-SUSAbstractRoad >> connectionDoneWith: aRoad [
-	| index |
-	index := connectionPoints indexOf: lastClickedAtConnectionPoint.
-	adjacentRoads at: index put: aRoad.
-	
-	isFixed := true.
-	
-	self removeMorph: lastClickedAtConnectionPoint;
-		unselect
+SUSAbstractRoad >> connectWith: aRoad FromConnectionPoint: aConnectionPoint ToConnectionPoint: otherConnectionPoint [ 
+	aConnectionPoint adjacentConnectionPoint: otherConnectionPoint.
+	otherConnectionPoint adjacentConnectionPoint: aConnectionPoint.
+	aRoad
+		updateConnectionFrom: (aRoad connectionPoints indexOf: otherConnectionPoint)
+		WithList: (Set new add: self;
+				 yourself)
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 5/29/2024 07:44'
+}
+SUSAbstractRoad >> connectionPoints [
+	^ connectionPoints
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 5/29/2024 07:44'
+}
+SUSAbstractRoad >> connectionPoints: anObject [
+	connectionPoints := anObject
 ]
 
 {
@@ -93,12 +113,22 @@ SUSAbstractRoad >> deltaPositionToConnectionPoint [
 ]
 
 {
+	#category : #utility,
+	#'squeak_changestamp' : 'GoChriNo 5/29/2024 12:08'
+}
+SUSAbstractRoad >> disableConnectionPoints [
+	self connectionPoints
+		do: [:each | each adjacentConnectionPoint
+				ifNil: [each visible: true]
+				ifNotNil: [each visible: false]]
+]
+
+{
 	#category : #initialization,
-	#'squeak_changestamp' : 'PM 5/28/2024 02:04'
+	#'squeak_changestamp' : 'GoChriNo 5/29/2024 08:47'
 }
 SUSAbstractRoad >> initialize [
 	super initialize.
-	
 	isFixed := false
 ]
 
@@ -111,12 +141,29 @@ SUSAbstractRoad >> isFixed [
 ]
 
 {
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 5/29/2024 08:00'
+}
+SUSAbstractRoad >> lastClickedAtConnectionPoint [
+	^ lastClickedAtConnectionPoint
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 5/29/2024 08:00'
+}
+SUSAbstractRoad >> lastClickedAtConnectionPoint: anObject [
+	lastClickedAtConnectionPoint := anObject
+]
+
+{
 	#category : #initialization,
-	#'squeak_changestamp' : 'PM 5/28/2024 01:28'
+	#'squeak_changestamp' : 'GoChriNo 5/29/2024 08:50'
 }
 SUSAbstractRoad >> postInitialization [
 	self addDrawing;
-		addConnectionPoints.
+		addConnectionPoints;
+		addFlexShell.
 	adjacentRoads := Array new: connectionPoints size
 ]
 
@@ -137,9 +184,34 @@ SUSAbstractRoad >> simulation: anObject [
 ]
 
 {
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 5/29/2024 08:16'
+}
+SUSAbstractRoad >> transformationMorph [
+	^ transformationMorph
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 5/29/2024 08:16'
+}
+SUSAbstractRoad >> transformationMorph: anObject [
+	transformationMorph := anObject
+]
+
+{
 	#category : #drawing,
-	#'squeak_changestamp' : 'PM 5/28/2024 01:03'
+	#'squeak_changestamp' : 'GoChriNo 5/29/2024 10:39'
 }
 SUSAbstractRoad >> unselect [
 	lastClickedAtConnectionPoint ifNotNil: [lastClickedAtConnectionPoint unselect ]
+]
+
+{
+	#category : #connection,
+	#'squeak_changestamp' : 'GoChriNo 5/29/2024 07:50'
+}
+SUSAbstractRoad >> updateConnectionFrom: anIndex WithList: updatedRoads [
+
+	self subclassResponsibility
 ]

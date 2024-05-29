@@ -5,7 +5,9 @@ Class {
 		'direction',
 		'road',
 		'isExit',
-		'isEntry'
+		'isEntry',
+		'adjacentConnectionPoint',
+		'index'
 	],
 	#category : #SustainableSimulations
 }
@@ -28,6 +30,22 @@ SUSConnectionPoint class >> newForRoad: aRoad withDirection: aPoint isEntry: aBo
 		isEntry: aBoolean;
 		isExit: anotherBoolean;
 		yourself
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 5/29/2024 07:43'
+}
+SUSConnectionPoint >> adjacentConnectionPoint [
+	^ adjacentConnectionPoint
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 5/29/2024 07:43'
+}
+SUSConnectionPoint >> adjacentConnectionPoint: anObject [
+	adjacentConnectionPoint := anObject
 ]
 
 {
@@ -61,6 +79,22 @@ SUSConnectionPoint >> handleMouseDown: anEvent [
 }
 SUSConnectionPoint >> handlesMouseDown: anEvent [
 	^ true
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 5/29/2024 09:59'
+}
+SUSConnectionPoint >> index [
+	^ index
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 5/29/2024 09:59'
+}
+SUSConnectionPoint >> index: anObject [
+	index := anObject
 ]
 
 {
