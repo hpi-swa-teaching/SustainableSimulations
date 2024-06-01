@@ -5,7 +5,9 @@ Class {
 		'maxSpeed',
 		'acceleration',
 		'position',
-		'length'
+		'length',
+		'simulation',
+		'lane'
 	],
 	#category : #SustainableSimulations
 }
@@ -75,4 +77,20 @@ SUSVehicle >> maxSpeed [
 SUSVehicle >> maxSpeed: aNumber [
 	
 	maxSpeed := aNumber.
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'Len 6/1/2024 20:32'
+}
+SUSVehicle >> simulation [
+	^ simulation
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'Len 6/1/2024 20:29'
+}
+SUSVehicle >> simulation: aSimulation [
+	simulation := aSimulation
 ]

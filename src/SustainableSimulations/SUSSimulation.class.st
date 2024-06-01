@@ -12,13 +12,31 @@ Class {
 }
 
 {
+	#category : #accessing,
+	#'squeak_changestamp' : 'Len 6/1/2024 20:50'
+}
+SUSSimulation >> addCar: aCar [
+	cars addLast: aCar
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'Len 6/1/2024 20:25'
+}
+SUSSimulation >> addRoad: aRoad [
+	roads addLast: aRoad
+]
+
+{
 	#category : #connection,
-	#'squeak_changestamp' : 'PM 5/28/2024 02:05'
+	#'squeak_changestamp' : 'Len 6/1/2024 21:05'
 }
 SUSSimulation >> connectRoad: aRoad with: anotherRoad [
 	anotherRoad isFixed
 		ifTrue: [ anotherRoad connectWith: aRoad ]
-		ifFalse: [ aRoad connectWith: anotherRoad ]
+		ifFalse: [ aRoad connectWith: anotherRoad ].
+	aRoad updateLanes: anotherRoad.
+	anotherRoad updateLanes: aRoad.
 ]
 
 {
@@ -65,7 +83,7 @@ SUSSimulation >> demoRoadWithCar [
 
 {
 	#category : #initialization,
-	#'squeak_changestamp' : 'MK 5/28/2024 18:21'
+	#'squeak_changestamp' : 'Len 6/1/2024 20:05'
 }
 SUSSimulation >> initialize [
 	super initialize.
@@ -78,7 +96,7 @@ SUSSimulation >> initialize [
 	roads := OrderedCollection new.
 	simulationSpeed := 1.
 	
-	self demoRoadWithCar.
+	"self demoRoadWithCar."
 ]
 
 {
@@ -107,12 +125,21 @@ SUSSimulation >> playSimulation [
 ]
 
 {
+	#category : #accessing,
+	#'squeak_changestamp' : 'Len 6/1/2024 20:38'
+}
+SUSSimulation >> roads [
+	^ roads
+]
+
+{
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'MK 5/27/2024 21:59'
+	#'squeak_changestamp' : 'Len 6/1/2024 20:57'
 }
 SUSSimulation >> step [
 
-	cars first moveAlongBezier: bezierCurve.
+	cars do: [:each | 
+		each move]
 ]
 
 {

@@ -87,11 +87,11 @@ SUSAbstractRoad >> createDrawing [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'MK 5/28/2024 19:13'
+	#'squeak_changestamp' : 'Len 6/1/2024 21:37'
 }
-SUSAbstractRoad >> createLanes [
-
-	self subclassResponsibility
+SUSAbstractRoad >> createLaneWithPath: aLineMorph [
+	
+	lanes add: (SUSLane newLaneWithPath: aLineMorph)
 ]
 
 {
@@ -122,13 +122,22 @@ SUSAbstractRoad >> isFixed [
 ]
 
 {
+	#category : #accessing,
+	#'squeak_changestamp' : 'Len 6/1/2024 20:34'
+}
+SUSAbstractRoad >> lanes [
+	^ lanes
+]
+
+{
 	#category : #initialization,
-	#'squeak_changestamp' : 'PM 5/28/2024 01:28'
+	#'squeak_changestamp' : 'Len 6/1/2024 20:25'
 }
 SUSAbstractRoad >> postInitialization [
 	self addDrawing;
 		addConnectionPoints.
-	adjacentRoads := Array new: connectionPoints size
+	adjacentRoads := Array new: connectionPoints size.
+	simulation addRoad: self
 ]
 
 {
@@ -153,4 +162,20 @@ SUSAbstractRoad >> simulation: anObject [
 }
 SUSAbstractRoad >> unselect [
 	lastClickedAtConnectionPoint ifNotNil: [lastClickedAtConnectionPoint unselect ]
+]
+
+{
+	#category : #drawing,
+	#'squeak_changestamp' : 'Len 6/1/2024 21:21'
+}
+SUSAbstractRoad >> updateLanes: aRoad [
+	lanes do: [:each | 
+		|pos1|
+		pos1 := each getPositionWithTValue: 1.
+		aRoad lanes do: [:anotherEach |
+			(pos1 =  (anotherEach getPositionWithTValue: 0))
+				ifTrue: [each addNextLane: anotherEach]]]
+		
+		
+	
 ]

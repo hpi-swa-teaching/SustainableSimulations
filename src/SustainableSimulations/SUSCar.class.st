@@ -11,6 +11,17 @@ Class {
 
 {
 	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'Len 6/1/2024 20:36'
+}
+SUSCar class >> newOnSimulation: aSimulation [
+	^ self new 
+		simulation: aSimulation;
+		postInitialization;
+		yourself
+]
+
+{
+	#category : #'as yet unclassified',
 	#'squeak_changestamp' : 'MK 5/19/2024 13:00'
 }
 SUSCar >> drawFrontMarkerOn: aCanvas [
@@ -69,7 +80,7 @@ SUSCar >> fuelLevel: aNumber [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'MK 5/27/2024 21:34'
+	#'squeak_changestamp' : 'Len 6/1/2024 20:35'
 }
 SUSCar >> initialize [
 	super initialize.
@@ -87,6 +98,25 @@ SUSCar >> initialize [
 
 {
 	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'Len 6/1/2024 21:20'
+}
+SUSCar >> move [
+	|curTime t| 
+
+	curTime := (Time millisecondClock) - timeRoadStart.
+	t := (curTime / (lane length / (maxSpeed / 360))).
+	
+	(t < 1) ifTrue: [self center: (lane getPositionWithTValue: t)]
+			ifFalse: [
+				(lane nextLanes isEmpty) 
+					ifFalse: [lane := lane nextLanes first.
+						timeRoadStart := (Time millisecondClock)]]
+	
+	
+]
+
+{
+	#category : #'as yet unclassified',
 	#'squeak_changestamp' : 'MK 5/27/2024 21:44'
 }
 SUSCar >> moveAlongBezier: aBezierCurve [
@@ -96,4 +126,16 @@ SUSCar >> moveAlongBezier: aBezierCurve [
 
 	self position: (aBezierCurve pointAt: (curTime / (aBezierCurve length / (maxSpeed / 360)))).
 	
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'Len 6/1/2024 20:50'
+}
+SUSCar >> postInitialization [
+	"TMP Method to spawn a simple car"
+	simulation addCar: self.
+	lane := simulation roads first lanes first.
+	
+	self center: (lane getPositionWithTValue: 0)
 ]

@@ -9,11 +9,11 @@ Class {
 
 {
 	#category : #events,
-	#'squeak_changestamp' : 'PM 5/28/2024 09:16'
+	#'squeak_changestamp' : 'Len 6/1/2024 20:18'
 }
 SUSWindow >> addButtons [
 	| row | 
- 	row := AlignmentMorph newRow addAllMorphs: {self createAddRoadButton. self createAddCrossIntersectionButton . self createPlaySimulationButton . self createPauseSimulationButton . self createStopSimulationButton }.
+ 	row := AlignmentMorph newRow addAllMorphs: {self createAddRoadButton. self createAddCrossIntersectionButton . self createPlaySimulationButton . self createPauseSimulationButton . self createStopSimulationButton . self createSpawnSimulationButton}.
 	self addMorph:  row.
 	row position: 15@45.
 ]
@@ -110,6 +110,19 @@ SUSWindow >> createPlaySimulationButton [
 
 {
 	#category : #initialization,
+	#'squeak_changestamp' : 'Len 6/1/2024 20:17'
+}
+SUSWindow >> createSpawnSimulationButton [
+	^ (PluggableButtonMorph
+		on: self
+		getState: nil
+		action: #spawnCar
+		label: #labelSpawnCar) position: 20 @ 20;
+		 yourself
+]
+
+{
+	#category : #initialization,
 	#'squeak_changestamp' : 'PM 5/28/2024 09:15'
 }
 SUSWindow >> createStopSimulationButton [
@@ -169,6 +182,14 @@ SUSWindow >> labelPlaySimulation [
 
 {
 	#category : #accessing,
+	#'squeak_changestamp' : 'Len 6/1/2024 21:41'
+}
+SUSWindow >> labelSpawnCar [
+	^ 'TMP Spawn TMP'
+]
+
+{
+	#category : #accessing,
 	#'squeak_changestamp' : 'PM 5/28/2024 09:14'
 }
 SUSWindow >> labelStopSimulation [
@@ -189,6 +210,16 @@ SUSWindow >> pauseSimulation [
 }
 SUSWindow >> playSimulation [
 	
+]
+
+{
+	#category : #simulation,
+	#'squeak_changestamp' : 'Len 6/1/2024 20:28'
+}
+SUSWindow >> spawnCar [
+	"TMP Method to spawn a car on a random Road"
+	simulation addMorph: (SUSCar
+		newOnSimulation: simulation)
 ]
 
 {

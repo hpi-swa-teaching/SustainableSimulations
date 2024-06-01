@@ -32,11 +32,15 @@ SUSCrossIntersection >> createConnectionPoints [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 5/28/2024 01:31'
+	#'squeak_changestamp' : 'Len 6/1/2024 21:35'
 }
 SUSCrossIntersection >> createDrawing [
 	| drawing |
 	drawing := SUSDrawing newCrossIntersetion.
+	
+	(drawing paths) do: [:each |
+    		self createLaneWithPath: each].
+	
 	self extent: drawing extent.
 	^ drawing
 ]
