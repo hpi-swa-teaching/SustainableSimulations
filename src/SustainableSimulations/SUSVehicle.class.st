@@ -32,31 +32,31 @@ SUSVehicle >> acceleration: aNumber [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'MK 5/21/2024 19:18'
+	#'squeak_changestamp' : 'Len 6/2/2024 18:34'
 }
 SUSVehicle >> initialize [
 	super initialize.
 	maxSpeed := 100.
 	acceleration := 1.
-	length := 1.
+	length := 30.
 	"position := 0 @ 0."
 	
 ]
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 5/21/2024 11:16'
+	#'squeak_changestamp' : 'Len 6/2/2024 18:28'
 }
-SUSVehicle >> lengh [
+SUSVehicle >> length [
 	
 	^ length.
 ]
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 5/21/2024 11:16'
+	#'squeak_changestamp' : 'Len 6/2/2024 18:28'
 }
-SUSVehicle >> lengh: aNumber [
+SUSVehicle >> length: aNumber [
 	
 	length := aNumber.
 ]

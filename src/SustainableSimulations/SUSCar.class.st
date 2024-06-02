@@ -4,7 +4,9 @@ Class {
 	#instVars : [
 		'driver',
 		'fuelLevel',
-		'timeRoadStart'
+		'timeRoadStart',
+		'lastT',
+		'lastTime'
 	],
 	#category : #SustainableSimulations
 }
@@ -80,7 +82,7 @@ SUSCar >> fuelLevel: aNumber [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'Len 6/1/2024 20:35'
+	#'squeak_changestamp' : 'Len 6/2/2024 18:49'
 }
 SUSCar >> initialize [
 	super initialize.
@@ -90,7 +92,7 @@ SUSCar >> initialize [
 	timeRoadStart := Time millisecondClock.
 	maxSpeed := 50.
 	acceleration := 10.
-	length := 1.
+	length := 30.
 	driver := 'Unknown'.
 	fuelLevel := 100.
 	
@@ -98,7 +100,15 @@ SUSCar >> initialize [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'Len 6/1/2024 21:20'
+	#'squeak_changestamp' : 'Len 6/2/2024 18:33'
+}
+SUSCar >> lastT [
+	^ lastT
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'Len 6/2/2024 18:38'
 }
 SUSCar >> move [
 	|curTime t| 
@@ -106,11 +116,22 @@ SUSCar >> move [
 	curTime := (Time millisecondClock) - timeRoadStart.
 	t := (curTime / (lane length / (maxSpeed / 360))).
 	
-	(t < 1) ifTrue: [self center: (lane getPositionWithTValue: t)]
+	(t < 1) ifTrue: [(lane checkIfFreeWithT: t withVehicle: self) 
+			ifTrue: [
+				self center: (lane getPositionWithTValue: t).
+				lastT := t.
+				lastTime := curTime]
+			ifFalse: [
+				timeRoadStart := timeRoadStart + (curTime - lastTime)]]
 			ifFalse: [
 				(lane nextLanes isEmpty) 
-					ifFalse: [lane := lane nextLanes first.
-						timeRoadStart := (Time millisecondClock)]]
+					ifTrue: [lastT := 1]
+					ifFalse: [
+						lane removeVehicle: self.
+						lane := lane nextLanes first.
+						timeRoadStart := (Time millisecondClock).
+						lane addVehicle: self.
+						lastT := 0]]
 	
 	
 ]
@@ -130,12 +151,14 @@ SUSCar >> moveAlongBezier: aBezierCurve [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'Len 6/1/2024 20:50'
+	#'squeak_changestamp' : 'Len 6/2/2024 18:32'
 }
 SUSCar >> postInitialization [
 	"TMP Method to spawn a simple car"
-	simulation addCar: self.
+	simulation addVehicle: self.
+	lastT := 0.
 	lane := simulation roads first lanes first.
+	lane addVehicle: self.
 	
 	self center: (lane getPositionWithTValue: 0)
 ]

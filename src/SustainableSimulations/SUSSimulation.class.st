@@ -13,18 +13,18 @@ Class {
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'Len 6/1/2024 20:50'
-}
-SUSSimulation >> addCar: aCar [
-	cars addLast: aCar
-]
-
-{
-	#category : #accessing,
 	#'squeak_changestamp' : 'Len 6/1/2024 20:25'
 }
 SUSSimulation >> addRoad: aRoad [
 	roads addLast: aRoad
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'Len 6/2/2024 18:15'
+}
+SUSSimulation >> addVehicle: aCar [
+	cars addLast: aCar
 ]
 
 {

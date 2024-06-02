@@ -2,10 +2,11 @@ Class {
 	#name : #SUSLane,
 	#superclass : #Object,
 	#instVars : [
-		'cars',
+		'vehicles',
 		'nextLanes',
 		'path',
-		'length'
+		'length',
+		'blocked'
 	],
 	#category : #SustainableSimulations
 }
@@ -23,20 +24,20 @@ SUSLane class >> newLaneWithPath: aLineMorph [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'MK 5/28/2024 19:11'
-}
-SUSLane >> addCar: aCar [
-
-	cars add: aCar
-]
-
-{
-	#category : #'as yet unclassified',
 	#'squeak_changestamp' : 'Len 6/1/2024 21:09'
 }
 SUSLane >> addNextLane: aNextLane [
 
 	nextLanes addLast: aNextLane
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'Len 6/2/2024 18:15'
+}
+SUSLane >> addVehicle: aCar [
+
+	vehicles add: aCar
 ]
 
 {
@@ -53,6 +54,21 @@ SUSLane >> calculateLength [
 
 {
 	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'Len 6/2/2024 18:51'
+}
+SUSLane >> checkIfFreeWithT: aNumber withVehicle: aVehicle [
+
+	vehicles do: [:each |
+		each = aVehicle 
+			ifTrue: [^ true]
+			ifFalse: [
+				((aNumber * length + (aVehicle length)) >= (each lastT * length - (each length))) 
+					ifTrue: [^ false]]].
+	^ true
+]
+
+{
+	#category : #'as yet unclassified',
 	#'squeak_changestamp' : 'Len 6/1/2024 20:42'
 }
 SUSLane >> getPositionWithTValue: aNumber [
@@ -65,11 +81,11 @@ SUSLane >> getPositionWithTValue: aNumber [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'Len 6/1/2024 20:58'
+	#'squeak_changestamp' : 'Len 6/2/2024 18:20'
 }
 SUSLane >> initialize [
 
-	cars := OrderedCollection new.
+	vehicles := OrderedCollection new.
 	nextLanes := OrderedCollection new
 ]
 
@@ -96,4 +112,13 @@ SUSLane >> nextLanes [
 SUSLane >> path: aLineMorph [
 	
 	path := aLineMorph
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'Len 6/2/2024 18:15'
+}
+SUSLane >> removeVehicle: aVehicle [
+
+	vehicles remove: aVehicle
 ]
