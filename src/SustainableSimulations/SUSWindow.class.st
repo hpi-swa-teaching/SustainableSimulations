@@ -42,6 +42,14 @@ SUSWindow >> addRoad [
 
 {
 	#category : #'user interface',
+	#'squeak_changestamp' : 'MK 6/3/2024 21:18'
+}
+SUSWindow >> askForCarSpeed [
+	^ (UIManager default request: 'Please enter car speed' initialAnswer: 50) asNumber
+]
+
+{
+	#category : #'user interface',
 	#'squeak_changestamp' : 'PM 5/28/2024 01:21'
 }
 SUSWindow >> askForLength [
@@ -214,12 +222,13 @@ SUSWindow >> playSimulation [
 
 {
 	#category : #simulation,
-	#'squeak_changestamp' : 'Len 6/1/2024 20:28'
+	#'squeak_changestamp' : 'MK 6/3/2024 21:18'
 }
 SUSWindow >> spawnCar [
 	"TMP Method to spawn a car on a random Road"
 	simulation addMorph: (SUSCar
-		newOnSimulation: simulation)
+		newOnSimulation: simulation
+		withSpeed: self askForCarSpeed)
 ]
 
 {

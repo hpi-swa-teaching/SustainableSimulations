@@ -22,6 +22,18 @@ SUSCar class >> newOnSimulation: aSimulation [
 
 {
 	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'MK 6/3/2024 21:17'
+}
+SUSCar class >> newOnSimulation: aSimulation withSpeed: aNumber [
+	^ self new 
+		simulation: aSimulation;
+		speed: aNumber;
+		postInitialization;
+		yourself
+]
+
+{
+	#category : #'as yet unclassified',
 	#'squeak_changestamp' : 'MK 5/19/2024 13:00'
 }
 SUSCar >> drawFrontMarkerOn: aCanvas [
@@ -98,13 +110,13 @@ SUSCar >> initialize [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'Len 6/1/2024 21:20'
+	#'squeak_changestamp' : 'MK 6/3/2024 21:19'
 }
 SUSCar >> move [
 	|curTime t| 
 
 	curTime := (Time millisecondClock) - timeRoadStart.
-	t := (curTime / (lane length / (maxSpeed / 360))).
+	t := (curTime / (lane length / (speed / 360))).
 	
 	(t < 1) ifTrue: [self center: (lane getPositionWithTValue: t)]
 			ifFalse: [
@@ -138,4 +150,20 @@ SUSCar >> postInitialization [
 	lane := simulation roads first lanes first.
 	
 	self center: (lane getPositionWithTValue: 0)
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'MK 6/3/2024 21:16'
+}
+SUSCar >> speed [
+	^speed
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'MK 6/3/2024 21:16'
+}
+SUSCar >> speed: aNumber [
+	speed := aNumber.
 ]

@@ -3,6 +3,7 @@ Class {
 	#superclass : #RectangleMorph,
 	#instVars : [
 		'maxSpeed',
+		'speed',
 		'acceleration',
 		'position',
 		'length',
