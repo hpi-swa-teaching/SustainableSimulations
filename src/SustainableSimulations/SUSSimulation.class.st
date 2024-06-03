@@ -163,10 +163,10 @@ SUSSimulation >> step [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'MK 6/4/2024 01:10'
+	#'squeak_changestamp' : 'MK 6/4/2024 01:15'
 }
 SUSSimulation >> stepTime [
-	^100
+	^10
 ]
 
 {
