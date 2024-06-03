@@ -92,7 +92,7 @@ SUSCar >> fuelLevel: aNumber [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'Len 6/1/2024 20:35'
+	#'squeak_changestamp' : 'MK 6/4/2024 01:06'
 }
 SUSCar >> initialize [
 	super initialize.
@@ -100,29 +100,41 @@ SUSCar >> initialize [
 		color: Color red.
 
 	timeRoadStart := Time millisecondClock.
+	timeSpeedChange := 0.
 	maxSpeed := 50.
+	progress := 0.
+	speedChanged := false.
 	acceleration := 10.
 	length := 1.
 	driver := 'Unknown'.
 	fuelLevel := 100.
-	
 ]
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'MK 6/3/2024 21:19'
+	#'squeak_changestamp' : 'MK 6/4/2024 01:12'
 }
 SUSCar >> move [
 	|curTime t| 
 
-	curTime := (Time millisecondClock) - timeRoadStart.
-	t := (curTime / (lane length / (speed / 360))).
-	
+	(timeSpeedChange ~= 0) ifTrue: [
+		curTime := (Time millisecondClock) - timeSpeedChange.
+		t := progress + (curTime / (lane length / (speed / 360)))]
+	ifFalse: [
+		curTime := (Time millisecondClock) - timeRoadStart.
+		t := (curTime / (lane length / (speed / 360))).
+		progress := t].
+	Transcript show: speed.
+		
 	(t < 1) ifTrue: [self center: (lane getPositionWithTValue: t)]
-			ifFalse: [
-				(lane nextLanes isEmpty) 
-					ifFalse: [lane := lane nextLanes first.
-						timeRoadStart := (Time millisecondClock)]]
+	ifFalse: [
+		(lane nextLanes isEmpty) 
+			ifFalse: [lane := lane nextLanes first.
+				timeRoadStart := (Time millisecondClock)]]
+	
+	
+		
+	
 	
 	
 ]
@@ -154,16 +166,8 @@ SUSCar >> postInitialization [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'MK 6/3/2024 21:16'
+	#'squeak_changestamp' : 'MK 6/4/2024 00:45'
 }
-SUSCar >> speed [
-	^speed
-]
-
-{
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'MK 6/3/2024 21:16'
-}
-SUSCar >> speed: aNumber [
-	speed := aNumber.
+SUSCar >> timeSpeedChange: aNumber [
+	timeSpeedChange := aNumber.
 ]

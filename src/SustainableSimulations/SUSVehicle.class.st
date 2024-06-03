@@ -4,6 +4,9 @@ Class {
 	#instVars : [
 		'maxSpeed',
 		'speed',
+		'speedChanged',
+		'timeSpeedChange',
+		'progress',
 		'acceleration',
 		'position',
 		'length',
@@ -82,6 +85,14 @@ SUSVehicle >> maxSpeed: aNumber [
 
 {
 	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'MK 6/4/2024 00:58'
+}
+SUSVehicle >> progress: aNumber [
+	progress := aNumber.
+]
+
+{
+	#category : #'as yet unclassified',
 	#'squeak_changestamp' : 'Len 6/1/2024 20:32'
 }
 SUSVehicle >> simulation [
@@ -94,4 +105,20 @@ SUSVehicle >> simulation [
 }
 SUSVehicle >> simulation: aSimulation [
 	simulation := aSimulation
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'MK 6/4/2024 00:42'
+}
+SUSVehicle >> speed [
+	^speed
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'MK 6/4/2024 00:41'
+}
+SUSVehicle >> speed: aNumber [
+	speed := aNumber.
 ]
