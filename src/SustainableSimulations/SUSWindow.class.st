@@ -192,10 +192,18 @@ SUSWindow >> labelAddRoad [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 5/28/2024 09:14'
+	#'squeak_changestamp' : 'MK 6/4/2024 16:40'
 }
 SUSWindow >> labelPauseSimulation [
-	^ 'Pause'
+	|pauseSymbolMorph|
+	pauseSymbolMorph := Morph new.
+	pauseSymbolMorph bounds: (0@0 extent: 20@20);
+		color: Color transparent;
+		addMorph: (Morph new bounds: (3@3 extent: 5@14); color: Color gray darker darker);
+		addMorph: (Morph new bounds: (12@3 extent: 5@14); color: Color gray darker darker);
+		layoutPolicy: ProportionalLayout new.
+
+	^pauseSymbolMorph
 ]
 
 {
@@ -216,10 +224,16 @@ SUSWindow >> labelSpawnCar [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 5/28/2024 09:14'
+	#'squeak_changestamp' : 'MK 6/4/2024 16:40'
 }
 SUSWindow >> labelStopSimulation [
-	^ 'Stop'
+	|stopSymbolMorph|
+	stopSymbolMorph := Morph new.
+	stopSymbolMorph bounds: (0@0 extent: 20@20);
+		color: Color transparent;
+		addMorph: (Morph new bounds: (3@3 extent: 14@14); color: Color gray darker darker).
+		
+	^stopSymbolMorph
 ]
 
 {
