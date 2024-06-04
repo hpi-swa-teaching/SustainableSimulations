@@ -6,7 +6,8 @@ Class {
 		'simulation',
 		'lastClickedAtConnectionPoint',
 		'adjacentRoads',
-		'isFixed'
+		'isFixed',
+		'lanes'
 	],
 	#category : #SustainableSimulations
 }
@@ -86,6 +87,15 @@ SUSAbstractRoad >> createDrawing [
 
 {
 	#category : #accessing,
+	#'squeak_changestamp' : 'Len 6/1/2024 21:37'
+}
+SUSAbstractRoad >> createLaneWithPath: aLineMorph [
+	
+	lanes add: (SUSLane newLaneWithPath: aLineMorph)
+]
+
+{
+	#category : #accessing,
 	#'squeak_changestamp' : 'PM 5/28/2024 01:15'
 }
 SUSAbstractRoad >> deltaPositionToConnectionPoint [
@@ -94,12 +104,13 @@ SUSAbstractRoad >> deltaPositionToConnectionPoint [
 
 {
 	#category : #initialization,
-	#'squeak_changestamp' : 'PM 5/28/2024 02:04'
+	#'squeak_changestamp' : 'MK 5/28/2024 19:16'
 }
 SUSAbstractRoad >> initialize [
 	super initialize.
 	
-	isFixed := false
+	isFixed := false.
+	lanes := OrderedCollection new.
 ]
 
 {
@@ -111,13 +122,22 @@ SUSAbstractRoad >> isFixed [
 ]
 
 {
+	#category : #accessing,
+	#'squeak_changestamp' : 'Len 6/1/2024 20:34'
+}
+SUSAbstractRoad >> lanes [
+	^ lanes
+]
+
+{
 	#category : #initialization,
-	#'squeak_changestamp' : 'PM 5/28/2024 01:28'
+	#'squeak_changestamp' : 'Len 6/1/2024 20:25'
 }
 SUSAbstractRoad >> postInitialization [
 	self addDrawing;
 		addConnectionPoints.
-	adjacentRoads := Array new: connectionPoints size
+	adjacentRoads := Array new: connectionPoints size.
+	simulation addRoad: self
 ]
 
 {
@@ -142,4 +162,20 @@ SUSAbstractRoad >> simulation: anObject [
 }
 SUSAbstractRoad >> unselect [
 	lastClickedAtConnectionPoint ifNotNil: [lastClickedAtConnectionPoint unselect ]
+]
+
+{
+	#category : #drawing,
+	#'squeak_changestamp' : 'Len 6/1/2024 21:21'
+}
+SUSAbstractRoad >> updateLanes: aRoad [
+	lanes do: [:each | 
+		|pos1|
+		pos1 := each getPositionWithTValue: 1.
+		aRoad lanes do: [:anotherEach |
+			(pos1 =  (anotherEach getPositionWithTValue: 0))
+				ifTrue: [each addNextLane: anotherEach]]]
+		
+		
+	
 ]

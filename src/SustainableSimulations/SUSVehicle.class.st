@@ -3,9 +3,15 @@ Class {
 	#superclass : #RectangleMorph,
 	#instVars : [
 		'maxSpeed',
+		'speed',
+		'speedChanged',
+		'timeSpeedChange',
+		'progress',
 		'acceleration',
 		'position',
-		'length'
+		'length',
+		'simulation',
+		'lane'
 	],
 	#category : #SustainableSimulations
 }
@@ -30,14 +36,14 @@ SUSVehicle >> acceleration: aNumber [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 5/21/2024 11:19'
+	#'squeak_changestamp' : 'MK 5/21/2024 19:18'
 }
 SUSVehicle >> initialize [
 	super initialize.
 	maxSpeed := 100.
 	acceleration := 1.
 	length := 1.
-	position := 0 @ 0.
+	"position := 0 @ 0."
 	
 ]
 
@@ -79,18 +85,40 @@ SUSVehicle >> maxSpeed: aNumber [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'ek 5/19/2024 16:46'
+	#'squeak_changestamp' : 'MK 6/4/2024 00:58'
 }
-SUSVehicle >> position [
-	
-	^ position.
+SUSVehicle >> progress: aNumber [
+	progress := aNumber.
 ]
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'ek 5/19/2024 16:21'
+	#'squeak_changestamp' : 'Len 6/1/2024 20:32'
 }
-SUSVehicle >> position: aPoint [
-	
-	position := aPoint.
+SUSVehicle >> simulation [
+	^ simulation
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'Len 6/1/2024 20:29'
+}
+SUSVehicle >> simulation: aSimulation [
+	simulation := aSimulation
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'MK 6/4/2024 00:42'
+}
+SUSVehicle >> speed [
+	^speed
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'MK 6/4/2024 00:41'
+}
+SUSVehicle >> speed: aNumber [
+	speed := aNumber.
 ]

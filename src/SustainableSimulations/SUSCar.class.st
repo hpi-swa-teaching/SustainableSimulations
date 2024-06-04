@@ -3,27 +3,33 @@ Class {
 	#superclass : #SUSVehicle,
 	#instVars : [
 		'driver',
-		'fuelLevel'
+		'fuelLevel',
+		'timeRoadStart'
 	],
 	#category : #SustainableSimulations
 }
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'ek 5/19/2024 16:47'
+	#'squeak_changestamp' : 'Len 6/1/2024 20:36'
 }
-SUSCar >> color [
-	
-	^ color.
+SUSCar class >> newOnSimulation: aSimulation [
+	^ self new 
+		simulation: aSimulation;
+		postInitialization;
+		yourself
 ]
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'ek 5/19/2024 16:40'
+	#'squeak_changestamp' : 'MK 6/3/2024 21:17'
 }
-SUSCar >> color: aColor [
-	
-	color := aColor.
+SUSCar class >> newOnSimulation: aSimulation withSpeed: aNumber [
+	^ self new 
+		simulation: aSimulation;
+		speed: aNumber;
+		postInitialization;
+		yourself
 ]
 
 {
@@ -86,15 +92,84 @@ SUSCar >> fuelLevel: aNumber [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 5/21/2024 11:18'
+	#'squeak_changestamp' : 'MK 6/4/2024 01:06'
 }
 SUSCar >> initialize [
 	super initialize.
-	maxSpeed := 200.
+	self extent: 30@15;
+		color: Color red.
+
+	timeRoadStart := Time millisecondClock.
+	timeSpeedChange := 0.
+	maxSpeed := 50.
+	progress := 0.
+	speedChanged := false.
 	acceleration := 10.
 	length := 1.
 	driver := 'Unknown'.
 	fuelLevel := 100.
-	self extent: 30@15.
-    	self color: Color red.
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'MK 6/4/2024 08:47'
+}
+SUSCar >> move [
+	|curTime t| 
+	(speed = 0) ifTrue: [t := 1]
+	ifFalse: [
+		(timeSpeedChange ~= 0) ifTrue: [
+			curTime := (Time millisecondClock) - timeSpeedChange.
+			t := progress + (curTime / (lane length / (speed / 360)))]
+		ifFalse: [
+			curTime := (Time millisecondClock) - timeRoadStart.
+			t := (curTime / (lane length / (speed / 360))).
+			progress := t]].
+	  
+	
+	(t < 1) ifTrue: [self center: (lane getPositionWithTValue: t)]
+	ifFalse: [
+		(lane nextLanes isEmpty) 
+			ifFalse: [lane := lane nextLanes first.
+				timeRoadStart := (Time millisecondClock)]
+			ifTrue: [speed := 0.]]
+	
+	
+		
+	
+	
+	
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'MK 5/27/2024 21:44'
+}
+SUSCar >> moveAlongBezier: aBezierCurve [
+	|curTime| 
+
+	curTime := (Time millisecondClock) - timeRoadStart.
+
+	self position: (aBezierCurve pointAt: (curTime / (aBezierCurve length / (maxSpeed / 360)))).
+	
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'Len 6/1/2024 20:50'
+}
+SUSCar >> postInitialization [
+	"TMP Method to spawn a simple car"
+	simulation addCar: self.
+	lane := simulation roads first lanes first.
+	
+	self center: (lane getPositionWithTValue: 0)
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'MK 6/4/2024 00:45'
+}
+SUSCar >> timeSpeedChange: aNumber [
+	timeSpeedChange := aNumber.
 ]

@@ -45,11 +45,15 @@ SUSStraightRoad >> createConnectionPoints [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 5/27/2024 23:46'
+	#'squeak_changestamp' : 'Len 6/1/2024 20:10'
 }
 SUSStraightRoad >> createDrawing [
 	| drawing |
 	drawing := SUSDrawing newNormalRoadWithLength: self length.
+	
+	(drawing paths) do: [:each |
+    		self createLaneWithPath: each].
+
 	self extent: drawing extent.
 	^ drawing
 ]
