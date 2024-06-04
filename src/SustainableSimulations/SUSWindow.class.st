@@ -192,7 +192,7 @@ SUSWindow >> labelAddRoad [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'MK 6/4/2024 16:40'
+	#'squeak_changestamp' : 'MK 6/4/2024 16:48'
 }
 SUSWindow >> labelPauseSimulation [
 	|pauseSymbolMorph|
@@ -200,18 +200,25 @@ SUSWindow >> labelPauseSimulation [
 	pauseSymbolMorph bounds: (0@0 extent: 20@20);
 		color: Color transparent;
 		addMorph: (Morph new bounds: (3@3 extent: 5@14); color: Color gray darker darker);
-		addMorph: (Morph new bounds: (12@3 extent: 5@14); color: Color gray darker darker);
-		layoutPolicy: ProportionalLayout new.
+		addMorph: (Morph new bounds: (12@3 extent: 5@14); color: Color gray darker darker).
 
 	^pauseSymbolMorph
 ]
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 5/28/2024 09:14'
+	#'squeak_changestamp' : 'MK 6/4/2024 17:01'
 }
 SUSWindow >> labelPlaySimulation [
-	^ 'Play'
+	|playSymbolMorph|
+	playSymbolMorph := PolygonMorph new. 
+	playSymbolMorph color: Color transparent;
+		setVertices: (Array with: 0@0 with: 10@5 with: 0@10);
+		color: Color gray darker darker;
+		borderWidth: 3;
+		borderColor: Color gray darker darker.
+		
+	^playSymbolMorph
 ]
 
 {
