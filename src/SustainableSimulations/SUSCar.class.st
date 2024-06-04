@@ -112,25 +112,27 @@ SUSCar >> initialize [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'MK 6/4/2024 01:12'
+	#'squeak_changestamp' : 'MK 6/4/2024 08:47'
 }
 SUSCar >> move [
 	|curTime t| 
-
-	(timeSpeedChange ~= 0) ifTrue: [
-		curTime := (Time millisecondClock) - timeSpeedChange.
-		t := progress + (curTime / (lane length / (speed / 360)))]
+	(speed = 0) ifTrue: [t := 1]
 	ifFalse: [
-		curTime := (Time millisecondClock) - timeRoadStart.
-		t := (curTime / (lane length / (speed / 360))).
-		progress := t].
-	Transcript show: speed.
-		
+		(timeSpeedChange ~= 0) ifTrue: [
+			curTime := (Time millisecondClock) - timeSpeedChange.
+			t := progress + (curTime / (lane length / (speed / 360)))]
+		ifFalse: [
+			curTime := (Time millisecondClock) - timeRoadStart.
+			t := (curTime / (lane length / (speed / 360))).
+			progress := t]].
+	  
+	
 	(t < 1) ifTrue: [self center: (lane getPositionWithTValue: t)]
 	ifFalse: [
 		(lane nextLanes isEmpty) 
 			ifFalse: [lane := lane nextLanes first.
-				timeRoadStart := (Time millisecondClock)]]
+				timeRoadStart := (Time millisecondClock)]
+			ifTrue: [speed := 0.]]
 	
 	
 		
