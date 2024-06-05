@@ -63,7 +63,7 @@ SUSConnectionPoint >> center [
 
 {
 	#category : #connection,
-	#'squeak_changestamp' : 'GoChriNo 6/5/2024 21:32'
+	#'squeak_changestamp' : 'GoChriNo 6/5/2024 21:35'
 }
 SUSConnectionPoint >> connectStraightRoadFromMousePos: mousePos [ 
 	| simulation connectingIndex newRoad length degrees|
@@ -89,7 +89,6 @@ SUSConnectionPoint >> connectStraightRoadFromMousePos: mousePos [
 				degrees := degrees - 360] ifFalse: [
 				degrees > 90 ifTrue: [degrees := degrees - 180]].
 			newRoad rotationDegrees: degrees.
-			Transcript show: degrees.
 			(newRoad connectionPoints at: (connectingIndex \\ 2 + 1))
 				direction: self direction.
 			self isStartingPoint
