@@ -4,30 +4,87 @@ Class {
 	#instVars : [
 		'direction',
 		'road',
-		'isExit',
-		'isEntry'
+		'simulation',
+		'isStartingPoint',
+		'adjacentConnectionPoint'
 	],
 	#category : #SustainableSimulations
 }
 
 {
 	#category : #'instance creation',
-	#'squeak_changestamp' : 'PM 5/27/2024 23:08'
+	#'squeak_changestamp' : 'GoChriNo 6/5/2024 09:32'
 }
-SUSConnectionPoint class >> newForRoad: aRoad withDirection: aPoint [
-	^ self newForRoad: aRoad withDirection: aPoint isEntry: true isExit: true
+SUSConnectionPoint class >> newAsStartingPointForSimulation: aSimulation withDirection: aPoint [
+	^ self new road: aSimulation;
+		direction: aPoint;
+		isStartingPoint: true;
+		isFixed;
+		yourself
 ]
 
 {
 	#category : #'instance creation',
-	#'squeak_changestamp' : 'PM 5/27/2024 23:08'
+	#'squeak_changestamp' : 'GoChriNo 6/5/2024 08:59'
 }
-SUSConnectionPoint class >> newForRoad: aRoad withDirection: aPoint isEntry: aBoolean isExit: anotherBoolean [
+SUSConnectionPoint class >> newForRoad: aRoad withDirection: aPoint [
 	^ self new road: aRoad;
 		direction: aPoint;
-		isEntry: aBoolean;
-		isExit: anotherBoolean;
+		isStartingPoint: false;
 		yourself
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 6/5/2024 09:17'
+}
+SUSConnectionPoint >> adjacentConnectionPoint [
+	^ adjacentConnectionPoint
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 6/5/2024 09:17'
+}
+SUSConnectionPoint >> adjacentConnectionPoint: anObject [
+	adjacentConnectionPoint := anObject
+]
+
+{
+	#category : #connection,
+	#'squeak_changestamp' : 'GoChriNo 6/5/2024 13:36'
+}
+SUSConnectionPoint >> connectStraightRoadFromMousePos: mousePos [
+	| simulation connectingIndex newRoad|
+	self isStartingPoint
+		ifTrue: [simulation := self road]
+		ifFalse: [simulation := self road simulation].
+	(self direction x >= 0)
+		ifTrue:[connectingIndex := 1] 
+		ifFalse: [connectingIndex := 2].
+	adjacentConnectionPoint ifNil: [
+			newRoad := SUSStraightRoad
+			newOnSimulation: simulation
+			withLength: (200)
+			withSpeedLimit: (50).
+			newRoad center: (self center + (self direction * (200 / 2))).
+			newRoad sticky: true.
+			simulation addMorph: newRoad.
+			self isStartingPoint 
+				ifFalse: [self connectWithConnectionPoint: (newRoad connectionPoints at: connectingIndex).
+					newRoad removeMorph: (newRoad connectionPoints at: connectingIndex)].
+			self road removeMorph: self..
+			]
+]
+
+{
+	#category : #connection,
+	#'squeak_changestamp' : 'GoChriNo 6/5/2024 13:17'
+}
+SUSConnectionPoint >> connectWithConnectionPoint: aConenctionPoint [
+
+	self adjacentConnectionPoint: aConenctionPoint.
+	aConenctionPoint adjacentConnectionPoint: self.
 ]
 
 {
@@ -48,11 +105,15 @@ SUSConnectionPoint >> direction: anObject [
 
 {
 	#category : #'event handling',
-	#'squeak_changestamp' : 'PM 5/28/2024 00:48'
+	#'squeak_changestamp' : 'GoChriNo 6/5/2024 09:22'
 }
-SUSConnectionPoint >> handleMouseDown: anEvent [
+SUSConnectionPoint >> handleMouseDown: anEvent [ 
+	| simulation |
 	self color: Color red.
-	self road clickedAtConnectionPoint: self
+	self isStartingPoint
+		ifTrue: [simulation := self road]
+		ifFalse: [simulation := self road simulation].
+	simulation notifyClickedAt: self
 ]
 
 {
@@ -75,34 +136,27 @@ SUSConnectionPoint >> initialize [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 5/27/2024 23:07'
+	#'squeak_changestamp' : 'GoChriNo 6/5/2024 09:33'
 }
-SUSConnectionPoint >> isEntry [
-	^ isEntry
+SUSConnectionPoint >> isFixed [
+
+	^ true.
 ]
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 5/27/2024 23:07'
+	#'squeak_changestamp' : 'GoChriNo 6/5/2024 08:58'
 }
-SUSConnectionPoint >> isEntry: anObject [
-	isEntry := anObject
+SUSConnectionPoint >> isStartingPoint [
+	^ isStartingPoint
 ]
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 5/27/2024 23:07'
+	#'squeak_changestamp' : 'GoChriNo 6/5/2024 08:58'
 }
-SUSConnectionPoint >> isExit [
-	^ isExit
-]
-
-{
-	#category : #accessing,
-	#'squeak_changestamp' : 'PM 5/27/2024 23:07'
-}
-SUSConnectionPoint >> isExit: anObject [
-	isExit := anObject
+SUSConnectionPoint >> isStartingPoint: anObject [
+	isStartingPoint := anObject
 ]
 
 {
@@ -119,6 +173,22 @@ SUSConnectionPoint >> road [
 }
 SUSConnectionPoint >> road: anObject [
 	road := anObject
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 6/5/2024 08:56'
+}
+SUSConnectionPoint >> simulation [
+	^ simulation
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 6/5/2024 08:56'
+}
+SUSConnectionPoint >> simulation: anObject [
+	simulation := anObject
 ]
 
 {

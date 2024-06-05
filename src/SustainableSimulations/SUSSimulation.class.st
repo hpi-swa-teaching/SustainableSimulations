@@ -28,6 +28,20 @@ SUSSimulation >> addRoad: aRoad [
 ]
 
 {
+	#category : #initialization,
+	#'squeak_changestamp' : 'GoChriNo 6/5/2024 13:36'
+}
+SUSSimulation >> addStartingPoint [
+
+	| startingPoint |
+	startingPoint := (SUSConnectionPoint newAsStartingPointForSimulation: self withDirection: (1@0))
+		center: (self position + (300@200));
+		sticky: true;
+		yourself.
+	self addMorph: startingPoint.
+]
+
+{
 	#category : #'as yet unclassified',
 	#'squeak_changestamp' : 'MK 6/4/2024 01:08'
 }
@@ -101,7 +115,7 @@ SUSSimulation >> demoRoadWithCar [
 
 {
 	#category : #initialization,
-	#'squeak_changestamp' : 'Len 6/1/2024 20:05'
+	#'squeak_changestamp' : 'GoChriNo 6/4/2024 12:12'
 }
 SUSSimulation >> initialize [
 	super initialize.
@@ -114,16 +128,18 @@ SUSSimulation >> initialize [
 	roads := OrderedCollection new.
 	simulationSpeed := 1.
 	
+	self addStartingPoint.
+	
 	"self demoRoadWithCar."
 ]
 
 {
 	#category : #'event handling',
-	#'squeak_changestamp' : 'PM 5/28/2024 01:05'
+	#'squeak_changestamp' : 'GoChriNo 6/5/2024 09:23'
 }
-SUSSimulation >> notifyClickedAt: aRoad [ 
-	roadToConnect ifNil: [roadToConnect := aRoad]
-		ifNotNil: [self connectSavedRoadWith: aRoad]
+SUSSimulation >> notifyClickedAt: aConnectionPoint [
+
+	aConnectionPoint connectStraightRoadFromMousePos: (0@0).
 ]
 
 {
