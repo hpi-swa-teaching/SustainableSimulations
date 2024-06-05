@@ -51,30 +51,56 @@ SUSConnectionPoint >> adjacentConnectionPoint: anObject [
 ]
 
 {
-	#category : #connection,
-	#'squeak_changestamp' : 'GoChriNo 6/5/2024 13:36'
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 6/5/2024 21:11'
 }
-SUSConnectionPoint >> connectStraightRoadFromMousePos: mousePos [
-	| simulation connectingIndex newRoad|
+SUSConnectionPoint >> center [
+	self road
+		ifNotNil: [self road isFlexed
+				ifTrue: [^ self rotatedCenter]].
+	^ super center
+]
+
+{
+	#category : #connection,
+	#'squeak_changestamp' : 'GoChriNo 6/5/2024 21:32'
+}
+SUSConnectionPoint >> connectStraightRoadFromMousePos: mousePos [ 
+	| simulation connectingIndex newRoad length degrees|
+	length := self getLengthFromMousePos: mousePos.
+	length <= 50
+		ifTrue: [^ false].
 	self isStartingPoint
 		ifTrue: [simulation := self road]
 		ifFalse: [simulation := self road simulation].
-	(self direction x >= 0)
-		ifTrue:[connectingIndex := 1] 
+	self direction x >= 0
+		ifTrue: [connectingIndex := 1]
 		ifFalse: [connectingIndex := 2].
-	adjacentConnectionPoint ifNil: [
-			newRoad := SUSStraightRoad
-			newOnSimulation: simulation
-			withLength: (200)
-			withSpeedLimit: (50).
-			newRoad center: (self center + (self direction * (200 / 2))).
+	adjacentConnectionPoint
+		ifNil: [newRoad := SUSStraightRoad
+						newOnSimulation: simulation
+						withLength: length
+						withSpeedLimit: 50.
+			newRoad center: self center + (self direction * (length / 2)).
 			newRoad sticky: true.
 			simulation addMorph: newRoad.
-			self isStartingPoint 
-				ifFalse: [self connectWithConnectionPoint: (newRoad connectionPoints at: connectingIndex).
-					newRoad removeMorph: (newRoad connectionPoints at: connectingIndex)].
-			self road removeMorph: self..
-			]
+			degrees := self direction degrees.
+			degrees > 270 ifTrue: [
+				degrees := degrees - 360] ifFalse: [
+				degrees > 90 ifTrue: [degrees := degrees - 180]].
+			newRoad rotationDegrees: degrees.
+			Transcript show: degrees.
+			(newRoad connectionPoints at: (connectingIndex \\ 2 + 1))
+				direction: self direction.
+			self isStartingPoint
+				ifTrue: [(newRoad connectionPoints at: connectingIndex)
+						direction: self direction negated]
+				ifFalse: [self
+						connectWithConnectionPoint: (newRoad connectionPoints at: connectingIndex).
+					newRoad
+						removeMorph: (newRoad connectionPoints at: connectingIndex )].
+			self road removeMorph: self].
+	^ true
 ]
 
 {
@@ -101,6 +127,20 @@ SUSConnectionPoint >> direction [
 }
 SUSConnectionPoint >> direction: anObject [
 	direction := anObject
+]
+
+{
+	#category : #connection,
+	#'squeak_changestamp' : 'GoChriNo 6/5/2024 14:44'
+}
+SUSConnectionPoint >> getLengthFromMousePos: mousePos [ 
+	| x |
+	x := mousePos - self center.
+	self isStartingPoint
+		ifTrue: [self direction: x normalized.
+			^ 0 @ 0 dist: x]
+		ifFalse: [^ self direction dotProduct: x normalized
+					* (0 @ 0 dist: x)]
 ]
 
 {
@@ -173,6 +213,17 @@ SUSConnectionPoint >> road [
 }
 SUSConnectionPoint >> road: anObject [
 	road := anObject
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'GoChriNo 6/5/2024 21:13'
+}
+SUSConnectionPoint >> rotatedCenter [
+	| dir rotation |
+	dir := self extent / 2.
+	rotation := self road rotationDegrees / 360 * 2 * 3.1415926.
+	^ self positionInWorld + (dir x * rotation cos + (dir y * rotation sin negated) @ (dir x * rotation sin + (dir y * rotation cos)))
 ]
 
 {
