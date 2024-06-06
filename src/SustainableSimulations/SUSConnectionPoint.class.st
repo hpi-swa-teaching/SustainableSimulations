@@ -64,7 +64,7 @@ SUSConnectionPoint >> center [
 
 {
 	#category : #connection,
-	#'squeak_changestamp' : 'GoChriNo 6/6/2024 09:17'
+	#'squeak_changestamp' : 'GoChriNo 6/6/2024 09:32'
 }
 SUSConnectionPoint >> connectStraightRoadFromMousePos: mousePos [ 
 	| simulation connectingIndex newRoad length degrees|
@@ -82,7 +82,7 @@ SUSConnectionPoint >> connectStraightRoadFromMousePos: mousePos [
 						newOnSimulation: simulation
 						withLength: length
 						withSpeedLimit: 50.
-			newRoad center: self center + (self direction * (length / 2)).
+			newRoad center: self center + (self direction * 0.999999999999 * (length / 2)).
 			newRoad sticky: true.
 			simulation addMorph: newRoad.
 			"rotation?
