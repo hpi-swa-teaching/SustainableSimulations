@@ -11,7 +11,8 @@ Class {
 		'position',
 		'length',
 		'simulation',
-		'lane'
+		'lane',
+		'lastPoint'
 	],
 	#category : #SustainableSimulations
 }
@@ -45,6 +46,14 @@ SUSVehicle >> initialize [
 	length := 1.
 	"position := 0 @ 0."
 	
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'Len 6/10/2024 00:05'
+}
+SUSVehicle >> lastPoint [
+	^ lastPoint
 ]
 
 {

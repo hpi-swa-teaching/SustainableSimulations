@@ -5,7 +5,8 @@ Class {
 		'cars',
 		'nextLanes',
 		'path',
-		'length'
+		'length',
+		'blocked'
 	],
 	#category : #SustainableSimulations
 }
@@ -37,6 +38,22 @@ SUSLane >> addCar: aCar [
 SUSLane >> addNextLane: aNextLane [
 
 	nextLanes addLast: aNextLane
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'Len 6/10/2024 00:21'
+}
+SUSLane >> blocked [
+	^ blocked
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'Len 6/10/2024 00:21'
+}
+SUSLane >> blocked: aTupel [
+	blocked := aTupel
 ]
 
 {
@@ -83,6 +100,19 @@ SUSLane >> getPosition3VerticesWithTValue: aNumber [
 SUSLane >> getPositionWithTValue: aNumber [
 	((path vertices size) == 3) ifTrue: [^ self getPosition3VerticesWithTValue: aNumber].
 	^ self getPosition2VerticesWithTValue: aNumber
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'Len 6/10/2024 00:08'
+}
+SUSLane >> getPreviousCarOnLane: aCar [
+	| previous |
+	previous := aCar.
+	cars do: [:each |
+		aCar = each ifTrue: [^ previous].
+		previous := each].
+	^ aCar
 ]
 
 {
@@ -161,4 +191,13 @@ SUSLane >> nextLanes [
 SUSLane >> path: aLineMorph [
 	
 	path := aLineMorph
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'Len 6/10/2024 00:11'
+}
+SUSLane >> removeCar: aCar [
+
+	cars remove: aCar
 ]
