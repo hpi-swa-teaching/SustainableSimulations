@@ -92,12 +92,13 @@ SUSCar >> fuelLevel: aNumber [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'MK 6/4/2024 01:06'
+	#'squeak_changestamp' : 'Len 6/9/2024 20:40'
 }
 SUSCar >> initialize [
 	super initialize.
 	self extent: 30@15;
 		color: Color red.
+	self addFlexShellIfNecessary.
 
 	timeRoadStart := Time millisecondClock.
 	timeSpeedChange := 0.
@@ -112,45 +113,40 @@ SUSCar >> initialize [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'MK 6/4/2024 08:47'
+	#'squeak_changestamp' : 'Len 6/9/2024 21:23'
 }
 SUSCar >> move [
 	|curTime t| 
-	(speed = 0) ifTrue: [t := 1]
-	ifFalse: [
-		(timeSpeedChange ~= 0) ifTrue: [
-			curTime := (Time millisecondClock) - timeSpeedChange.
-			t := progress + (curTime / (lane length / (speed / 360)))]
+	(speed = 0) 
+		ifTrue: [t := 1]
 		ifFalse: [
-			curTime := (Time millisecondClock) - timeRoadStart.
-			t := (curTime / (lane length / (speed / 360))).
-			progress := t]].
+			(timeSpeedChange ~= 0) 
+				ifTrue: [
+					curTime := (Time millisecondClock) - timeSpeedChange.
+					t := progress + (curTime / (lane length / (speed / 360)))]
+				ifFalse: [
+					curTime := (Time millisecondClock) - timeRoadStart.
+					t := (curTime / (lane length / (speed / 360))).
+					progress := t]].
 	  
-	
-	(t < 1) ifTrue: [self center: (lane getPositionWithTValue: t)]
-	ifFalse: [
-		(lane nextLanes isEmpty) 
-			ifFalse: [lane := lane nextLanes first.
-				timeRoadStart := (Time millisecondClock)]
-			ifTrue: [speed := 0.]]
+	(t < 1) 
+		ifTrue: [
+			self owner center: (lane getPositionWithTValue: t).
+			self rotationDegrees: (lane getRotationWithTValue: t)]
+		ifFalse: [
+			(lane nextLanes isEmpty) 
+				ifFalse: [
+					| random |
+					random := Random new.
+					"lane := lane nextLanes first."
+					lane := (lane nextLanes at: (random nextInt: (lane nextLanes size))).
+					timeRoadStart := (Time millisecondClock)]
+				ifTrue: [speed := 0.]]
 	
 	
 		
 	
 	
-	
-]
-
-{
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'MK 5/27/2024 21:44'
-}
-SUSCar >> moveAlongBezier: aBezierCurve [
-	|curTime| 
-
-	curTime := (Time millisecondClock) - timeRoadStart.
-
-	self position: (aBezierCurve pointAt: (curTime / (aBezierCurve length / (maxSpeed / 360)))).
 	
 ]
 

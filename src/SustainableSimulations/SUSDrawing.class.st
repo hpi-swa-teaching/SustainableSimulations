@@ -185,22 +185,24 @@ SUSDrawing >> addStraightMarks [
 
 {
 	#category : #drawing,
-	#'squeak_changestamp' : 'Len 6/1/2024 21:39'
+	#'squeak_changestamp' : 'Len 6/9/2024 21:06'
 }
 SUSDrawing >> generateCrossInterPaths [
 	| factor |
 	factor := SUSDrawing normalLaneWidth.
 	"From top"
+	self addPathWithVertices: ({1.5@0. 1.5@2.5. 4@2.5} * factor). "Left"
 	self addPathWithVertices: ({1.5@0. 1.5@2. 1.5@0} * factor). "Straight"
 	self addPathWithVertices: ({1.5@0. 1.5@1.5. 0@1.5} * factor). "Right"
-	self addPathWithVertices: ({1.5@0. 1.5@2.5. 4@2.5} * factor). "Left"
 	"From bottom"
 	self addPathWithVertices: ({2.5@4. 2.5@2. 2.5@0} * factor). "Straight"
 	self addPathWithVertices: ({2.5@4. 2.5@2.5. 4@2.5} * factor). "Right"
 	self addPathWithVertices: ({2.5@4. 2.5@1.5. 0@1.5} * factor). "Left"
 	"From left"
-	self addPathWithVertices: ({0@2.5. 2@2.5. 4@2.5} * factor). "Straight"
 	self addPathWithVertices: ({0@2.5. 1.5@2.5. 1.5@4} * factor). "Right"
+	self addPathWithVertices: ({0@2.5. 2.5@2.5. 2.5@0} * factor). "Left"
+	self addPathWithVertices: ({0@2.5. 2@2.5. 4@2.5} * factor). "Straight"
+	
 	self addPathWithVertices: ({0@2.5. 2.5@2.5. 2.5@0} * factor). "Left"
 	"From right"
 	self addPathWithVertices: ({4@1.5. 2@1.5. 0@1.5} * factor). "Straight"

@@ -30,7 +30,7 @@ SUSWindow >> addCrossIntersection [
 
 {
 	#category : #events,
-	#'squeak_changestamp' : 'ek 6/1/2024 20:32'
+	#'squeak_changestamp' : 'Len 6/9/2024 23:09'
 }
 SUSWindow >> addRoad [
 	| lengthAndSpeed |
