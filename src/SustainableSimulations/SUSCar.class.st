@@ -22,7 +22,7 @@ SUSCar class >> newOnSimulation: aSimulation [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'MK 6/3/2024 21:17'
+	#'squeak_changestamp' : 'ek 6/9/2024 21:46'
 }
 SUSCar class >> newOnSimulation: aSimulation withSpeed: aNumber [
 	^ self new 
@@ -30,6 +30,15 @@ SUSCar class >> newOnSimulation: aSimulation withSpeed: aNumber [
 		speed: aNumber;
 		postInitialization;
 		yourself
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'ek 6/9/2024 23:47'
+}
+SUSCar >> adjustTimeBy: delta [
+	timeRoadStart := timeRoadStart + delta.
+	timeSpeedChange := timeSpeedChange + delta.
 ]
 
 {
@@ -156,7 +165,7 @@ SUSCar >> moveAlongBezier: aBezierCurve [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'Len 6/1/2024 20:50'
+	#'squeak_changestamp' : 'ek 6/9/2024 23:41'
 }
 SUSCar >> postInitialization [
 	"TMP Method to spawn a simple car"

@@ -162,7 +162,7 @@ SUSWindow >> createStopSimulationButton [
 
 {
 	#category : #initialization,
-	#'squeak_changestamp' : 'PM 5/28/2024 01:53'
+	#'squeak_changestamp' : 'ek 6/9/2024 22:31'
 }
 SUSWindow >> initialize [
 	super initialize.
@@ -245,35 +245,38 @@ SUSWindow >> labelStopSimulation [
 
 {
 	#category : #simulation,
-	#'squeak_changestamp' : 'PM 5/28/2024 09:13'
+	#'squeak_changestamp' : 'ek 6/9/2024 18:54'
 }
 SUSWindow >> pauseSimulation [
-	
+	simulation pauseSimulation.
 ]
 
 {
 	#category : #simulation,
-	#'squeak_changestamp' : 'PM 5/28/2024 09:13'
+	#'squeak_changestamp' : 'ek 6/9/2024 18:53'
 }
 SUSWindow >> playSimulation [
-	
+	simulation playSimulation.
 ]
 
 {
 	#category : #simulation,
-	#'squeak_changestamp' : 'MK 6/3/2024 21:18'
+	#'squeak_changestamp' : 'ek 6/9/2024 21:43'
 }
 SUSWindow >> spawnCar [
 	"TMP Method to spawn a car on a random Road"
-	simulation addMorph: (SUSCar
-		newOnSimulation: simulation
-		withSpeed: self askForCarSpeed)
+	| newCar |
+	newCar := SUSCar newOnSimulation: simulation withSpeed: self askForCarSpeed.
+	simulation addMorph: newCar.
+	"simulationRef addCar: newCar."
+	
+	
 ]
 
 {
 	#category : #simulation,
-	#'squeak_changestamp' : 'PM 5/28/2024 09:13'
+	#'squeak_changestamp' : 'ek 6/9/2024 18:54'
 }
 SUSWindow >> stopSimulation [
-	
+	simulation stopSimulation.
 ]

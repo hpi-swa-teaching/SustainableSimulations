@@ -6,9 +6,11 @@ Class {
 		'cars',
 		'simulationSpeed',
 		'roads',
-		'bezierCurve'
+		'bezierCurve',
+		'running',
+		'timePaused'
 	],
-	#category : 'SustainableSimulations'
+	#category : #SustainableSimulations
 }
 
 {
@@ -25,6 +27,27 @@ SUSSimulation >> addCar: aCar [
 }
 SUSSimulation >> addRoad: aRoad [
 	roads addLast: aRoad
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'ek 6/9/2024 23:52'
+}
+SUSSimulation >> adjustTimes [
+	| curTime delta |
+	curTime := Time millisecondClock.
+	delta := curTime - timePaused.
+	"cars do: [:car | car adjustTimeBy: delta]."
+	timePaused := 0.
+	Transcript show: 'Times adjusted by: ', delta asString, String cr; flush.
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'ek 6/9/2024 21:29'
+}
+SUSSimulation >> cars [
+	^ cars
 ]
 
 {
@@ -101,7 +124,7 @@ SUSSimulation >> demoRoadWithCar [
 
 {
 	#category : #initialization,
-	#'squeak_changestamp' : 'Len 6/1/2024 20:05'
+	#'squeak_changestamp' : 'ek 6/9/2024 23:33'
 }
 SUSSimulation >> initialize [
 	super initialize.
@@ -113,6 +136,8 @@ SUSSimulation >> initialize [
 	cars := OrderedCollection new.
 	roads := OrderedCollection new.
 	simulationSpeed := 1.
+	running := true.
+	timePaused := 0.
 	
 	"self demoRoadWithCar."
 ]
@@ -128,18 +153,29 @@ SUSSimulation >> notifyClickedAt: aRoad [
 
 {
 	#category : #simulation,
-	#'squeak_changestamp' : 'PM 5/28/2024 02:08'
+	#'squeak_changestamp' : 'ek 6/9/2024 23:29'
 }
 SUSSimulation >> pauseSimulation [
-	Transcript show: 'Pause Simulation'
+	running ifTrue: [
+		super stopStepping.
+		timePaused := Time millisecondClock.
+		running := false .
+		Transcript show: 'Simulation paused', String cr; flush.
+	].
 ]
 
 {
 	#category : #simulation,
-	#'squeak_changestamp' : 'PM 5/28/2024 02:08'
+	#'squeak_changestamp' : 'ek 6/9/2024 23:29'
 }
 SUSSimulation >> playSimulation [
-	Transcript show: 'Play Simulation'
+	running ifFalse: [
+		timePaused > 0 ifTrue: [self adjustTimes].
+		super startStepping.
+		running := true .
+		Transcript show: 'Simulation started', String cr; flush.
+	].
+	
 ]
 
 {
@@ -148,6 +184,22 @@ SUSSimulation >> playSimulation [
 }
 SUSSimulation >> roads [
 	^ roads
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'ek 6/9/2024 18:55'
+}
+SUSSimulation >> running [
+	^ running
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'ek 6/9/2024 19:46'
+}
+SUSSimulation >> running: aBoolean [
+	running := aBoolean.
 ]
 
 {
@@ -171,8 +223,8 @@ SUSSimulation >> stepTime [
 
 {
 	#category : #simulation,
-	#'squeak_changestamp' : 'PM 5/28/2024 02:08'
+	#'squeak_changestamp' : 'ek 6/9/2024 21:41'
 }
 SUSSimulation >> stopSimulation [
-	Transcript show: 'Stop Simulation'
+	"Transcript show: 'Stop Simulation'"
 ]
