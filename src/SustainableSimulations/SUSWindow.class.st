@@ -29,20 +29,6 @@ SUSWindow >> addCrossIntersection [
 ]
 
 {
-	#category : #events,
-	#'squeak_changestamp' : 'Len 6/9/2024 23:09'
-}
-SUSWindow >> addRoad [
-	| lengthAndSpeed |
-	lengthAndSpeed := self askForLengthAndSpeed.
-	simulation addMorph: ((SUSStraightRoad
-			newOnSimulation: simulation
-			withLength: lengthAndSpeed first
-			withSpeedLimit: lengthAndSpeed second) position: 100 @ 100 + simulation position;
-			 yourself).
-]
-
-{
 	#category : #'user interface',
 	#'squeak_changestamp' : 'MK 6/3/2024 21:18'
 }
@@ -56,22 +42,6 @@ SUSWindow >> askForCarSpeed [
 }
 SUSWindow >> askForLength [
 	^ (UIManager default request: 'Please enter length' initialAnswer: 200) asNumber
-]
-
-{
-	#category : #'user interface',
-	#'squeak_changestamp' : 'ek 6/1/2024 20:41'
-}
-SUSWindow >> askForLengthAndSpeed [
-	| dialogWindow lengthInput speedLimitInput result |
-	dialogWindow := (UIManager default
-		request: 'Please enter length and speed limit separated by a comma (e.g.: 200, 50)'
-		initialAnswer: '200, ' , simulation defaultSpeedLimit asString).
-		
-	result := dialogWindow findTokens: ', '.
-	lengthInput := (result at: 1) asNumber.
-	speedLimitInput := (result at: 2) asNumber.
-	^ { lengthInput. speedLimitInput }.
 ]
 
 {
