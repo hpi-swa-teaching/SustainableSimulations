@@ -119,6 +119,14 @@ SUSAbstractRoad >> deltaPositionToConnectionPoint [
 ]
 
 {
+	#category : #'event handling',
+	#'squeak_changestamp' : 'MK 6/10/2024 22:32'
+}
+SUSAbstractRoad >> handlesMouseDown: anEvent [
+ 	^true
+]
+
+{
 	#category : #initialization,
 	#'squeak_changestamp' : 'MK 5/28/2024 19:16'
 }
@@ -182,14 +190,14 @@ SUSAbstractRoad >> unselect [
 
 {
 	#category : #drawing,
-	#'squeak_changestamp' : 'Len 6/1/2024 21:21'
+	#'squeak_changestamp' : 'MK 6/10/2024 21:11'
 }
 SUSAbstractRoad >> updateLanes: aRoad [
 	lanes do: [:each | 
 		|pos1|
 		pos1 := each getPositionWithTValue: 1.
 		aRoad lanes do: [:anotherEach |
-			(pos1 =  (anotherEach getPositionWithTValue: 0))
+			((pos1 dist: (anotherEach getPositionWithTValue: 0))<5)
 				ifTrue: [each addNextLane: anotherEach]]]
 		
 		

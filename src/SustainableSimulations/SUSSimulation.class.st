@@ -80,7 +80,7 @@ SUSSimulation >> buildMode: anObject [
 
 {
 	#category : #'event handling',
-	#'squeak_changestamp' : 'GoChriNo 6/10/2024 17:31'
+	#'squeak_changestamp' : 'MK 6/10/2024 23:37'
 }
 SUSSimulation >> buildRoad [
 	self buildMode = 'straightroad'

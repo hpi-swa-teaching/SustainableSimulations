@@ -36,6 +36,18 @@ SUSCar class >> newOnSimulation: aSimulation withSpeed: aNumber [
 
 {
 	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'MK 6/10/2024 23:40'
+}
+SUSCar class >> newOnSimulation: aSimulation withSpeed: aNumber onRoad: aRoad [
+	^ self new 
+		simulation: aSimulation;
+		speed: aNumber;
+		placeCarOnRoad: aRoad;
+		yourself
+]
+
+{
+	#category : #'as yet unclassified',
 	#'squeak_changestamp' : 'Len 6/10/2024 00:10'
 }
 SUSCar >> calculateNewMaxT [
@@ -179,6 +191,19 @@ SUSCar >> move [
 	rotation := (lane getRotationWithTValue: t).
 	rotation first = 1
 		ifTrue:[ self rotationDegrees: rotation second ]
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'MK 6/10/2024 23:31'
+}
+SUSCar >> placeCarOnRoad: aRoad [
+
+	simulation addCar: self.
+	lane := aRoad lanes first.
+	lane addCar: self.
+	
+	self center: (lane getPositionWithTValue: 0)
 ]
 
 {

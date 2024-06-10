@@ -59,6 +59,19 @@ SUSStraightRoad >> createDrawing [
 ]
 
 {
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'MK 6/10/2024 23:41'
+}
+SUSStraightRoad >> handleClick: anEvent [
+	(simulation buildMode = 'spawnCar') ifTrue: [
+		simulation addMorph: (SUSCar
+			newOnSimulation: simulation
+			withSpeed: (UIManager default request: 'Please enter car speed' initialAnswer: 50) asNumber
+			onRoad: self)]
+	
+]
+
+{
 	#category : #accessing,
 	#'squeak_changestamp' : 'PM 5/27/2024 23:42'
 }
@@ -72,6 +85,14 @@ SUSStraightRoad >> length [
 }
 SUSStraightRoad >> length: anObject [
 	length := anObject
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'MK 6/10/2024 22:53'
+}
+SUSStraightRoad >> mouseDown: anEvent [
+	self handleClick: anEvent.
 ]
 
 {

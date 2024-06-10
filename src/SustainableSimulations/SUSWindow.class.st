@@ -123,13 +123,13 @@ SUSWindow >> createPlaySimulationButton [
 
 {
 	#category : #initialization,
-	#'squeak_changestamp' : 'Len 6/1/2024 20:17'
+	#'squeak_changestamp' : 'MK 6/10/2024 23:34'
 }
 SUSWindow >> createSpawnSimulationButton [
 	^ (PluggableButtonMorph
 		on: self
 		getState: nil
-		action: #spawnCar
+		action: #spawnCarMode
 		label: #labelSpawnCar) position: 20 @ 20;
 		 yourself
 ]
@@ -226,10 +226,10 @@ SUSWindow >> labelPlaySimulation [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'Len 6/1/2024 21:41'
+	#'squeak_changestamp' : 'MK 6/10/2024 23:42'
 }
 SUSWindow >> labelSpawnCar [
-	^ 'TMP Spawn TMP'
+	^ 'Car'
 ]
 
 {
@@ -279,6 +279,15 @@ SUSWindow >> spawnCar [
 	simulation addMorph: (SUSCar
 		newOnSimulation: simulation
 		withSpeed: self askForCarSpeed)
+]
+
+{
+	#category : #events,
+	#'squeak_changestamp' : 'MK 6/10/2024 23:33'
+}
+SUSWindow >> spawnCarMode [
+
+	simulation buildMode: 'spawnCar'
 ]
 
 {
