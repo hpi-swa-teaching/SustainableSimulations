@@ -31,7 +31,7 @@ SUSAbstractRoad >> addDrawing [
 
 {
 	#category : #'event handling',
-	#'squeak_changestamp' : 'PM 5/28/2024 01:04'
+	#'squeak_changestamp' : 'GoChriNo 6/5/2024 09:02'
 }
 SUSAbstractRoad >> clickedAtConnectionPoint: aConnectionPoint [
 	self unselect.
@@ -66,6 +66,22 @@ SUSAbstractRoad >> connectionDoneWith: aRoad [
 	
 	self removeMorph: lastClickedAtConnectionPoint;
 		unselect
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 6/5/2024 13:24'
+}
+SUSAbstractRoad >> connectionPoints [
+	^ connectionPoints
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 6/5/2024 13:24'
+}
+SUSAbstractRoad >> connectionPoints: anObject [
+	connectionPoints := anObject
 ]
 
 {

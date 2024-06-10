@@ -6,9 +6,11 @@ Class {
 		'cars',
 		'simulationSpeed',
 		'roads',
-		'bezierCurve'
+		'bezierCurve',
+		'clickHandler',
+		'clickedConnectionPoint'
 	],
-	#category : 'SustainableSimulations'
+	#category : #SustainableSimulations
 }
 
 {
@@ -20,11 +22,73 @@ SUSSimulation >> addCar: aCar [
 ]
 
 {
+	#category : #initialization,
+	#'squeak_changestamp' : 'GoChriNo 6/5/2024 14:28'
+}
+SUSSimulation >> addClickHandler [
+
+	| ch |
+	ch := SUSClickHandler new 
+		position: 0@0;
+		extent: (Display width @ Display height);
+		color: Color transparent;
+		sticky: true;
+		simulation: self.
+	self addMorph: ch.
+]
+
+{
 	#category : #accessing,
 	#'squeak_changestamp' : 'Len 6/1/2024 20:25'
 }
 SUSSimulation >> addRoad: aRoad [
 	roads addLast: aRoad
+]
+
+{
+	#category : #initialization,
+	#'squeak_changestamp' : 'GoChriNo 6/5/2024 13:36'
+}
+SUSSimulation >> addStartingPoint [
+
+	| startingPoint |
+	startingPoint := (SUSConnectionPoint newAsStartingPointForSimulation: self withDirection: (1@0))
+		center: (self position + (300@200));
+		sticky: true;
+		yourself.
+	self addMorph: startingPoint.
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 6/5/2024 14:13'
+}
+SUSSimulation >> clickHandler [
+	^ clickHandler
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 6/5/2024 14:13'
+}
+SUSSimulation >> clickHandler: anObject [
+	clickHandler := anObject
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 6/5/2024 14:29'
+}
+SUSSimulation >> clickedConnectionPoint [
+	^ clickedConnectionPoint
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 6/5/2024 14:29'
+}
+SUSSimulation >> clickedConnectionPoint: anObject [
+	clickedConnectionPoint := anObject
 ]
 
 {
@@ -59,7 +123,7 @@ SUSSimulation >> defaultSpeedLimit [
 
 {
 	#category : #initialization,
-	#'squeak_changestamp' : 'Len 6/1/2024 20:05'
+	#'squeak_changestamp' : 'GoChriNo 6/5/2024 14:28'
 }
 SUSSimulation >> initialize [
 	super initialize.
@@ -72,16 +136,35 @@ SUSSimulation >> initialize [
 	roads := OrderedCollection new.
 	simulationSpeed := 1.
 	
+	self addClickHandler.
+	self addStartingPoint.
+	
 	"self demoRoadWithCar."
 ]
 
 {
 	#category : #'event handling',
-	#'squeak_changestamp' : 'PM 5/28/2024 01:05'
+	#'squeak_changestamp' : 'GoChriNo 6/5/2024 14:33'
 }
-SUSSimulation >> notifyClickedAt: aRoad [ 
-	roadToConnect ifNil: [roadToConnect := aRoad]
-		ifNotNil: [self connectSavedRoadWith: aRoad]
+SUSSimulation >> notifyClickedAt: aConnectionPoint [
+
+	self clickedConnectionPoint ifNil: [
+		aConnectionPoint color: Color red.
+		self clickedConnectionPoint: aConnectionPoint]
+	ifNotNil: [
+		self clickedConnectionPoint color: Color green. 
+		(aConnectionPoint == self clickedConnectionPoint) ifTrue: [self clickedConnectionPoint: nil]
+		ifFalse: [self clickedConnectionPoint: aConnectionPoint]].
+]
+
+{
+	#category : #'event handling',
+	#'squeak_changestamp' : 'GoChriNo 6/5/2024 14:38'
+}
+SUSSimulation >> notifyClickedAtMousePos: mousePos [ 
+	self clickedConnectionPoint
+		ifNotNil: [(self clickedConnectionPoint connectStraightRoadFromMousePos: mousePos) ifTrue: [
+			self clickedConnectionPoint: nil]]
 ]
 
 {
