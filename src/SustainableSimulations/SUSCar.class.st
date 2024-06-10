@@ -221,14 +221,6 @@ SUSCar >> postInitialization [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'MK 6/4/2024 00:45'
-}
-SUSCar >> timeSpeedChange: aNumber [
-	timeSpeedChange := aNumber.
-]
-
-{
-	#category : #'as yet unclassified',
 	#'squeak_changestamp' : 'Len 6/10/2024 01:21'
 }
 SUSCar >> updateLaneConnectionsWithT: aNumber [

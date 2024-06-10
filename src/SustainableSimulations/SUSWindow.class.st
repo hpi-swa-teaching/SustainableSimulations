@@ -9,23 +9,13 @@ Class {
 
 {
 	#category : #events,
-	#'squeak_changestamp' : 'GoChriNo 6/10/2024 17:10'
+	#'squeak_changestamp' : 'PM 6/11/2024 00:58'
 }
 SUSWindow >> addButtons [
 	| row | 
- 	row := AlignmentMorph newRow addAllMorphs: {self createStraightRoadButton . self createCrossIntersectionButton . self createPlaySimulationButton . self createPauseSimulationButton . self createStopSimulationButton . self createSpawnSimulationButton}.
+ 	row := AlignmentMorph newRow addAllMorphs: {self createStraightRoadButton . self createCurvyRoadButton . self createCrossIntersectionButton . self createPlaySimulationButton . self createPauseSimulationButton . self createStopSimulationButton . self createSpawnSimulationButton}.
 	self addMorph:  row.
 	row position: 15@45.
-]
-
-{
-	#category : #events,
-	#'squeak_changestamp' : 'PM 5/28/2024 01:42'
-}
-SUSWindow >> addCrossIntersection [
-	simulation addMorph: ((SUSCrossIntersection
-			newOnSimulation: simulation) position: 100 @ 100 + simulation position;
-			 yourself)
 ]
 
 {
@@ -62,6 +52,19 @@ SUSWindow >> createCrossIntersectionButton [
 		getState: nil
 		action: #crossIntersectionMode
 		label: #labelIntersection) position: 20 @ 20;
+		 yourself
+]
+
+{
+	#category : #initialization,
+	#'squeak_changestamp' : 'PM 6/11/2024 00:58'
+}
+SUSWindow >> createCurvyRoadButton [
+	^ (PluggableButtonMorph
+		on: self
+		getState: nil
+		action: #curvyRoadMode
+		label: #labelCurvyRoad) position: 20 @ 20;
 		 yourself
 ]
 
@@ -132,11 +135,20 @@ SUSWindow >> createStraightRoadButton [
 
 {
 	#category : #events,
-	#'squeak_changestamp' : 'GoChriNo 6/10/2024 17:14'
+	#'squeak_changestamp' : 'PM 6/11/2024 00:55'
 }
 SUSWindow >> crossIntersectionMode [
 
-	simulation buildMode: 'crossintersection'
+	simulation buildMode: #CrossIntersection
+]
+
+{
+	#category : #events,
+	#'squeak_changestamp' : 'PM 6/11/2024 00:56'
+}
+SUSWindow >> curvyRoadMode [
+
+	simulation buildMode: #CurvyRoad
 ]
 
 {
@@ -153,6 +165,14 @@ SUSWindow >> initialize [
 		addButtons.
 	
 
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'PM 6/11/2024 00:57'
+}
+SUSWindow >> labelCurvyRoad [
+	^ 'Curvy Road'
 ]
 
 {
@@ -241,23 +261,12 @@ SUSWindow >> playSimulation [
 ]
 
 {
-	#category : #simulation,
-	#'squeak_changestamp' : 'MK 6/3/2024 21:18'
-}
-SUSWindow >> spawnCar [
-	"TMP Method to spawn a car on a random Road"
-	simulation addMorph: (SUSCar
-		newOnSimulation: simulation
-		withSpeed: self askForCarSpeed)
-]
-
-{
 	#category : #events,
-	#'squeak_changestamp' : 'MK 6/10/2024 23:33'
+	#'squeak_changestamp' : 'PM 6/11/2024 00:55'
 }
 SUSWindow >> spawnCarMode [
 
-	simulation buildMode: 'spawnCar'
+	simulation buildMode: #SpawnCar
 ]
 
 {
@@ -270,9 +279,9 @@ SUSWindow >> stopSimulation [
 
 {
 	#category : #events,
-	#'squeak_changestamp' : 'GoChriNo 6/10/2024 17:14'
+	#'squeak_changestamp' : 'PM 6/11/2024 00:55'
 }
 SUSWindow >> straightRoadMode [
 
-	simulation buildMode: 'straightroad'
+	simulation buildMode: #StraightRoad
 ]

@@ -60,10 +60,10 @@ SUSStraightRoad >> createDrawing [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'MK 6/10/2024 23:41'
+	#'squeak_changestamp' : 'PM 6/11/2024 00:55'
 }
 SUSStraightRoad >> handleClick: anEvent [
-	(simulation buildMode = 'spawnCar') ifTrue: [
+	(simulation buildMode = #SpawnCar) ifTrue: [
 		simulation addMorph: (SUSCar
 			newOnSimulation: simulation
 			withSpeed: (UIManager default request: 'Please enter car speed' initialAnswer: 50) asNumber

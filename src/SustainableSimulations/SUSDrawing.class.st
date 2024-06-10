@@ -8,6 +8,17 @@ Class {
 }
 
 {
+	#category : #'instance creation',
+	#'squeak_changestamp' : 'PM 6/11/2024 00:27'
+}
+SUSDrawing class >> calculateExtentWith: aPoint and: anotherPoint [
+	| minPoint maxPoint |
+	minPoint := (aPoint x min: anotherPoint x)@(aPoint y min: anotherPoint y).
+	maxPoint := (aPoint x max: anotherPoint x)@(aPoint y max: anotherPoint y).
+	^ maxPoint - minPoint
+]
+
+{
 	#category : #'class variables',
 	#'squeak_changestamp' : 'Len 5/16/2024 11:16'
 }
@@ -17,11 +28,11 @@ SUSDrawing class >> colorMark [
 
 {
 	#category : #'class variables',
-	#'squeak_changestamp' : 'Len 5/23/2024 10:12'
+	#'squeak_changestamp' : 'PM 6/11/2024 00:22'
 }
 SUSDrawing class >> colorPath [
-	^ self colorRoad
-	"^ Color red"
+	"^ self colorRoad"
+	^ Color red
 ]
 
 {
@@ -50,15 +61,27 @@ SUSDrawing class >> midMarkLength [
 
 {
 	#category : #'instance creation',
-	#'squeak_changestamp' : 'Len 5/26/2024 23:44'
+	#'squeak_changestamp' : 'PM 6/11/2024 00:22'
 }
 SUSDrawing class >> newCrossIntersetion [
 
 	^ (SUSDrawing new
-		extent: (SUSDrawing normalLaneWidth * 4)@(SUSDrawing normalLaneWidth * 4);
+		extent: 4@4 * SUSDrawing normalLaneWidth;
 		color: SUSDrawing colorRoad)
 		addCrossInterMarks;
 		generateCrossInterPaths
+]
+
+{
+	#category : #'instance creation',
+	#'squeak_changestamp' : 'PM 6/11/2024 01:27'
+}
+SUSDrawing class >> newCurveFrom: aConnectionPoint to: anotherConnectionPoint [
+
+	^ (SUSDrawing new
+		extent: (self calculateExtentWith: aConnectionPoint position and: anotherConnectionPoint position);
+		color: SUSDrawing colorRoad)
+		generateCurvePathsFrom: aConnectionPoint to: anotherConnectionPoint
 ]
 
 {
@@ -209,6 +232,18 @@ SUSDrawing >> generateCrossInterPaths [
 	self addPathWithVertices: ({4@1.5. 2.5@1.5. 2.5@0} * factor). "Right"
 	self addPathWithVertices: ({4@1.5. 1.5@1.5. 1.5@4} * factor). "Left"
 	
+]
+
+{
+	#category : #drawing,
+	#'squeak_changestamp' : 'PM 6/11/2024 01:37'
+}
+SUSDrawing >> generateCurvePathsFrom: aPoint to: anotherPoint [
+	| factor |
+	factor := SUSDrawing normalLaneWidth.
+	"From top"
+	self addPathWithVertices: ({aPoint position . anotherPoint position } * factor).
+	self addPathWithVertices: ({anotherPoint position . aPoint position } * factor).
 ]
 
 {

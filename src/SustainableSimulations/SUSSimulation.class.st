@@ -80,25 +80,27 @@ SUSSimulation >> buildMode: anObject [
 
 {
 	#category : #'event handling',
-	#'squeak_changestamp' : 'MK 6/10/2024 23:37'
+	#'squeak_changestamp' : 'PM 6/11/2024 01:01'
 }
 SUSSimulation >> buildRoad [
-	self buildMode = 'straightroad'
+	self buildMode = #StraightRoad
 		ifTrue: [^ self clickedConnectionPoint connectStraightRoadFromMousePos: Sensor cursorPoint].
-	self buildMode = 'crossintersection'
+	self buildMode = #CurvyRoad
+		ifTrue: [^ self clickedConnectionPoint connectCurvyRoadFromMousePos: Sensor cursorPoint].
+	self buildMode = #CrossIntersection
 		ifTrue: [^ self clickedConnectionPoint connectCrossIntersectionFromMousePos: Sensor cursorPoint].
 		^ false.
 ]
 
 {
 	#category : #'event handling',
-	#'squeak_changestamp' : 'GoChriNo 6/10/2024 17:22'
+	#'squeak_changestamp' : 'PM 6/11/2024 00:54'
 }
 SUSSimulation >> buildRoadWithMousePos: mousePos [
 
-	(self buildMode = 'straightroad') ifTrue: [
+	(self buildMode = #StraightRoad) ifTrue: [
 		self clickedConnectionPoint connectStraightRoadFromMousePos: mousePos].
-	(self buildMode = 'intersection') ifTrue: [
+	(self buildMode = #CrossIntersection) ifTrue: [
 		self clickedConnectionPoint connectCrossIntersectionFromMousePos: mousePos
 		]
 	
@@ -168,7 +170,7 @@ SUSSimulation >> defaultSpeedLimit [
 
 {
 	#category : #initialization,
-	#'squeak_changestamp' : 'MK 6/10/2024 20:41'
+	#'squeak_changestamp' : 'PM 6/11/2024 00:55'
 }
 SUSSimulation >> initialize [
 	super initialize.
@@ -185,7 +187,7 @@ SUSSimulation >> initialize [
 	
 	self addClickHandler.
 	self addStartingPoint.
-	self buildMode: 'straightroad'
+	self buildMode: #StraightRoad.
 	
 	
 	"self demoRoadWithCar."
@@ -208,13 +210,12 @@ SUSSimulation >> notifyClickedAt: aConnectionPoint [
 
 {
 	#category : #'event handling',
-	#'squeak_changestamp' : 'GoChriNo 6/10/2024 17:29'
+	#'squeak_changestamp' : 'PM 6/11/2024 01:01'
 }
 SUSSimulation >> notifyClickedAtMousePos [
-	| t |
 	self clickedConnectionPoint
-		ifNotNil: [t := (self buildRoad). t ifTrue: [
-			self clickedConnectionPoint: nil]]
+		ifNotNil: [self buildRoad
+				ifTrue: [self clickedConnectionPoint: nil]]
 ]
 
 {
