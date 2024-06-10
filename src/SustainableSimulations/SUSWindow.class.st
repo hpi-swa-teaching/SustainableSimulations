@@ -9,11 +9,11 @@ Class {
 
 {
 	#category : #events,
-	#'squeak_changestamp' : 'Len 6/1/2024 20:18'
+	#'squeak_changestamp' : 'GoChriNo 6/10/2024 17:10'
 }
 SUSWindow >> addButtons [
 	| row | 
- 	row := AlignmentMorph newRow addAllMorphs: {self createAddRoadButton. self createAddCrossIntersectionButton . self createPlaySimulationButton . self createPauseSimulationButton . self createStopSimulationButton . self createSpawnSimulationButton}.
+ 	row := AlignmentMorph newRow addAllMorphs: {self createStraightRoadButton . self createCrossIntersectionButton . self createPlaySimulationButton . self createPauseSimulationButton . self createStopSimulationButton . self createSpawnSimulationButton}.
 	self addMorph:  row.
 	row position: 15@45.
 ]
@@ -84,27 +84,14 @@ SUSWindow >> askForSpeedLimit [
 
 {
 	#category : #initialization,
-	#'squeak_changestamp' : 'PM 5/28/2024 01:42'
+	#'squeak_changestamp' : 'GoChriNo 6/10/2024 17:13'
 }
-SUSWindow >> createAddCrossIntersectionButton [
+SUSWindow >> createCrossIntersectionButton [
 	^ (PluggableButtonMorph
 		on: self
 		getState: nil
-		action: #addCrossIntersection
-		label: #labelAddIntersection) position: 20 @ 20;
-		 yourself
-]
-
-{
-	#category : #initialization,
-	#'squeak_changestamp' : 'PM 5/28/2024 01:30'
-}
-SUSWindow >> createAddRoadButton [
-	^ (PluggableButtonMorph
-		on: self
-		getState: nil
-		action: #addRoad
-		label: #labelAddRoad) position: 20 @ 20;
+		action: #crossIntersectionMode
+		label: #labelIntersection) position: 20 @ 20;
 		 yourself
 ]
 
@@ -162,6 +149,28 @@ SUSWindow >> createStopSimulationButton [
 
 {
 	#category : #initialization,
+	#'squeak_changestamp' : 'GoChriNo 6/10/2024 17:13'
+}
+SUSWindow >> createStraightRoadButton [
+	^ (PluggableButtonMorph
+		on: self
+		getState: nil
+		action: #straightRoadMode
+		label: #labelStraightRoad) position: 20 @ 20;
+		 yourself
+]
+
+{
+	#category : #events,
+	#'squeak_changestamp' : 'GoChriNo 6/10/2024 17:14'
+}
+SUSWindow >> crossIntersectionMode [
+
+	simulation buildMode: 'crossintersection'
+]
+
+{
+	#category : #initialization,
 	#'squeak_changestamp' : 'PM 5/28/2024 01:53'
 }
 SUSWindow >> initialize [
@@ -176,18 +185,10 @@ SUSWindow >> initialize [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 5/28/2024 01:30'
+	#'squeak_changestamp' : 'GoChriNo 6/10/2024 17:08'
 }
-SUSWindow >> labelAddIntersection [
-	^ 'Add Intersection'
-]
-
-{
-	#category : #accessing,
-	#'squeak_changestamp' : 'PM 5/28/2024 01:30'
-}
-SUSWindow >> labelAddRoad [
-	^ 'Add Road'
+SUSWindow >> labelIntersection [
+	^ 'Intersection'
 ]
 
 {
@@ -223,6 +224,14 @@ SUSWindow >> labelStopSimulation [
 ]
 
 {
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 6/10/2024 17:08'
+}
+SUSWindow >> labelStraightRoad [
+	^ 'Straight Road'
+]
+
+{
 	#category : #simulation,
 	#'squeak_changestamp' : 'PM 5/28/2024 09:13'
 }
@@ -255,4 +264,13 @@ SUSWindow >> spawnCar [
 }
 SUSWindow >> stopSimulation [
 	
+]
+
+{
+	#category : #events,
+	#'squeak_changestamp' : 'GoChriNo 6/10/2024 17:14'
+}
+SUSWindow >> straightRoadMode [
+
+	simulation buildMode: 'straightroad'
 ]
