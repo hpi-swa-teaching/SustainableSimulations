@@ -109,24 +109,25 @@ SUSLane >> getPreviousCarOnLane: aCar [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'Len 6/10/2024 01:39'
+	#'squeak_changestamp' : 'Len 6/10/2024 10:36'
 }
 SUSLane >> getRotation2VerticesWithTValue: aNumber [
-	| p1 p2 p3 dx dy |
+	| p1 p2 dx dy |
 	p1 := path pointInWorld: path vertices first.
-	p2 := path pointInWorld: (path vertices at: 2).
-	p3 := path pointInWorld: path vertices last.
+	p2 := path pointInWorld: path vertices last.
 	
 	dx := (p2 x - p1 x).
 	dy := (p2 y - p1 y).
 	
-	dx = 0 ifTrue: [^ {0. -90}].
+	dx = 0 ifTrue: [
+		dy > 0 ifTrue: [^ {1. 90}] ifFalse: [dy < 0 ifTrue: [^ {1. -90}] ifFalse: [^ {0. -90}]]].
+	dx < 0 ifTrue: [^ {1. (dy / dx) arcTan radiansToDegrees + 180}].
 	^ {1. (dy / dx) arcTan radiansToDegrees}
 ]
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'Len 6/10/2024 01:50'
+	#'squeak_changestamp' : 'Len 6/10/2024 10:33'
 }
 SUSLane >> getRotation3VerticesWithTValue: aNumber [
 	| p1 p2 p3 dx dy |
@@ -137,7 +138,8 @@ SUSLane >> getRotation3VerticesWithTValue: aNumber [
 	dx := (p2 x - p1 x) * 2 * (1 - aNumber) + (p3 x - p2 x) * 2 * aNumber.
 	dy := (p2 y - p1 y) * 2 * (1 - aNumber) + (p3 y - p2 y) * 2 * aNumber.
 	
-	dx = 0 ifTrue: [^ {0. -90}].
+	dx = 0 ifTrue: [
+		dy > 0 ifTrue: [^ {1. 90}] ifFalse: [dy < 0 ifTrue: [^ {1. -90}] ifFalse: [^ {0. -90}]]].
 	dx < 0 ifTrue: [^ {1. (dy / dx) arcTan radiansToDegrees + 180}].
 	^ {1. (dy / dx) arcTan radiansToDegrees}
 ]
