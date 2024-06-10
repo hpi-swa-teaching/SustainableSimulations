@@ -6,7 +6,7 @@ Class {
 		'nextLanes',
 		'path',
 		'length',
-		'blocked'
+		'blockedT'
 	],
 	#category : #SustainableSimulations
 }
@@ -42,30 +42,22 @@ SUSLane >> addNextLane: aNextLane [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'Len 6/10/2024 00:21'
+	#'squeak_changestamp' : 'Len 6/10/2024 01:10'
 }
-SUSLane >> blocked [
-	^ blocked
+SUSLane >> blockedT [
+	^ blockedT
 ]
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'Len 6/10/2024 00:21'
-}
-SUSLane >> blocked: aTupel [
-	blocked := aTupel
-]
-
-{
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'Len 6/1/2024 20:56'
+	#'squeak_changestamp' : 'Len 6/10/2024 01:43'
 }
 SUSLane >> calculateLength [
 	| p1 p2 |
 	p1 := path vertices first.
 	p2 := path vertices last.
 	
-	length := ((p1 x - p2 x) squared + (p1 y - p2 y) squared) sqrt
+	length := (((p1 x - p2 x) squared) + ((p1 y - p2 y)) squared) sqrt
 ]
 
 {
@@ -117,7 +109,7 @@ SUSLane >> getPreviousCarOnLane: aCar [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'Len 6/9/2024 21:05'
+	#'squeak_changestamp' : 'Len 6/10/2024 01:39'
 }
 SUSLane >> getRotation2VerticesWithTValue: aNumber [
 	| p1 p2 p3 dx dy |
@@ -128,13 +120,13 @@ SUSLane >> getRotation2VerticesWithTValue: aNumber [
 	dx := (p2 x - p1 x).
 	dy := (p2 y - p1 y).
 	
-	dx = 0 ifTrue: [^ -90].
-	^ (dy / dx) arcTan radiansToDegrees
+	dx = 0 ifTrue: [^ {0. -90}].
+	^ {1. (dy / dx) arcTan radiansToDegrees}
 ]
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'Len 6/9/2024 21:05'
+	#'squeak_changestamp' : 'Len 6/10/2024 01:50'
 }
 SUSLane >> getRotation3VerticesWithTValue: aNumber [
 	| p1 p2 p3 dx dy |
@@ -145,8 +137,9 @@ SUSLane >> getRotation3VerticesWithTValue: aNumber [
 	dx := (p2 x - p1 x) * 2 * (1 - aNumber) + (p3 x - p2 x) * 2 * aNumber.
 	dy := (p2 y - p1 y) * 2 * (1 - aNumber) + (p3 y - p2 y) * 2 * aNumber.
 	
-	dx = 0 ifTrue: [^ -90].
-	^ (dy / dx) arcTan radiansToDegrees
+	dx = 0 ifTrue: [^ {0. -90}].
+	dx < 0 ifTrue: [^ {1. (dy / dx) arcTan radiansToDegrees + 180}].
+	^ {1. (dy / dx) arcTan radiansToDegrees}
 ]
 
 {
@@ -160,12 +153,13 @@ SUSLane >> getRotationWithTValue: aNumber [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'Len 6/1/2024 20:58'
+	#'squeak_changestamp' : 'Len 6/10/2024 01:12'
 }
 SUSLane >> initialize [
 
 	cars := OrderedCollection new.
-	nextLanes := OrderedCollection new
+	nextLanes := OrderedCollection new.
+	blockedT := 1
 ]
 
 {
@@ -200,4 +194,12 @@ SUSLane >> path: aLineMorph [
 SUSLane >> removeCar: aCar [
 
 	cars remove: aCar
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'Len 6/10/2024 01:10'
+}
+SUSLane >> updateBlocked: aNumber [
+	blockedT := (length -  aNumber) / length
 ]

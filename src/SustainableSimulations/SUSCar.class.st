@@ -4,7 +4,9 @@ Class {
 	#instVars : [
 		'driver',
 		'fuelLevel',
-		'timeRoadStart'
+		'timeRoadStart',
+		'blockedOldLane',
+		'oldLane'
 	],
 	#category : #SustainableSimulations
 }
@@ -46,7 +48,7 @@ SUSCar >> calculateNewMaxT [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'Len 6/10/2024 00:18'
+	#'squeak_changestamp' : 'Len 6/10/2024 01:22'
 }
 SUSCar >> calculateNewT [
 	| difTime t maxT |
@@ -56,14 +58,16 @@ SUSCar >> calculateNewT [
 	
 	t > maxT 
 		ifTrue: [t := maxT].
-	t := self checkLaneConnectionsWithT: t.
+	t > lane blockedT
+		ifTrue: [t := lane blockedT].
 	
+	self updateLaneConnectionsWithT: t.
 	^ {t. (Time millisecondClock)}
 ]
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'Len 6/9/2024 23:59'
+	#'squeak_changestamp' : 'Len 6/10/2024 01:06'
 }
 SUSCar >> changeLane [
 	lane nextLanes isEmpty
@@ -71,41 +75,13 @@ SUSCar >> changeLane [
 			| random |
 			random := Random new.
 			lane removeCar: self.
+			blockedOldLane := true.
+			oldLane := lane.
 			"lane := lane nextLanes first."
 			lane := (lane nextLanes at: (random nextInt: (lane nextLanes size))).
 			lane addCar: self.
 			lastPoint := {0. (Time millisecondClock)}]
 		ifTrue: [{1. (Time millisecondClock)}]
-]
-
-{
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'Len 6/9/2024 23:34'
-}
-SUSCar >> checkDistanceWithT: aNumber [
-	| previousCar |
-	previousCar := lane getPreviousCarOnLane: self.
-	previousCar ~= false ifTrue: [ | distance |
-		distance := (previousCar lastT - self aNumber) * lane length.
-		distance <= 50 ifTrue: ["ToDo"]
-		
-		]
-]
-
-{
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'Len 6/10/2024 00:27'
-}
-SUSCar >> checkLaneConnectionsWithT: aNumber [
-	| pos |
-	^ aNumber.
-	"pos := lane length * aNumber.
-	pos > lane length
-		ifTrue: [lane blocked: {self. 50 - pos}].
-	lane blocked first = self
-		ifTrue: [lane blocked: {-1. 0}].
-	pos < 50
-		ifTrue: [lane blocked: {self. 50 - pos}]."
 ]
 
 {
@@ -168,7 +144,7 @@ SUSCar >> fuelLevel: aNumber [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'Len 6/9/2024 23:35'
+	#'squeak_changestamp' : 'Len 6/10/2024 01:14'
 }
 SUSCar >> initialize [
 	super initialize.
@@ -186,60 +162,26 @@ SUSCar >> initialize [
 	driver := 'Unknown'.
 	fuelLevel := 100.
 	
-	lastPoint := {0. Time millisecondClock} 
+	lastPoint := {0. Time millisecondClock}.
+	blockedOldLane := false
 ]
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'Len 6/9/2024 21:23'
+	#'squeak_changestamp' : 'Len 6/10/2024 01:40'
 }
 SUSCar >> move [
-	|curTime t| 
-	(speed = 0) 
-		ifTrue: [t := 1]
-		ifFalse: [
-			(timeSpeedChange ~= 0) 
-				ifTrue: [
-					curTime := (Time millisecondClock) - timeSpeedChange.
-					t := progress + (curTime / (lane length / (speed / 360)))]
-				ifFalse: [
-					curTime := (Time millisecondClock) - timeRoadStart.
-					t := (curTime / (lane length / (speed / 360))).
-					progress := t]].
-	  
-	(t < 1) 
-		ifTrue: [
-			self owner center: (lane getPositionWithTValue: t).
-			self rotationDegrees: (lane getRotationWithTValue: t)]
-		ifFalse: [
-			(lane nextLanes isEmpty) 
-				ifFalse: [
-					| random |
-					random := Random new.
-					"lane := lane nextLanes first."
-					lane := (lane nextLanes at: (random nextInt: (lane nextLanes size))).
-					timeRoadStart := (Time millisecondClock)]
-				ifTrue: [speed := 0.]]
-	
-	
-		
-	
-	
-	
-]
-
-{
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'Len 6/9/2024 23:50'
-}
-SUSCar >> move2 [
-	| t |
+	| t rotation |
 	lastPoint := self calculateNewT.
 	t := lastPoint first.
 	(t >= 1)
-		ifTrue: [self changeLane].
+		ifTrue: [
+			self changeLane.
+			t := lastPoint first.].
 	self owner center: (lane getPositionWithTValue: t).
-	self rotationDegrees: (lane getRotationWithTValue: t)
+	rotation := (lane getRotationWithTValue: t).
+	rotation first = 1
+		ifTrue:[ self rotationDegrees: rotation second ]
 ]
 
 {
@@ -261,4 +203,19 @@ SUSCar >> postInitialization [
 }
 SUSCar >> timeSpeedChange: aNumber [
 	timeSpeedChange := aNumber.
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'Len 6/10/2024 01:21'
+}
+SUSCar >> updateLaneConnectionsWithT: aNumber [
+	blockedOldLane
+		ifTrue: [ | pos |
+			pos := lane length * aNumber.
+			pos > 50
+				ifTrue: [
+					oldLane updateBlocked: -1.
+					blockedOldLane := false.]
+				ifFalse: [oldLane updateBlocked: 50 - pos]]
 ]

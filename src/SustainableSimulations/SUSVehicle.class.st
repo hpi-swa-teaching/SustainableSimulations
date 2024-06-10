@@ -4,11 +4,7 @@ Class {
 	#instVars : [
 		'maxSpeed',
 		'speed',
-		'speedChanged',
-		'timeSpeedChange',
-		'progress',
 		'acceleration',
-		'position',
 		'length',
 		'simulation',
 		'lane',

@@ -28,24 +28,6 @@ SUSSimulation >> addRoad: aRoad [
 ]
 
 {
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'MK 6/4/2024 01:08'
-}
-SUSSimulation >> checkDistance [
-
-	|previousCar|
-	previousCar := nil.
-	
-	cars do: [:car |
-            previousCar ifNotNil: [
-                ((previousCar position - car position) x < 50) ifTrue: [
-                    car speed: previousCar speed;
-				timeSpeedChange: Time millisecondClock]].
-            previousCar := car. ].
-
-]
-
-{
 	#category : #connection,
 	#'squeak_changestamp' : 'Len 6/1/2024 21:05'
 }
@@ -128,13 +110,12 @@ SUSSimulation >> roads [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'Len 6/9/2024 23:51'
+	#'squeak_changestamp' : 'Len 6/10/2024 01:34'
 }
 SUSSimulation >> step [
 
 	cars do: [:car | 
-		car move2].
-	"self checkDistance."
+		car move]
 ]
 
 {
