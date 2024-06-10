@@ -10,9 +10,10 @@ Class {
 		'clickHandler',
 		'clickedConnectionPoint',
 		'running',
-		'timePaused'
+		'timePaused',
+		'buildMode'
 	],
-	#category : #SustainableSimulations
+	#category : 'SustainableSimulations'
 }
 
 {
@@ -59,6 +60,48 @@ SUSSimulation >> addStartingPoint [
 		sticky: true;
 		yourself.
 	self addMorph: startingPoint.
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 6/10/2024 17:09'
+}
+SUSSimulation >> buildMode [
+	^ buildMode
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 6/10/2024 17:09'
+}
+SUSSimulation >> buildMode: anObject [
+	buildMode := anObject
+]
+
+{
+	#category : #'event handling',
+	#'squeak_changestamp' : 'GoChriNo 6/10/2024 17:31'
+}
+SUSSimulation >> buildRoad [
+	self buildMode = 'straightroad'
+		ifTrue: [^ self clickedConnectionPoint connectStraightRoadFromMousePos: Sensor cursorPoint].
+	self buildMode = 'crossintersection'
+		ifTrue: [^ self clickedConnectionPoint connectCrossIntersectionFromMousePos: Sensor cursorPoint].
+		^ false.
+]
+
+{
+	#category : #'event handling',
+	#'squeak_changestamp' : 'GoChriNo 6/10/2024 17:22'
+}
+SUSSimulation >> buildRoadWithMousePos: mousePos [
+
+	(self buildMode = 'straightroad') ifTrue: [
+		self clickedConnectionPoint connectStraightRoadFromMousePos: mousePos].
+	(self buildMode = 'intersection') ifTrue: [
+		self clickedConnectionPoint connectCrossIntersectionFromMousePos: mousePos
+		]
+	
 ]
 
 {
@@ -125,7 +168,7 @@ SUSSimulation >> defaultSpeedLimit [
 
 {
 	#category : #initialization,
-	#'squeak_changestamp' : 'MK 6/10/2024 18:08'
+	#'squeak_changestamp' : 'MK 6/10/2024 20:41'
 }
 SUSSimulation >> initialize [
 	super initialize.
@@ -142,6 +185,7 @@ SUSSimulation >> initialize [
 	
 	self addClickHandler.
 	self addStartingPoint.
+	self buildMode: 'straightroad'
 	
 	
 	"self demoRoadWithCar."
@@ -164,11 +208,12 @@ SUSSimulation >> notifyClickedAt: aConnectionPoint [
 
 {
 	#category : #'event handling',
-	#'squeak_changestamp' : 'GoChriNo 6/5/2024 14:38'
+	#'squeak_changestamp' : 'GoChriNo 6/10/2024 17:29'
 }
-SUSSimulation >> notifyClickedAtMousePos: mousePos [ 
+SUSSimulation >> notifyClickedAtMousePos [
+	| t |
 	self clickedConnectionPoint
-		ifNotNil: [(self clickedConnectionPoint connectStraightRoadFromMousePos: mousePos) ifTrue: [
+		ifNotNil: [t := (self buildRoad). t ifTrue: [
 			self clickedConnectionPoint: nil]]
 ]
 

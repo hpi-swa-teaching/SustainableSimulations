@@ -9,11 +9,11 @@ Class {
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'GoChriNo 6/5/2024 14:18'
+	#'squeak_changestamp' : 'GoChriNo 6/10/2024 17:25'
 }
 SUSClickHandler >> handleMouseDown: anEvent [
 
-	self simulation notifyClickedAtMousePos: (Sensor cursorPoint)
+	self simulation notifyClickedAtMousePos
 ]
 
 {
