@@ -144,7 +144,7 @@ SUSCar >> fuelLevel: aNumber [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'Len 6/10/2024 01:14'
+	#'squeak_changestamp' : 'MK 6/10/2024 17:24'
 }
 SUSCar >> initialize [
 	super initialize.
@@ -153,10 +153,7 @@ SUSCar >> initialize [
 	self addFlexShellIfNecessary.
 
 	timeRoadStart := Time millisecondClock.
-	timeSpeedChange := 0.
 	maxSpeed := 50.
-	progress := 0.
-	speedChanged := false.
 	acceleration := 10.
 	length := 1.
 	driver := 'Unknown'.

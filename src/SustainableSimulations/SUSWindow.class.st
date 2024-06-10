@@ -162,7 +162,7 @@ SUSWindow >> createStopSimulationButton [
 
 {
 	#category : #initialization,
-	#'squeak_changestamp' : 'PM 5/28/2024 01:53'
+	#'squeak_changestamp' : 'MK 6/10/2024 18:09'
 }
 SUSWindow >> initialize [
 	super initialize.
@@ -171,7 +171,9 @@ SUSWindow >> initialize [
 	
 	self setLabel: 'Sustainable Simulations';
 		addMorph: simulation frame: (0@0 corner: 1@1);
-		addButtons
+		addButtons.
+	
+
 ]
 
 {
@@ -245,18 +247,18 @@ SUSWindow >> labelStopSimulation [
 
 {
 	#category : #simulation,
-	#'squeak_changestamp' : 'PM 5/28/2024 09:13'
+	#'squeak_changestamp' : 'MK 6/10/2024 17:16'
 }
 SUSWindow >> pauseSimulation [
-	
+	simulation pauseSimulation.
 ]
 
 {
 	#category : #simulation,
-	#'squeak_changestamp' : 'PM 5/28/2024 09:13'
+	#'squeak_changestamp' : 'MK 6/10/2024 17:17'
 }
 SUSWindow >> playSimulation [
-	
+	simulation playSimulation.
 ]
 
 {

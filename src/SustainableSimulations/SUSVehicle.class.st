@@ -33,7 +33,7 @@ SUSVehicle >> acceleration: aNumber [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'MK 5/21/2024 19:18'
+	#'squeak_changestamp' : 'MK 6/10/2024 17:23'
 }
 SUSVehicle >> initialize [
 	super initialize.
@@ -50,6 +50,15 @@ SUSVehicle >> initialize [
 }
 SUSVehicle >> lastPoint [
 	^ lastPoint
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'MK 6/10/2024 17:26'
+}
+SUSVehicle >> lastPointTime: aNumber [
+
+	lastPoint  := {(lastPoint first). (lastPoint second + aNumber)}
 ]
 
 {

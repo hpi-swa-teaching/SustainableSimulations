@@ -8,7 +8,9 @@ Class {
 		'roads',
 		'bezierCurve',
 		'clickHandler',
-		'clickedConnectionPoint'
+		'clickedConnectionPoint',
+		'running',
+		'timePaused'
 	],
 	#category : #SustainableSimulations
 }
@@ -123,7 +125,7 @@ SUSSimulation >> defaultSpeedLimit [
 
 {
 	#category : #initialization,
-	#'squeak_changestamp' : 'GoChriNo 6/5/2024 14:28'
+	#'squeak_changestamp' : 'MK 6/10/2024 18:08'
 }
 SUSSimulation >> initialize [
 	super initialize.
@@ -135,9 +137,12 @@ SUSSimulation >> initialize [
 	cars := OrderedCollection new.
 	roads := OrderedCollection new.
 	simulationSpeed := 1.
+	running := true. 
+	timePaused := 0.
 	
 	self addClickHandler.
 	self addStartingPoint.
+	
 	
 	"self demoRoadWithCar."
 ]
@@ -169,18 +174,29 @@ SUSSimulation >> notifyClickedAtMousePos: mousePos [
 
 {
 	#category : #simulation,
-	#'squeak_changestamp' : 'PM 5/28/2024 02:08'
+	#'squeak_changestamp' : 'MK 6/10/2024 17:19'
 }
 SUSSimulation >> pauseSimulation [
-	Transcript show: 'Pause Simulation'
+	running ifTrue: [
+		super stopStepping.
+		timePaused := Time millisecondClock.
+		running := false]
 ]
 
 {
 	#category : #simulation,
-	#'squeak_changestamp' : 'PM 5/28/2024 02:08'
+	#'squeak_changestamp' : 'MK 6/10/2024 18:06'
 }
 SUSSimulation >> playSimulation [
-	Transcript show: 'Play Simulation'
+	running ifFalse: [
+		(timePaused > 0) ifTrue: [
+			cars do: [:car | 
+				car lastPointTime: (Time millisecondClock - timePaused).
+				(car lastPoint first = 0) ifTrue: [
+					car lastPointTime: Time millisecondClock - (car lastPoint second)]]].
+		super startStepping.
+		timePaused := 0.
+		running := true]
 ]
 
 {
