@@ -154,6 +154,15 @@ SUSAbstractRoad >> lanes [
 ]
 
 {
+	#category : #accessing,
+	#'squeak_changestamp' : 'PM 6/11/2024 05:47'
+}
+SUSAbstractRoad >> mouseDown: anEvent [
+	(simulation buildMode = #SpawnCar) 
+		ifTrue: [ self spawnCar ]
+]
+
+{
 	#category : #initialization,
 	#'squeak_changestamp' : 'Len 6/1/2024 20:25'
 }
@@ -178,6 +187,17 @@ SUSAbstractRoad >> simulation [
 }
 SUSAbstractRoad >> simulation: anObject [
 	simulation := anObject
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'PM 6/11/2024 05:45'
+}
+SUSAbstractRoad >> spawnCar [
+	simulation addMorph: (SUSCar
+		newOnSimulation: simulation
+		withSpeed: (UIManager default request: 'Please enter car speed' initialAnswer: 50) asNumber
+		onRoad: self)
 ]
 
 {
