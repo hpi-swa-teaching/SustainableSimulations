@@ -5,16 +5,6 @@ Class {
 }
 
 {
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 5/28/2024 01:43'
-}
-SUSCrossIntersection class >> newOnSimulation: aSimulation [
-	^ self new simulation: aSimulation;
-		postInitialization;
-		yourself
-]
-
-{
 	#category : #accessing,
 	#'squeak_changestamp' : 'GoChriNo 6/10/2024 17:03'
 }
@@ -43,4 +33,12 @@ SUSCrossIntersection >> createDrawing [
 	
 	self extent: drawing extent.
 	^ drawing
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'PM 6/11/2024 05:58'
+}
+SUSCrossIntersection >> from: aDirectedPoint to: aPoint [
+	"Do nothing, as cross intersections have a fixed size"
 ]

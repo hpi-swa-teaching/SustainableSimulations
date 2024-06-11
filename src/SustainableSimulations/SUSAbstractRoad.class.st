@@ -13,6 +13,17 @@ Class {
 }
 
 {
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'PM 6/11/2024 05:54'
+}
+SUSAbstractRoad class >> newOnSimulation: aSimulation from: aDirectedPoint to: aPoint [
+	^ self new simulation: aSimulation;
+		from: aDirectedPoint to: aPoint;
+		postInitialization;
+		yourself
+]
+
+{
 	#category : #drawing,
 	#'squeak_changestamp' : 'PM 5/28/2024 00:03'
 }
@@ -116,6 +127,15 @@ SUSAbstractRoad >> createLaneWithPath: aLineMorph [
 }
 SUSAbstractRoad >> deltaPositionToConnectionPoint [
 	^ self position - (connectionPoints at: 1) center
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'PM 6/11/2024 05:56'
+}
+SUSAbstractRoad >> from: aDirectedPoint to: aPoint [
+	"initialize this road from aDirectedPoint to aPoint"
+	self subclassResponsibility
 ]
 
 {

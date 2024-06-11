@@ -10,19 +10,6 @@ Class {
 }
 
 {
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/11/2024 03:41'
-}
-SUSCurvyRoad class >> newOnSimulation: aSimulation to: aPoint withDegrees: aNumber withSpeedLimit: anotherNumber [
-	^ self new simulation: aSimulation;
-		speedLimit: anotherNumber;
-		point: aPoint;
-		degrees: aNumber;
-		postInitialization;
-		yourself
-]
-
-{
 	#category : #accessing,
 	#'squeak_changestamp' : 'PM 6/11/2024 04:06'
 }
@@ -54,7 +41,7 @@ SUSCurvyRoad >> createDrawing [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/11/2024 03:35'
+	#'squeak_changestamp' : 'PM 6/11/2024 06:00'
 }
 SUSCurvyRoad >> degrees [
 	^ degrees
@@ -62,7 +49,7 @@ SUSCurvyRoad >> degrees [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/11/2024 03:35'
+	#'squeak_changestamp' : 'PM 6/11/2024 06:00'
 }
 SUSCurvyRoad >> degrees: anObject [
 	degrees := anObject
@@ -74,6 +61,15 @@ SUSCurvyRoad >> degrees: anObject [
 }
 SUSCurvyRoad >> directionVector [
 	^ 1@0 rotateBy: (180 - degrees) degreesToRadians about: 0@0
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'PM 6/11/2024 06:01'
+}
+SUSCurvyRoad >> from: aDirectedPoint to: aPoint [
+	self point: aPoint.
+	
 ]
 
 {

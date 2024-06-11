@@ -9,26 +9,6 @@ Class {
 }
 
 {
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 5/27/2024 23:45'
-}
-SUSStraightRoad class >> newOnSimulation: aSimulation withLength: aNumber [
-	^ self newOnSimulation: aSimulation withLength: aNumber withSpeedLimit: aSimulation defaultSpeedLimit
-]
-
-{
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 5/27/2024 23:51'
-}
-SUSStraightRoad class >> newOnSimulation: aSimulation withLength: aNumber withSpeedLimit: anotherNumber [
-	^ self new simulation: aSimulation;
-		length: aNumber;
-		speedLimit: anotherNumber;
-		postInitialization;
-		yourself
-]
-
-{
 	#category : #accessing,
 	#'squeak_changestamp' : 'PM 5/28/2024 01:16'
 }
@@ -56,6 +36,14 @@ SUSStraightRoad >> createDrawing [
 
 	self extent: drawing extent.
 	^ drawing
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'PM 6/11/2024 05:59'
+}
+SUSStraightRoad >> from: aDirectedPoint to: aPoint [
+	self length: (aDirectedPoint position dist: (aDirectedPoint projectionOf: aPoint)).
 ]
 
 {

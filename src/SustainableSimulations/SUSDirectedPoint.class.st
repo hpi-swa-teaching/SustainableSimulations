@@ -73,3 +73,11 @@ SUSDirectedPoint >> position [
 SUSDirectedPoint >> position: anObject [
 	position := anObject
 ]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'PM 6/11/2024 05:57'
+}
+SUSDirectedPoint >> projectionOf: aPoint [
+	^ aPoint nearestPointAlongLineFrom: self position to: (self position + direction)
+]
