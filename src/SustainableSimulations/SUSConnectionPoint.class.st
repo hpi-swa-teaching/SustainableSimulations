@@ -63,10 +63,10 @@ SUSConnectionPoint >> adjacentConnectionPoint: anObject [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/11/2024 02:58'
+	#'squeak_changestamp' : 'PM 6/11/2024 05:39'
 }
 SUSConnectionPoint >> askForDegrees [
-	^ (UIManager default request: 'Please enter rotation degrees (0 = up, 90 = right, -90 = left)' initialAnswer: 90) asNumber
+	^ (UIManager default request: 'Please enter rotation degrees (0 < x < 180)' initialAnswer: 90) asNumber
 ]
 
 {
@@ -115,12 +115,12 @@ SUSConnectionPoint >> connectCrossIntersectionFromMousePos: mousePos [
 
 {
 	#category : #connection,
-	#'squeak_changestamp' : 'PM 6/11/2024 04:33'
+	#'squeak_changestamp' : 'PM 6/11/2024 05:39'
 }
 SUSConnectionPoint >> connectCurvyRoadFromMousePos: mousePos [ 
 	| simulation connectingIndex newRoad newDirection point degrees |
 	degrees := self askForDegrees.
-	((degrees ~= 0) and: (degrees < 360) and: degrees > -360)
+	((degrees ~= 0) and: (degrees < 180) and: degrees > -180)
 		ifFalse: [^ false].
 	newDirection := 1@0 rotateBy: degrees degreesToRadians about: 0@0.
 	self isStartingPoint

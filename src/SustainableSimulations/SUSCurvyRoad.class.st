@@ -70,10 +70,10 @@ SUSCurvyRoad >> degrees: anObject [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/11/2024 03:43'
+	#'squeak_changestamp' : 'PM 6/11/2024 05:36'
 }
 SUSCurvyRoad >> directionVector [
-	^ 1@0 rotateBy: degrees about: 0@0
+	^ 1@0 rotateBy: (180 - degrees) degreesToRadians about: 0@0
 ]
 
 {

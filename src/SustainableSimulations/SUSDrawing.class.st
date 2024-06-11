@@ -224,16 +224,19 @@ SUSDrawing >> generateCrossInterPaths [
 
 {
 	#category : #drawing,
-	#'squeak_changestamp' : 'PM 6/11/2024 04:18'
+	#'squeak_changestamp' : 'PM 6/11/2024 05:32'
 }
 SUSDrawing >> generateCurvePathFrom: aPointPosition To: anotherPointPosition withDirection: anotherPointDirection [
-	
-	^ {aPointPosition . (anotherPointPosition x)@(aPointPosition y) . anotherPointPosition }
+	| midpoint lineA lineB |
+	lineA := SUSDirectedPoint newWithPosition: aPointPosition inDirection: 1@0.
+	lineB := SUSDirectedPoint newWithPosition: anotherPointPosition inDirection: anotherPointDirection.
+	midpoint := lineA calculateIntersectionPoint: lineB.
+	^ {aPointPosition . midpoint . anotherPointPosition }
 ]
 
 {
 	#category : #drawing,
-	#'squeak_changestamp' : 'PM 6/11/2024 04:17'
+	#'squeak_changestamp' : 'PM 6/11/2024 05:19'
 }
 SUSDrawing >> generateCurvePathOldFrom: aPointPosition To: anotherPointPosition withDirection: anotherPointDirection [
 	| aPointDirection directionA directionB lineA lineB middlePoint | 
@@ -243,8 +246,8 @@ SUSDrawing >> generateCurvePathOldFrom: aPointPosition To: anotherPointPosition 
 	directionB := (aPointPosition - anotherPointPosition) normalized.
 	directionB := (anotherPointDirection normalized + directionB) normalized.
 	
-	lineA := SUSLine newWithPosition: aPointPosition inDirection: directionA.
-	lineB := SUSLine newWithPosition: anotherPointPosition inDirection: directionB.
+	lineA := SUSDirectedPoint newWithPosition: aPointPosition inDirection: directionA.
+	lineB := SUSDirectedPoint newWithPosition: anotherPointPosition inDirection: directionB.
 	
 	middlePoint := lineA calculateIntersectionPoint: lineB.
 	
@@ -253,7 +256,7 @@ SUSDrawing >> generateCurvePathOldFrom: aPointPosition To: anotherPointPosition 
 
 {
 	#category : #drawing,
-	#'squeak_changestamp' : 'PM 6/11/2024 04:14'
+	#'squeak_changestamp' : 'PM 6/11/2024 05:35'
 }
 SUSDrawing >> generateCurvePathsTo: aPosition withDirection: aDirection [
 	| verticesA verticesB delta | 

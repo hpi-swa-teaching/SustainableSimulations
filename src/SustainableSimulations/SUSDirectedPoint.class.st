@@ -1,5 +1,5 @@
 Class {
-	#name : #SUSLine,
+	#name : #SUSDirectedPoint,
 	#superclass : #Object,
 	#instVars : [
 		'position',
@@ -12,7 +12,7 @@ Class {
 	#category : #'as yet unclassified',
 	#'squeak_changestamp' : 'PM 6/11/2024 02:09'
 }
-SUSLine class >> newWithPosition: aPoint inDirection: anotherPoint [
+SUSDirectedPoint class >> newWithPosition: aPoint inDirection: anotherPoint [
 	^ self new position: aPoint;
 		direction: anotherPoint;
 		yourself
@@ -22,7 +22,7 @@ SUSLine class >> newWithPosition: aPoint inDirection: anotherPoint [
 	#category : #accessing,
 	#'squeak_changestamp' : 'PM 6/11/2024 02:27'
 }
-SUSLine >> calculateIntersectionPoint: aLine [
+SUSDirectedPoint >> calculateIntersectionPoint: aLine [
 	| x1 y1 x2 y2 dx1 dy1 dx2 dy2 denominator t1 t2 |
         
         "Get coordinates and direction vectors"
@@ -46,7 +46,7 @@ SUSLine >> calculateIntersectionPoint: aLine [
 	#category : #accessing,
 	#'squeak_changestamp' : 'PM 6/11/2024 02:09'
 }
-SUSLine >> direction [
+SUSDirectedPoint >> direction [
 	^ direction
 ]
 
@@ -54,7 +54,7 @@ SUSLine >> direction [
 	#category : #accessing,
 	#'squeak_changestamp' : 'PM 6/11/2024 02:09'
 }
-SUSLine >> direction: anObject [
+SUSDirectedPoint >> direction: anObject [
 	direction := anObject
 ]
 
@@ -62,7 +62,7 @@ SUSLine >> direction: anObject [
 	#category : #accessing,
 	#'squeak_changestamp' : 'PM 6/11/2024 02:09'
 }
-SUSLine >> position [
+SUSDirectedPoint >> position [
 	^ position
 ]
 
@@ -70,6 +70,6 @@ SUSLine >> position [
 	#category : #accessing,
 	#'squeak_changestamp' : 'PM 6/11/2024 02:09'
 }
-SUSLine >> position: anObject [
+SUSDirectedPoint >> position: anObject [
 	position := anObject
 ]
