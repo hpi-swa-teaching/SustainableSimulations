@@ -63,10 +63,10 @@ SUSConnectionPoint >> adjacentConnectionPoint: anObject [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/11/2024 01:15'
+	#'squeak_changestamp' : 'PM 6/11/2024 02:58'
 }
 SUSConnectionPoint >> askForDegrees [
-	^ (UIManager default request: 'Please enter rotation degrees (+ = Clockwise, - = Counterclockwise)' initialAnswer: 90) asNumber
+	^ (UIManager default request: 'Please enter rotation degrees (0 = up, 90 = right, -90 = left)' initialAnswer: 90) asNumber
 ]
 
 {
@@ -82,7 +82,7 @@ SUSConnectionPoint >> center [
 
 {
 	#category : #connection,
-	#'squeak_changestamp' : 'GoChriNo 6/10/2024 19:21'
+	#'squeak_changestamp' : 'PM 6/11/2024 02:52'
 }
 SUSConnectionPoint >> connectCrossIntersectionFromMousePos: mousePos [
 	| simulation connectingIndex newRoad |
@@ -115,25 +115,44 @@ SUSConnectionPoint >> connectCrossIntersectionFromMousePos: mousePos [
 
 {
 	#category : #connection,
-	#'squeak_changestamp' : 'PM 6/11/2024 01:24'
+	#'squeak_changestamp' : 'PM 6/11/2024 04:33'
 }
 SUSConnectionPoint >> connectCurvyRoadFromMousePos: mousePos [ 
-	| simulation newDirection connectionPointB newRoad |
+	| simulation connectingIndex newRoad newDirection point degrees |
+	degrees := self askForDegrees.
+	((degrees ~= 0) and: (degrees < 360) and: degrees > -360)
+		ifFalse: [^ false].
+	newDirection := 1@0 rotateBy: degrees degreesToRadians about: 0@0.
 	self isStartingPoint
 		ifTrue: [simulation := self road]
 		ifFalse: [simulation := self road simulation].
-	newDirection := self direction rotateBy: self askForDegrees about: 0@0.
-	connectionPointB := SUSConnectionPoint newAtPosition: mousePos withDirection: newDirection.
-	newRoad := SUSCurvyRoad newOnSimulation: simulation from: self to: connectionPointB withSpeedLimit: 50.
-	newRoad position: self center.
+	connectingIndex := 2.
+	self direction x >= 0
+		ifTrue: [connectingIndex := 1.
+			(self direction x = 0 and: self direction y <= 0)
+				ifTrue: [connectingIndex := 2]].
+	adjacentConnectionPoint
+		ifNil: [
+			point := mousePos - self center.
+			newRoad := SUSCurvyRoad newOnSimulation: simulation to: point withDegrees: degrees withSpeedLimit: 50.
+			newRoad position: self center + newRoad deltaPositionToConnectionPoint.
 			newRoad sticky: true.
 			simulation addMorph: newRoad.
+			self isStartingPoint
+				ifTrue: [(newRoad connectionPoints at: connectingIndex)
+						direction: self direction negated]
+				ifFalse: [self road updateLanes: newRoad.
+					self
+						connectWithConnectionPoint: (newRoad connectionPoints at: connectingIndex).
+					newRoad
+						removeMorph: (newRoad connectionPoints at: connectingIndex)].
+			self road removeMorph: self].
 	^ true
 ]
 
 {
 	#category : #connection,
-	#'squeak_changestamp' : 'GoChriNo 6/10/2024 19:29'
+	#'squeak_changestamp' : 'PM 6/11/2024 02:52'
 }
 SUSConnectionPoint >> connectStraightRoadFromMousePos: mousePos [ 
 	| simulation connectingIndex newRoad length degrees |

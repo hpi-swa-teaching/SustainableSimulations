@@ -2,8 +2,8 @@ Class {
 	#name : #SUSCurvyRoad,
 	#superclass : #SUSAbstractRoad,
 	#instVars : [
-		'connectionPointA',
-		'connectionPointB',
+		'point',
+		'degrees',
 		'speedLimit'
 	],
 	#category : #SustainableSimulations
@@ -11,72 +11,85 @@ Class {
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/11/2024 01:05'
+	#'squeak_changestamp' : 'PM 6/11/2024 03:41'
 }
-SUSCurvyRoad class >> newOnSimulation: aSimulation from: aConnectionPoint to: anotherConnectionPoint withSpeedLimit: anotherNumber [
+SUSCurvyRoad class >> newOnSimulation: aSimulation to: aPoint withDegrees: aNumber withSpeedLimit: anotherNumber [
 	^ self new simulation: aSimulation;
-		connectionPointA: aConnectionPoint;
-		connectionPointB: anotherConnectionPoint;
 		speedLimit: anotherNumber;
+		point: aPoint;
+		degrees: aNumber;
 		postInitialization;
 		yourself
 ]
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/11/2024 01:04'
-}
-SUSCurvyRoad >> connectionPointA [
-	^ connectionPointA
-]
-
-{
-	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/11/2024 01:05'
-}
-SUSCurvyRoad >> connectionPointA: anObject [
-	connectionPointA := anObject.
-	anObject road: self
-]
-
-{
-	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/11/2024 01:04'
-}
-SUSCurvyRoad >> connectionPointB [
-	^ connectionPointB
-]
-
-{
-	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/11/2024 01:06'
-}
-SUSCurvyRoad >> connectionPointB: anObject [
-	connectionPointB := anObject.
-	anObject road: self
-]
-
-{
-	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/11/2024 01:04'
+	#'squeak_changestamp' : 'PM 6/11/2024 04:06'
 }
 SUSCurvyRoad >> createConnectionPoints [
-	^ {connectionPointA . connectionPointB}
+	| previousConnectionPoint nextConnectionPoint |
+	previousConnectionPoint := (SUSConnectionPoint newForRoad: self withDirection: (-1@0))
+		center: 0@SUSDrawing normalLaneWidth;
+		yourself.
+	nextConnectionPoint := (SUSConnectionPoint newForRoad: self withDirection: self directionVector)
+		center: self point;
+		yourself.
+	^ {previousConnectionPoint . nextConnectionPoint}
 ]
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/11/2024 01:27'
+	#'squeak_changestamp' : 'PM 6/11/2024 03:44'
 }
 SUSCurvyRoad >> createDrawing [
 	| drawing |
-	drawing := SUSDrawing newCurveFrom: connectionPointA to: connectionPointB.
+	drawing := SUSDrawing newCurveTo: point withDirection: self directionVector.
 	
 	(drawing paths) do: [:each |
     		self createLaneWithPath: each].
 
 	self extent: drawing extent.
 	^ drawing
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'PM 6/11/2024 03:35'
+}
+SUSCurvyRoad >> degrees [
+	^ degrees
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'PM 6/11/2024 03:35'
+}
+SUSCurvyRoad >> degrees: anObject [
+	degrees := anObject
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'PM 6/11/2024 03:43'
+}
+SUSCurvyRoad >> directionVector [
+	^ 1@0 rotateBy: degrees about: 0@0
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'PM 6/11/2024 03:42'
+}
+SUSCurvyRoad >> point [
+	^ point
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'PM 6/11/2024 03:42'
+}
+SUSCurvyRoad >> point: anObject [
+	point := anObject
 ]
 
 {

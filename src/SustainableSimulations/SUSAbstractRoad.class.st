@@ -112,10 +112,10 @@ SUSAbstractRoad >> createLaneWithPath: aLineMorph [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 5/28/2024 01:15'
+	#'squeak_changestamp' : 'PM 6/11/2024 02:45'
 }
 SUSAbstractRoad >> deltaPositionToConnectionPoint [
-	^ self position - lastClickedAtConnectionPoint position
+	^ self position - (connectionPoints at: 1) center
 ]
 
 {
@@ -190,13 +190,17 @@ SUSAbstractRoad >> unselect [
 
 {
 	#category : #drawing,
-	#'squeak_changestamp' : 'MK 6/10/2024 21:11'
+	#'squeak_changestamp' : 'PM 6/11/2024 03:53'
 }
 SUSAbstractRoad >> updateLanes: aRoad [
 	lanes do: [:each | 
 		|pos1|
 		pos1 := each getPositionWithTValue: 1.
+		Transcript show: 'pos1: '.
+		Transcript showln: pos1.
 		aRoad lanes do: [:anotherEach |
+			Transcript show: 'pos2: '.
+			Transcript showln: (anotherEach getPositionWithTValue: 0).
 			((pos1 dist: (anotherEach getPositionWithTValue: 0))<5)
 				ifTrue: [each addNextLane: anotherEach]]]
 		

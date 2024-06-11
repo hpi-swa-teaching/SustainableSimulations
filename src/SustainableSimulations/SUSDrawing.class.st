@@ -8,17 +8,6 @@ Class {
 }
 
 {
-	#category : #'instance creation',
-	#'squeak_changestamp' : 'PM 6/11/2024 00:27'
-}
-SUSDrawing class >> calculateExtentWith: aPoint and: anotherPoint [
-	| minPoint maxPoint |
-	minPoint := (aPoint x min: anotherPoint x)@(aPoint y min: anotherPoint y).
-	maxPoint := (aPoint x max: anotherPoint x)@(aPoint y max: anotherPoint y).
-	^ maxPoint - minPoint
-]
-
-{
 	#category : #'class variables',
 	#'squeak_changestamp' : 'Len 5/16/2024 11:16'
 }
@@ -74,14 +63,13 @@ SUSDrawing class >> newCrossIntersetion [
 
 {
 	#category : #'instance creation',
-	#'squeak_changestamp' : 'PM 6/11/2024 01:27'
+	#'squeak_changestamp' : 'PM 6/11/2024 04:15'
 }
-SUSDrawing class >> newCurveFrom: aConnectionPoint to: anotherConnectionPoint [
-
+SUSDrawing class >> newCurveTo: aPoint withDirection: anotherPoint [
 	^ (SUSDrawing new
-		extent: (self calculateExtentWith: aConnectionPoint position and: anotherConnectionPoint position);
+		extent: aPoint abs;
 		color: SUSDrawing colorRoad)
-		generateCurvePathsFrom: aConnectionPoint to: anotherConnectionPoint
+		generateCurvePathsTo: aPoint withDirection: anotherPoint
 ]
 
 {
@@ -236,14 +224,44 @@ SUSDrawing >> generateCrossInterPaths [
 
 {
 	#category : #drawing,
-	#'squeak_changestamp' : 'PM 6/11/2024 01:37'
+	#'squeak_changestamp' : 'PM 6/11/2024 04:18'
 }
-SUSDrawing >> generateCurvePathsFrom: aPoint to: anotherPoint [
-	| factor |
-	factor := SUSDrawing normalLaneWidth.
-	"From top"
-	self addPathWithVertices: ({aPoint position . anotherPoint position } * factor).
-	self addPathWithVertices: ({anotherPoint position . aPoint position } * factor).
+SUSDrawing >> generateCurvePathFrom: aPointPosition To: anotherPointPosition withDirection: anotherPointDirection [
+	
+	^ {aPointPosition . (anotherPointPosition x)@(aPointPosition y) . anotherPointPosition }
+]
+
+{
+	#category : #drawing,
+	#'squeak_changestamp' : 'PM 6/11/2024 04:17'
+}
+SUSDrawing >> generateCurvePathOldFrom: aPointPosition To: anotherPointPosition withDirection: anotherPointDirection [
+	| aPointDirection directionA directionB lineA lineB middlePoint | 
+	aPointDirection := 1@0.
+	directionA := (anotherPointPosition - aPointPosition) normalized.
+	directionA := (aPointDirection normalized + directionA) normalized.
+	directionB := (aPointPosition - anotherPointPosition) normalized.
+	directionB := (anotherPointDirection normalized + directionB) normalized.
+	
+	lineA := SUSLine newWithPosition: aPointPosition inDirection: directionA.
+	lineB := SUSLine newWithPosition: anotherPointPosition inDirection: directionB.
+	
+	middlePoint := lineA calculateIntersectionPoint: lineB.
+	
+	^ {aPointPosition . middlePoint . anotherPointPosition }
+]
+
+{
+	#category : #drawing,
+	#'squeak_changestamp' : 'PM 6/11/2024 04:14'
+}
+SUSDrawing >> generateCurvePathsTo: aPosition withDirection: aDirection [
+	| verticesA verticesB delta | 
+	delta := aDirection normal normalized * SUSDrawing normalLaneWidth * 0.5.
+	verticesA := self generateCurvePathFrom: (0@0.5 * SUSDrawing normalLaneWidth) To: (aPosition + delta) withDirection: aDirection.
+	verticesB := self generateCurvePathFrom: (0@1.5 * SUSDrawing normalLaneWidth) To: (aPosition - delta) withDirection: aDirection.
+	self addPathWithVertices: verticesA.
+	self addPathWithVertices: verticesB.
 ]
 
 {
