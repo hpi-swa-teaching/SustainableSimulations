@@ -175,10 +175,10 @@ SUSAbstractRoad >> lanes [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/11/2024 05:47'
+	#'squeak_changestamp' : 'PM 6/12/2024 17:15'
 }
 SUSAbstractRoad >> mouseDown: anEvent [
-	(simulation buildMode = #SpawnCar) 
+	(simulation spawnClass = #SpawnCar) 
 		ifTrue: [ self spawnCar ]
 ]
 

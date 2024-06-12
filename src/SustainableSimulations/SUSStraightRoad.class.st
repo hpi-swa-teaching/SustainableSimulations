@@ -2,7 +2,8 @@ Class {
 	#name : #SUSStraightRoad,
 	#superclass : #SUSAbstractRoad,
 	#instVars : [
-		'length',
+		'from',
+		'to',
 		'speedLimit'
 	],
 	#category : #SustainableSimulations
@@ -40,26 +41,11 @@ SUSStraightRoad >> createDrawing [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/11/2024 05:59'
+	#'squeak_changestamp' : 'PM 6/12/2024 16:54'
 }
 SUSStraightRoad >> from: aDirectedPoint to: aPoint [
-	self length: (aDirectedPoint position dist: (aDirectedPoint projectionOf: aPoint)).
-]
-
-{
-	#category : #accessing,
-	#'squeak_changestamp' : 'PM 5/27/2024 23:42'
-}
-SUSStraightRoad >> length [
-	^ length
-]
-
-{
-	#category : #accessing,
-	#'squeak_changestamp' : 'PM 5/27/2024 23:42'
-}
-SUSStraightRoad >> length: anObject [
-	length := anObject
+	from := aDirectedPoint.
+	to := SUSDirectedPoint newWithPosition: aPoint inDirection: from direction
 ]
 
 {

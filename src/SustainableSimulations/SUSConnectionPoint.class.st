@@ -13,13 +13,12 @@ Class {
 
 {
 	#category : #'instance creation',
-	#'squeak_changestamp' : 'GoChriNo 6/5/2024 09:32'
+	#'squeak_changestamp' : 'PM 6/12/2024 17:06'
 }
 SUSConnectionPoint class >> newAsStartingPointForSimulation: aSimulation withDirection: aPoint [
 	^ self new road: aSimulation;
 		direction: aPoint;
 		isStartingPoint: true;
-		isFixed;
 		yourself
 ]
 
@@ -43,14 +42,6 @@ SUSConnectionPoint class >> newForRoad: aRoad withDirection: aPoint [
 		direction: aPoint;
 		isStartingPoint: false;
 		yourself
-]
-
-{
-	#category : #accessing,
-	#'squeak_changestamp' : 'GoChriNo 6/5/2024 09:17'
-}
-SUSConnectionPoint >> adjacentConnectionPoint [
-	^ adjacentConnectionPoint
 ]
 
 {
@@ -264,15 +255,6 @@ SUSConnectionPoint >> initialize [
 	super initialize.
 	
 	self color: Color green
-]
-
-{
-	#category : #accessing,
-	#'squeak_changestamp' : 'GoChriNo 6/5/2024 09:33'
-}
-SUSConnectionPoint >> isFixed [
-
-	^ true.
 ]
 
 {

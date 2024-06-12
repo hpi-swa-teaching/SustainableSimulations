@@ -2,12 +2,20 @@ Class {
 	#name : #SUSCurvyRoad,
 	#superclass : #SUSAbstractRoad,
 	#instVars : [
-		'point',
-		'degrees',
+		'from',
+		'to',
 		'speedLimit'
 	],
 	#category : #SustainableSimulations
 }
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'PM 6/12/2024 16:58'
+}
+SUSCurvyRoad >> askForDegrees [
+	^ (UIManager default request: 'Please enter rotation degrees (0 < x < 180)' initialAnswer: 90) asNumber
+]
 
 {
 	#category : #accessing,
@@ -41,35 +49,13 @@ SUSCurvyRoad >> createDrawing [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/11/2024 06:00'
-}
-SUSCurvyRoad >> degrees [
-	^ degrees
-]
-
-{
-	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/11/2024 06:00'
-}
-SUSCurvyRoad >> degrees: anObject [
-	degrees := anObject
-]
-
-{
-	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/11/2024 05:36'
-}
-SUSCurvyRoad >> directionVector [
-	^ 1@0 rotateBy: (180 - degrees) degreesToRadians about: 0@0
-]
-
-{
-	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/11/2024 06:01'
+	#'squeak_changestamp' : 'PM 6/12/2024 16:58'
 }
 SUSCurvyRoad >> from: aDirectedPoint to: aPoint [
-	self point: aPoint.
-	
+	| degrees |
+	from := aDirectedPoint.
+	degrees := self askDegrees.
+	to := SUSDirectedPoint newWithPosition: aPoint inDirection: (aDirectedPoint direction rotateBy: degrees about: 0@0).
 ]
 
 {

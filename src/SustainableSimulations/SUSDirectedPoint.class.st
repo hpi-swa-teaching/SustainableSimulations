@@ -20,7 +20,7 @@ SUSDirectedPoint class >> newWithPosition: aPoint inDirection: anotherPoint [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/11/2024 02:27'
+	#'squeak_changestamp' : 'PM 6/11/2024 14:41'
 }
 SUSDirectedPoint >> calculateIntersectionPoint: aLine [
 	| x1 y1 x2 y2 dx1 dy1 dx2 dy2 denominator t1 t2 |
