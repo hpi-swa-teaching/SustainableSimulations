@@ -6,46 +6,40 @@ Class {
 		'to',
 		'speedLimit'
 	],
-	#category : #SustainableSimulations
+	#category : #'SustainableSimulations-Roads'
 }
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 5/28/2024 01:16'
+	#'squeak_changestamp' : 'PM 6/13/2024 00:48'
 }
-SUSStraightRoad >> createConnectionPoints [
-	| previousConnectionPoint nextConnectionPoint |
-	previousConnectionPoint := (SUSConnectionPoint newForRoad: self withDirection: (-1@0))
-		center: (self extent * (0@0.5));
-		yourself.
-	nextConnectionPoint := (SUSConnectionPoint newForRoad: self withDirection: (1@0))
-		center: (self extent * (1@0.5));
-		yourself.
-	^ {previousConnectionPoint . nextConnectionPoint}
-]
-
-{
-	#category : #accessing,
-	#'squeak_changestamp' : 'Len 6/1/2024 20:10'
-}
-SUSStraightRoad >> createDrawing [
+SUSStraightRoad >> createDrawingFrom: aConnectionPoint to: aPoint [
 	| drawing |
-	drawing := SUSDrawing newNormalRoadWithLength: self length.
+	drawing := SUSStraightRoadDrawing newFrom: from position to: to position.
 	
 	(drawing paths) do: [:each |
     		self createLaneWithPath: each].
 
 	self extent: drawing extent.
+	self position: drawing position.
 	^ drawing
 ]
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/12/2024 16:54'
+	#'squeak_changestamp' : 'PM 6/12/2024 23:03'
 }
 SUSStraightRoad >> from: aDirectedPoint to: aPoint [
 	from := aDirectedPoint.
-	to := SUSDirectedPoint newWithPosition: aPoint inDirection: from direction
+	to := SUSDirectedPoint newWithPosition: aPoint inDirection: aDirectedPoint direction
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'PM 6/12/2024 23:01'
+}
+SUSStraightRoad >> otherConnectionPointPositionsThan: aConnectionPoint [ 
+	^ { SUSConnectionPoint newForRoad: self at: to}
 ]
 
 {

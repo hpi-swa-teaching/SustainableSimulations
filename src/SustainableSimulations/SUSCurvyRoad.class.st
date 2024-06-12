@@ -6,22 +6,14 @@ Class {
 		'to',
 		'speedLimit'
 	],
-	#category : #SustainableSimulations
+	#category : #'SustainableSimulations-Roads'
 }
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/12/2024 16:58'
+	#'squeak_changestamp' : 'PM 6/12/2024 22:47'
 }
-SUSCurvyRoad >> askForDegrees [
-	^ (UIManager default request: 'Please enter rotation degrees (0 < x < 180)' initialAnswer: 90) asNumber
-]
-
-{
-	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/11/2024 04:06'
-}
-SUSCurvyRoad >> createConnectionPoints [
+SUSCurvyRoad >> addConnectionPoints [
 	| previousConnectionPoint nextConnectionPoint |
 	previousConnectionPoint := (SUSConnectionPoint newForRoad: self withDirection: (-1@0))
 		center: 0@SUSDrawing normalLaneWidth;
@@ -30,6 +22,14 @@ SUSCurvyRoad >> createConnectionPoints [
 		center: self point;
 		yourself.
 	^ {previousConnectionPoint . nextConnectionPoint}
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'PM 6/12/2024 16:58'
+}
+SUSCurvyRoad >> askForDegrees [
+	^ (UIManager default request: 'Please enter rotation degrees (0 < x < 180)' initialAnswer: 90) asNumber
 ]
 
 {

@@ -8,7 +8,7 @@ Class {
 		'length',
 		'blockedT'
 	],
-	#category : #SustainableSimulations
+	#category : #'SustainableSimulations-Core'
 }
 
 {

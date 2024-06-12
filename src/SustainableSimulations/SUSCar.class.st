@@ -8,39 +8,16 @@ Class {
 		'blockedOldLane',
 		'oldLane'
 	],
-	#category : #SustainableSimulations
+	#category : #'SustainableSimulations-Core'
 }
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'Len 6/1/2024 20:36'
+	#'squeak_changestamp' : 'PM 6/13/2024 00:19'
 }
-SUSCar class >> newOnSimulation: aSimulation [
+SUSCar class >> newOnRoad: aRoad withSpeed: aNumber [
 	^ self new 
-		simulation: aSimulation;
-		postInitialization;
-		yourself
-]
-
-{
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'MK 6/3/2024 21:17'
-}
-SUSCar class >> newOnSimulation: aSimulation withSpeed: aNumber [
-	^ self new 
-		simulation: aSimulation;
-		speed: aNumber;
-		postInitialization;
-		yourself
-]
-
-{
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'MK 6/10/2024 23:40'
-}
-SUSCar class >> newOnSimulation: aSimulation withSpeed: aNumber onRoad: aRoad [
-	^ self new 
-		simulation: aSimulation;
+		simulation: aRoad simulation;
 		speed: aNumber;
 		placeCarOnRoad: aRoad;
 		yourself

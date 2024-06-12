@@ -135,20 +135,20 @@ SUSWindow >> createStraightRoadButton [
 
 {
 	#category : #events,
-	#'squeak_changestamp' : 'PM 6/12/2024 17:14'
+	#'squeak_changestamp' : 'PM 6/12/2024 19:57'
 }
 SUSWindow >> crossIntersectionMode [
 
-	simulation spawnClass: #CrossIntersection
+	simulation selectedSpawnType: #CrossIntersection
 ]
 
 {
 	#category : #events,
-	#'squeak_changestamp' : 'PM 6/12/2024 17:14'
+	#'squeak_changestamp' : 'PM 6/12/2024 19:57'
 }
 SUSWindow >> curvyRoadMode [
 
-	simulation spawnClass: #CurvyRoad
+	simulation selectedSpawnType: #CurvyRoad
 ]
 
 {
@@ -262,11 +262,11 @@ SUSWindow >> playSimulation [
 
 {
 	#category : #events,
-	#'squeak_changestamp' : 'PM 6/12/2024 17:14'
+	#'squeak_changestamp' : 'PM 6/12/2024 19:57'
 }
 SUSWindow >> spawnCarMode [
 
-	simulation spawnClass: #SpawnCar
+	simulation selectedSpawnType: #SpawnCar
 ]
 
 {
@@ -279,9 +279,9 @@ SUSWindow >> stopSimulation [
 
 {
 	#category : #events,
-	#'squeak_changestamp' : 'PM 6/12/2024 17:14'
+	#'squeak_changestamp' : 'PM 6/12/2024 19:57'
 }
 SUSWindow >> straightRoadMode [
 
-	simulation spawnClass: #StraightRoad
+	simulation selectedSpawnType: #StraightRoad
 ]

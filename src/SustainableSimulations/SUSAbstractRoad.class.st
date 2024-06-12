@@ -9,35 +9,39 @@ Class {
 		'isFixed',
 		'lanes'
 	],
-	#category : #SustainableSimulations
+	#category : #'SustainableSimulations-Roads'
 }
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/11/2024 05:54'
+	#'squeak_changestamp' : 'PM 6/12/2024 23:43'
 }
-SUSAbstractRoad class >> newOnSimulation: aSimulation from: aDirectedPoint to: aPoint [
+SUSAbstractRoad class >> newOnSimulation: aSimulation from: aConnectionPoint to: aPoint [
 	^ self new simulation: aSimulation;
-		from: aDirectedPoint to: aPoint;
-		postInitialization;
+		initializeFrom: aConnectionPoint to: aPoint;
 		yourself
 ]
 
 {
-	#category : #drawing,
-	#'squeak_changestamp' : 'PM 5/28/2024 00:03'
+	#category : #accessing,
+	#'squeak_changestamp' : 'PM 6/12/2024 23:41'
 }
-SUSAbstractRoad >> addConnectionPoints [
-	connectionPoints := self createConnectionPoints.
-	connectionPoints do: [ :each | self addMorph: each ]
+SUSAbstractRoad >> addConnectionPointsWith: aConnectionPoint [
+	| others | 
+	others := self otherConnectionPointPositionsThan: aConnectionPoint.
+	others do: [ :each | simulation addMorphInLayer: each ].
+	connectionPoints := OrderedCollection new.
+	aConnectionPoint connectRoad: self.
+	connectionPoints add: aConnectionPoint.
+	connectionPoints addAll: others
 ]
 
 {
-	#category : #drawing,
-	#'squeak_changestamp' : 'PM 5/28/2024 00:04'
+	#category : #accessing,
+	#'squeak_changestamp' : 'PM 6/13/2024 00:47'
 }
-SUSAbstractRoad >> addDrawing [
-	self addMorph: (self createDrawing)
+SUSAbstractRoad >> addDrawingFrom: aConnectionPoint to: aPoint [
+	self addMorph: (self createDrawingFrom: aConnectionPoint to: aPoint)
 ]
 
 {
@@ -97,18 +101,9 @@ SUSAbstractRoad >> connectionPoints: anObject [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 5/27/2024 23:05'
+	#'squeak_changestamp' : 'PM 6/13/2024 00:43'
 }
-SUSAbstractRoad >> createConnectionPoints [
-	"Create SUSConnectionPoints for this road and return them as list"
-	self subclassResponsibility
-]
-
-{
-	#category : #accessing,
-	#'squeak_changestamp' : 'PM 5/28/2024 00:03'
-}
-SUSAbstractRoad >> createDrawing [
+SUSAbstractRoad >> createDrawingFrom: aConnectionPoint to: aPoint [
 	self subclassResponsibility
 ]
 
@@ -148,13 +143,28 @@ SUSAbstractRoad >> handlesMouseDown: anEvent [
 
 {
 	#category : #initialization,
-	#'squeak_changestamp' : 'MK 5/28/2024 19:16'
+	#'squeak_changestamp' : 'PM 6/12/2024 23:06'
 }
 SUSAbstractRoad >> initialize [
 	super initialize.
 	
 	isFixed := false.
 	lanes := OrderedCollection new.
+	
+	self color: Color transparent.
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'PM 6/13/2024 00:43'
+}
+SUSAbstractRoad >> initializeFrom: aConnectionPoint to: aPoint [
+	self from: aConnectionPoint asDirectedPoint to: aPoint;
+		addDrawingFrom: aConnectionPoint to: aPoint;
+		addConnectionPointsWith: aConnectionPoint.
+	
+	adjacentRoads := Array new: connectionPoints size.
+	self simulation addRoad: self
 ]
 
 {
@@ -175,22 +185,20 @@ SUSAbstractRoad >> lanes [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/12/2024 17:15'
+	#'squeak_changestamp' : 'PM 6/12/2024 19:57'
 }
 SUSAbstractRoad >> mouseDown: anEvent [
-	(simulation spawnClass = #SpawnCar) 
+	(simulation selectedSpawnType = #SpawnCar) 
 		ifTrue: [ self spawnCar ]
 ]
 
 {
-	#category : #initialization,
-	#'squeak_changestamp' : 'Len 6/1/2024 20:25'
+	#category : #accessing,
+	#'squeak_changestamp' : 'PM 6/12/2024 22:50'
 }
-SUSAbstractRoad >> postInitialization [
-	self addDrawing;
-		addConnectionPoints.
-	adjacentRoads := Array new: connectionPoints size.
-	simulation addRoad: self
+SUSAbstractRoad >> otherConnectionPointPositionsThan: aConnectionPoint [
+	"Create SUSConnectionPoints for this road and return them as list"
+	self subclassResponsibility
 ]
 
 {
@@ -211,13 +219,12 @@ SUSAbstractRoad >> simulation: anObject [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/11/2024 05:45'
+	#'squeak_changestamp' : 'PM 6/13/2024 00:20'
 }
 SUSAbstractRoad >> spawnCar [
-	simulation addMorph: (SUSCar
-		newOnSimulation: simulation
-		withSpeed: (UIManager default request: 'Please enter car speed' initialAnswer: 50) asNumber
-		onRoad: self)
+	simulation addMorphInLayer: (SUSCar
+		newOnRoad: self
+		withSpeed: (UIManager default request: 'Please enter car speed' initialAnswer: 50) asNumber)
 ]
 
 {

@@ -11,9 +11,9 @@ Class {
 		'clickedConnectionPoint',
 		'running',
 		'timePaused',
-		'spawnClass'
+		'roadFactory'
 	],
-	#category : #SustainableSimulations
+	#category : #'SustainableSimulations-Core'
 }
 
 {
@@ -34,27 +34,31 @@ SUSSimulation >> addRoad: aRoad [
 
 {
 	#category : #initialization,
-	#'squeak_changestamp' : 'GoChriNo 6/5/2024 13:36'
+	#'squeak_changestamp' : 'PM 6/12/2024 23:39'
 }
 SUSSimulation >> addStartingPoint [
+	self addMorph: (SUSConnectionPoint newStartingPointForSimulation: self at: self startingPointPosition)
+]
 
-	| startingPoint |
-	startingPoint := (SUSConnectionPoint newAsStartingPointForSimulation: self withDirection: (1@0))
-		center: (self position + (300@200));
-		sticky: true;
-		yourself.
-	self addMorph: startingPoint.
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'PM 6/12/2024 19:19'
+}
+SUSSimulation >> clickedConnectionPoint: anObject [
+	clickedConnectionPoint ifNotNil: [ clickedConnectionPoint unselect ].
+	clickedConnectionPoint := anObject.
+	clickedConnectionPoint ifNotNil: [ clickedConnectionPoint select ].
+	^ clickedConnectionPoint
 ]
 
 {
 	#category : #simulation,
-	#'squeak_changestamp' : 'PM 6/12/2024 19:01'
+	#'squeak_changestamp' : 'PM 6/12/2024 23:20'
 }
 SUSSimulation >> clickedWorld: anEvent [
-	Transcript show: 'Hello'
-"	clickedConnectionPoint
+	clickedConnectionPoint
 		ifNotNil: [(self tryToBuildRoadTo: anEvent position)
-				ifTrue: [clickedConnectionPoint := nil]]"
+				ifTrue: [self clickedConnectionPoint: nil]]
 ]
 
 {
@@ -97,7 +101,7 @@ SUSSimulation >> handlesMouseDown: anEvent [
 
 {
 	#category : #initialization,
-	#'squeak_changestamp' : 'PM 6/12/2024 18:53'
+	#'squeak_changestamp' : 'PM 6/12/2024 22:24'
 }
 SUSSimulation >> initialize [
 	super initialize.
@@ -110,35 +114,32 @@ SUSSimulation >> initialize [
 	simulationSpeed := 1.
 	running := true. 
 	timePaused := 0.
-	spawnClass := SUSStraightRoad class.
+	roadFactory := SUSRoadFactory newForSimulation: self.
 	
 	self addStartingPoint.
 ]
 
 {
 	#category : #'event handling',
-	#'squeak_changestamp' : 'PM 6/12/2024 19:04'
+	#'squeak_changestamp' : 'PM 6/12/2024 19:20'
 }
 SUSSimulation >> mouseDown: anEvent [ 
 	super mouseDown: anEvent.
 	self submorphs
 		detect: [:each | each containsPoint: anEvent position]
-		ifNone: [self clickedWorld]
+		ifNone: [self clickedWorld: anEvent]
 ]
 
 {
 	#category : #'event handling',
-	#'squeak_changestamp' : 'PM 6/12/2024 18:56'
+	#'squeak_changestamp' : 'PM 6/12/2024 19:20'
 }
-SUSSimulation >> notifyClickedAt: aConnectionPoint [
-
-	clickedConnectionPoint ifNil: [
-		aConnectionPoint color: Color red.
-		clickedConnectionPoint := aConnectionPoint]
-	ifNotNil: [
-		self clickedConnectionPoint color: Color green. 
-		(aConnectionPoint == self clickedConnectionPoint) ifTrue: [clickedConnectionPoint := nil]
-		ifFalse: [ clickedConnectionPoint := aConnectionPoint ]].
+SUSSimulation >> notifyClickedAt: aConnectionPoint [ 
+	clickedConnectionPoint
+		ifNil: [self clickedConnectionPoint: aConnectionPoint]
+		ifNotNil: [aConnectionPoint == clickedConnectionPoint
+				ifTrue: [self clickedConnectionPoint: nil]
+				ifFalse: [self clickedConnectionPoint: aConnectionPoint]]
 ]
 
 {
@@ -178,18 +179,26 @@ SUSSimulation >> roads [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/12/2024 18:53'
+	#'squeak_changestamp' : 'PM 6/12/2024 19:57'
 }
-SUSSimulation >> spawnClass [
-	^ spawnClass
+SUSSimulation >> selectedSpawnType [
+	^ roadFactory selectedRoadType
 ]
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/12/2024 18:53'
+	#'squeak_changestamp' : 'PM 6/12/2024 19:57'
 }
-SUSSimulation >> spawnClass: aClass [
-	spawnClass := aClass
+SUSSimulation >> selectedSpawnType: aSymbol [
+	roadFactory selectedRoadType: aSymbol
+]
+
+{
+	#category : #simulation,
+	#'squeak_changestamp' : 'PM 6/12/2024 20:00'
+}
+SUSSimulation >> startingPointPosition [
+	^ 200@300
 ]
 
 {
@@ -220,15 +229,20 @@ SUSSimulation >> stopSimulation [
 
 {
 	#category : #'event handling',
-	#'squeak_changestamp' : 'PM 6/12/2024 18:57'
+	#'squeak_changestamp' : 'PM 6/13/2024 00:15'
 }
-SUSSimulation >> tryToBuildRoadTo: aPoint [
-	self spawnClass newOnSimulation: self from: clickedConnectionPoint to: aPoint.
-	self spawnClass = #StraightRoad
-		ifTrue: [^ clickedConnectionPoint connectStraightRoadFromMousePos: Sensor cursorPoint].
-	self spawnClass = #CurvyRoad
-		ifTrue: [^ clickedConnectionPoint connectCurvyRoadFromMousePos: Sensor cursorPoint].
-	self spawnClass = #CrossIntersection
-		ifTrue: [^ clickedConnectionPoint connectCrossIntersectionFromMousePos: Sensor cursorPoint].
-		^ false.
+SUSSimulation >> tryToBuildRoadTo: aPoint [ 
+	| canBuildRoad wasStartingPoint |
+	wasStartingPoint := clickedConnectionPoint isStartingPoint.
+	wasStartingPoint
+		ifTrue: [clickedConnectionPoint direction: aPoint - clickedConnectionPoint position].
+	canBuildRoad := roadFactory canBuildRoadFrom: clickedConnectionPoint to: aPoint.
+	canBuildRoad
+		ifTrue: [self
+				addMorph: (roadFactory buildRoadFrom: clickedConnectionPoint to: aPoint)].
+	wasStartingPoint
+		ifTrue: [canBuildRoad
+				ifTrue: [clickedConnectionPoint direction: (clickedConnectionPoint position - aPoint)]
+				ifFalse: [clickedConnectionPoint direction: 0 @ 0]].
+	^ canBuildRoad
 ]

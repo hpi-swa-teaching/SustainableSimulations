@@ -3,44 +3,34 @@ Class {
 	#superclass : #CircleMorph,
 	#instVars : [
 		'direction',
-		'road',
+		'firstRoad',
+		'secondRoad',
 		'simulation',
 		'isStartingPoint',
 		'adjacentConnectionPoint'
 	],
-	#category : #SustainableSimulations
+	#category : #'SustainableSimulations-Core'
 }
 
 {
 	#category : #'instance creation',
-	#'squeak_changestamp' : 'PM 6/12/2024 17:06'
+	#'squeak_changestamp' : 'PM 6/12/2024 23:41'
 }
-SUSConnectionPoint class >> newAsStartingPointForSimulation: aSimulation withDirection: aPoint [
-	^ self new road: aSimulation;
-		direction: aPoint;
-		isStartingPoint: true;
+SUSConnectionPoint class >> newForRoad: aRoad at: aDirectedPoint [
+	^ self new simulation: aRoad simulation;
+		connectRoad: aRoad;
+		center: aDirectedPoint position;
+		direction: aDirectedPoint direction;
 		yourself
 ]
 
 {
 	#category : #'instance creation',
-	#'squeak_changestamp' : 'PM 6/11/2024 01:06'
+	#'squeak_changestamp' : 'PM 6/12/2024 23:39'
 }
-SUSConnectionPoint class >> newAtPosition: aPoint withDirection: anotherPoint [
-	^ self new position: aPoint;
-		direction: anotherPoint;
-		isStartingPoint: false;
-		yourself
-]
-
-{
-	#category : #'instance creation',
-	#'squeak_changestamp' : 'GoChriNo 6/5/2024 08:59'
-}
-SUSConnectionPoint class >> newForRoad: aRoad withDirection: aPoint [
-	^ self new road: aRoad;
-		direction: aPoint;
-		isStartingPoint: false;
+SUSConnectionPoint class >> newStartingPointForSimulation: aSimulation at: aPoint [
+	^ self new simulation: aSimulation;
+		center: aPoint;
 		yourself
 ]
 
@@ -53,22 +43,19 @@ SUSConnectionPoint >> adjacentConnectionPoint: anObject [
 ]
 
 {
+	#category : #'event handling',
+	#'squeak_changestamp' : 'PM 6/12/2024 22:28'
+}
+SUSConnectionPoint >> asDirectedPoint [
+	^ SUSDirectedPoint newWithPosition: self center inDirection: self direction
+]
+
+{
 	#category : #accessing,
 	#'squeak_changestamp' : 'PM 6/11/2024 05:39'
 }
 SUSConnectionPoint >> askForDegrees [
 	^ (UIManager default request: 'Please enter rotation degrees (0 < x < 180)' initialAnswer: 90) asNumber
-]
-
-{
-	#category : #accessing,
-	#'squeak_changestamp' : 'GoChriNo 6/10/2024 17:00'
-}
-SUSConnectionPoint >> center [
-	self road
-		ifNotNil: [self road isFlexed
-				ifTrue: [^ self rotatedCenter]].
-	^ super center
 ]
 
 {
@@ -142,6 +129,19 @@ SUSConnectionPoint >> connectCurvyRoadFromMousePos: mousePos [
 ]
 
 {
+	#category : #drawing,
+	#'squeak_changestamp' : 'PM 6/13/2024 00:17'
+}
+SUSConnectionPoint >> connectRoad: aRoad [ 
+	isStartingPoint
+		ifTrue: [firstRoad := aRoad]
+		ifFalse: [secondRoad := aRoad.
+			firstRoad updateLanes: secondRoad.
+			simulation removeMorph: self].
+	isStartingPoint := false
+]
+
+{
 	#category : #connection,
 	#'squeak_changestamp' : 'PM 6/11/2024 02:52'
 }
@@ -197,7 +197,7 @@ SUSConnectionPoint >> connectWithConnectionPoint: aConenctionPoint [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 5/27/2024 23:00'
+	#'squeak_changestamp' : 'PM 6/12/2024 22:28'
 }
 SUSConnectionPoint >> direction [
 	^ direction
@@ -205,7 +205,7 @@ SUSConnectionPoint >> direction [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 5/27/2024 23:00'
+	#'squeak_changestamp' : 'PM 6/12/2024 22:28'
 }
 SUSConnectionPoint >> direction: anObject [
 	direction := anObject
@@ -228,14 +228,9 @@ SUSConnectionPoint >> getLengthFromMousePos: mousePos [
 
 {
 	#category : #'event handling',
-	#'squeak_changestamp' : 'GoChriNo 6/5/2024 09:22'
+	#'squeak_changestamp' : 'PM 6/12/2024 23:32'
 }
-SUSConnectionPoint >> handleMouseDown: anEvent [ 
-	| simulation |
-	self color: Color red.
-	self isStartingPoint
-		ifTrue: [simulation := self road]
-		ifFalse: [simulation := self road simulation].
+SUSConnectionPoint >> handleMouseDown: anEvent [
 	simulation notifyClickedAt: self
 ]
 
@@ -249,55 +244,33 @@ SUSConnectionPoint >> handlesMouseDown: anEvent [
 
 {
 	#category : #initialization,
-	#'squeak_changestamp' : 'PM 5/28/2024 00:48'
+	#'squeak_changestamp' : 'PM 6/12/2024 23:41'
 }
 SUSConnectionPoint >> initialize [
 	super initialize.
 	
-	self color: Color green
+	isStartingPoint := true.
+	direction := 0@0.
+	
+	self color: Color green;
+		sticky: true;
+		morphicLayerNumber: 20
 ]
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'GoChriNo 6/5/2024 08:58'
+	#'squeak_changestamp' : 'PM 6/12/2024 23:52'
 }
 SUSConnectionPoint >> isStartingPoint [
 	^ isStartingPoint
 ]
 
 {
-	#category : #accessing,
-	#'squeak_changestamp' : 'GoChriNo 6/5/2024 08:58'
+	#category : #drawing,
+	#'squeak_changestamp' : 'PM 6/12/2024 19:16'
 }
-SUSConnectionPoint >> isStartingPoint: anObject [
-	isStartingPoint := anObject
-]
-
-{
-	#category : #accessing,
-	#'squeak_changestamp' : 'PM 5/27/2024 23:00'
-}
-SUSConnectionPoint >> road [
-	^ road
-]
-
-{
-	#category : #accessing,
-	#'squeak_changestamp' : 'PM 5/27/2024 23:00'
-}
-SUSConnectionPoint >> road: anObject [
-	road := anObject
-]
-
-{
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'GoChriNo 6/5/2024 21:13'
-}
-SUSConnectionPoint >> rotatedCenter [
-	| dir rotation |
-	dir := self extent / 2.
-	rotation := self road rotationDegrees / 360 * 2 * 3.1415926.
-	^ self positionInWorld + (dir x * rotation cos + (dir y * rotation sin negated) @ (dir x * rotation sin + (dir y * rotation cos)))
+SUSConnectionPoint >> select [
+	self color: Color red
 ]
 
 {

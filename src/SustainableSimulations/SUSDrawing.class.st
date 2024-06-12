@@ -2,9 +2,11 @@ Class {
 	#name : #SUSDrawing,
 	#superclass : #Morph,
 	#instVars : [
-		'paths'
+		'paths',
+		'from',
+		'to'
 	],
-	#category : #SustainableSimulations
+	#category : #'SustainableSimulations-UI'
 }
 
 {
@@ -50,19 +52,6 @@ SUSDrawing class >> midMarkLength [
 
 {
 	#category : #'instance creation',
-	#'squeak_changestamp' : 'PM 6/11/2024 00:22'
-}
-SUSDrawing class >> newCrossIntersetion [
-
-	^ (SUSDrawing new
-		extent: 4@4 * SUSDrawing normalLaneWidth;
-		color: SUSDrawing colorRoad)
-		addCrossInterMarks;
-		generateCrossInterPaths
-]
-
-{
-	#category : #'instance creation',
 	#'squeak_changestamp' : 'PM 6/11/2024 04:15'
 }
 SUSDrawing class >> newCurveTo: aPoint withDirection: anotherPoint [
@@ -70,21 +59,6 @@ SUSDrawing class >> newCurveTo: aPoint withDirection: anotherPoint [
 		extent: aPoint abs;
 		color: SUSDrawing colorRoad)
 		generateCurvePathsTo: aPoint withDirection: anotherPoint
-]
-
-{
-	#category : #'instance creation',
-	#'squeak_changestamp' : 'Len 6/1/2024 20:42'
-}
-SUSDrawing class >> newNormalRoadWithLength: aNumber [
-
-	^ (SUSDrawing new
-		extent: aNumber@(SUSDrawing normalLaneWidth * 2);
-		color: SUSDrawing colorRoad)
-		addStraightMarks;
-		generateNormalPathFrom: 0@(SUSDrawing normalLaneWidth * 1.5) To: aNumber@(SUSDrawing normalLaneWidth * 1.5);
-		generateNormalPathFrom: aNumber@(SUSDrawing normalLaneWidth * 0.5) To: 0@(SUSDrawing normalLaneWidth * 0.5)
-		
 ]
 
 {
@@ -106,30 +80,6 @@ SUSDrawing class >> verticesLineCurve [
 
 {
 	#category : #drawing,
-	#'squeak_changestamp' : 'Len 6/1/2024 21:40'
-}
-SUSDrawing >> addCrossInterMarks [
-
-	self addCurveAt: SUSDrawing normalLaneWidth@SUSDrawing normalLaneWidth * 0.55 withRotation: 0.
-	self addCurveAt: SUSDrawing normalLaneWidth@SUSDrawing normalLaneWidth * 3.45 withRotation: 180.
-	self addCurveAt: (SUSDrawing normalLaneWidth * 0.55)@(SUSDrawing normalLaneWidth * 3.45) withRotation: 270.
-	self addCurveAt: (SUSDrawing normalLaneWidth * 3.45)@(SUSDrawing normalLaneWidth * 0.55) withRotation: 90.
-	
-	self addMorphInLayer: ((self generateMarkWithLength: SUSDrawing normalLaneWidth * 0.6) 
-		center: (SUSDrawing normalLaneWidth * 0.3)@(SUSDrawing normalLaneWidth * 2)).
-	self addMorphInLayer: ((self generateMarkWithLength: SUSDrawing normalLaneWidth * 0.6) 
-		center: (SUSDrawing normalLaneWidth * 3.7)@(SUSDrawing normalLaneWidth * 2)).
-	self addMorphInLayer: (((self generateMarkWithLength: SUSDrawing normalLaneWidth * 0.6) 
-		rotationDegrees: 90; addFlexShellIfNecessary) center: (SUSDrawing normalLaneWidth * 2)@(SUSDrawing normalLaneWidth * 0.3)).
-	self addMorphInLayer: (((self generateMarkWithLength: SUSDrawing normalLaneWidth * 0.6)
-		rotationDegrees: 90; addFlexShellIfNecessary) center: (SUSDrawing normalLaneWidth * 2)@(SUSDrawing normalLaneWidth * 3.7)).
-		
-	self addMorphInLayer: (self generateStopMark center: (SUSDrawing normalLaneWidth * 1.5)@(SUSDrawing normalLaneWidth * 0.5)).
-	self addMorphInLayer: (self generateStopMark center: (SUSDrawing normalLaneWidth * 2.5)@(SUSDrawing normalLaneWidth * 3.5))
-]
-
-{
-	#category : #drawing,
 	#'squeak_changestamp' : 'Len 5/26/2024 23:03'
 }
 SUSDrawing >> addCurveAt: aPoint withRotation: aNumber [
@@ -144,6 +94,14 @@ SUSDrawing >> addCurveAt: aPoint withRotation: aNumber [
 			rotationDegrees: aNumber;
 			addFlexShellIfNecessary) 
 	 	center: aPoint)
+]
+
+{
+	#category : #initialization,
+	#'squeak_changestamp' : 'PM 6/12/2024 20:21'
+}
+SUSDrawing >> addDetailFrom: aDirectedPoint to: aPoint [
+	self subclassResponsibility
 ]
 
 {
@@ -180,46 +138,28 @@ SUSDrawing >> addPathWithVertices: aCollection [
 ]
 
 {
-	#category : #drawing,
-	#'squeak_changestamp' : 'Len 5/26/2024 23:16'
+	#category : #initialization,
+	#'squeak_changestamp' : 'PM 6/12/2024 20:21'
 }
-SUSDrawing >> addStraightMarks [
-
-	self addMorphInLayer: (
-		(self generateMarkWithLength: self extent x - (SUSDrawing markWidth)) 
-		position: 0@SUSDrawing markWidth).
-	self addMorphInLayer: (
-		(self generateMarkWithLength: self extent x - (SUSDrawing markWidth)) 
-		position: 0@(self extent y - (SUSDrawing markWidth * 2))).
-	self addMidMark
+SUSDrawing >> addPathsFrom: aDirectedPoint to: aPoint [
+	"Create paths here"
+	self subclassResponsibility.
 ]
 
 {
-	#category : #drawing,
-	#'squeak_changestamp' : 'Len 6/10/2024 01:45'
+	#category : #initialization,
+	#'squeak_changestamp' : 'PM 6/12/2024 23:09'
 }
-SUSDrawing >> generateCrossInterPaths [
-	| factor |
-	factor := SUSDrawing normalLaneWidth.
-	"From top"
-	self addPathWithVertices: ({1.5@0. 1.5@2.5. 4@2.5} * factor). "Left"
-	self addPathWithVertices: ({1.5@0. 1.5@2. 1.5@4} * factor). "Straight"
-	self addPathWithVertices: ({1.5@0. 1.5@1.5. 0@1.5} * factor). "Right"
-	"From bottom"
-	self addPathWithVertices: ({2.5@4. 2.5@2. 2.5@0} * factor). "Straight"
-	self addPathWithVertices: ({2.5@4. 2.5@2.5. 4@2.5} * factor). "Right"
-	self addPathWithVertices: ({2.5@4. 2.5@1.5. 0@1.5} * factor). "Left"
-	"From left"
-	self addPathWithVertices: ({0@2.5. 1.5@2.5. 1.5@4} * factor). "Right"
-	self addPathWithVertices: ({0@2.5. 2.5@2.5. 2.5@0} * factor). "Left"
-	self addPathWithVertices: ({0@2.5. 2@2.5. 4@2.5} * factor). "Straight"
-	
-	self addPathWithVertices: ({0@2.5. 2.5@2.5. 2.5@0} * factor). "Left"
-	"From right"
-	self addPathWithVertices: ({4@1.5. 2@1.5. 0@1.5} * factor). "Straight"
-	self addPathWithVertices: ({4@1.5. 2.5@1.5. 2.5@0} * factor). "Right"
-	self addPathWithVertices: ({4@1.5. 1.5@1.5. 1.5@4} * factor). "Left"
-	
+SUSDrawing >> baseLayer [
+	^ 29
+]
+
+{
+	#category : #initialization,
+	#'squeak_changestamp' : 'PM 6/12/2024 23:09'
+}
+SUSDrawing >> detailLayer [
+	^ 28
 ]
 
 {
@@ -268,68 +208,21 @@ SUSDrawing >> generateCurvePathsTo: aPosition withDirection: aDirection [
 ]
 
 {
-	#category : #drawing,
-	#'squeak_changestamp' : 'Len 5/23/2024 09:55'
+	#category : #initialization,
+	#'squeak_changestamp' : 'PM 6/12/2024 22:17'
 }
-SUSDrawing >> generateMarkWithLength: aNumber [
-
-	^ LineMorph 
-		from: 0@0
-		to: aNumber@0
-		color: SUSDrawing colorMark 
-		width: SUSDrawing markWidth
-
-]
-
-{
-	#category : #drawing,
-	#'squeak_changestamp' : 'Len 6/1/2024 20:14'
-}
-SUSDrawing >> generateNormalPathFrom: aPoint To: anotherPoint [
-	| path |
-	path := CurveMorph vertices: {aPoint. anotherPoint}
-			color: (Color r: 0 g: 0 b: 0 alpha: 0) 
-			borderWidth: 2 
-			borderColor: SUSDrawing colorPath.
-	self addMorphInLayer: path.
-	paths add: path
-]
-
-{
-	#category : #drawing,
-	#'squeak_changestamp' : 'Len 5/26/2024 23:34'
-}
-SUSDrawing >> generateStopMark [
-
-	^ Morph new 
-		extent: (SUSDrawing normalLaneWidth)@(SUSDrawing markWidth * 3);
-		color: SUSDrawing colorMark;
-		yourself
-
-]
-
-{
-	#category : #drawing,
-	#'squeak_changestamp' : 'Len 5/23/2024 09:31'
-}
-SUSDrawing >> generateStraightPathWithYValue: aNumber [
-	| path |
-	path := CurveMorph vertices: {0@aNumber. self extent x@aNumber}
-			color: (Color r: 0 g: 0 b: 0 alpha: 0) 
-			borderWidth: 2 
-			borderColor: SUSDrawing colorPath.
-	self addMorphInLayer: path.
-	paths add: path
+SUSDrawing >> initialize [
+	super initialize.
+	self morphicLayerNumber: self baseLayer.
+	paths := OrderedCollection new
 ]
 
 {
 	#category : #initialization,
-	#'squeak_changestamp' : 'Len 5/21/2024 17:36'
+	#'squeak_changestamp' : 'PM 6/12/2024 23:09'
 }
-SUSDrawing >> initialize [
-
-	super initialize.
-	paths := OrderedCollection new
+SUSDrawing >> pathLayer [
+	^ 27
 ]
 
 {
