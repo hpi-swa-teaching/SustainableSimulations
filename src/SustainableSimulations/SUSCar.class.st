@@ -24,26 +24,95 @@ SUSCar class >> newOnSimulation: aSimulation [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'MK 6/3/2024 21:17'
+	#'squeak_changestamp' : 'GoChriNo 6/14/2024 15:59'
 }
 SUSCar class >> newOnSimulation: aSimulation withSpeed: aNumber [
 	^ self new 
 		simulation: aSimulation;
-		speed: aNumber;
+		maxSpeed: aNumber;
+		speedGoal: aNumber;
 		postInitialization;
 		yourself
 ]
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'MK 6/10/2024 23:40'
+	#'squeak_changestamp' : 'GoChriNo 6/14/2024 15:59'
 }
 SUSCar class >> newOnSimulation: aSimulation withSpeed: aNumber onRoad: aRoad [
 	^ self new 
 		simulation: aSimulation;
-		speed: aNumber;
+		maxSpeed: aNumber;
+		speedGoal: aNumber;
 		placeCarOnRoad: aRoad;
 		yourself
+]
+
+{
+	#category : #behavior,
+	#'squeak_changestamp' : 'GoChriNo 6/15/2024 09:25'
+}
+SUSCar >> applyAcceleration [
+	self speed < speedGoal
+		ifTrue: [self speed: self speed + (self acceleration * 0.001 * self deltaTime).
+			self speed > self speedGoal
+				ifTrue: [self speed: self speedGoal]]
+		ifFalse: [self speed: self speed - (self deacceleration * 0.001 * self deltaTime).
+			self speed < self speedGoal
+				ifTrue: [self speed: self speedGoal]]
+]
+
+{
+	#category : #behavior,
+	#'squeak_changestamp' : 'GoChriNo 6/14/2024 15:09'
+}
+SUSCar >> applyBehavior [
+	self deltaTime: Time millisecondClock - self lastTime.
+	self lastTime: Time millisecondClock.
+	self applyAcceleration.
+	self applyMovement.
+]
+
+{
+	#category : #behavior,
+	#'squeak_changestamp' : 'GoChriNo 6/15/2024 19:18'
+}
+SUSCar >> applyCautiousness: t [ 
+	| nextCar dist diffSpeed |
+	nextCar := self getNextCar.
+	nextCar == self
+		ifTrue: [self color: Color blue.
+			self lane nextLanes isEmpty
+				ifTrue: [dist := self owner center
+								dist: (self lane getPositionWithTValue: 1).
+					dist <= (self speed squared / (self deacceleration * 2) * 1000 / 360)
+						ifTrue: [self isAccelerating: false.
+							self speedGoal: 0]]]
+		ifFalse: [(self isOnOwnLane: nextCar)
+				ifTrue: [dist := nextCar lastPoint - self lastPoint * self lane length]
+				ifFalse: [dist := 1 - self lastPoint * self lane length + (nextCar lastPoint * nextCar lane length)].
+			diffSpeed := self speed - nextCar speed.
+			dist <= (diffSpeed squared / (self deacceleration * 2) * 1000 / 360 + 100)
+				ifTrue: [self isAccelerating: false.
+					self speedGoal: nextCar speed]
+				ifFalse: [self speedGoal: self maxSpeed.
+					self isAccelerating: true]]
+]
+
+{
+	#category : #behavior,
+	#'squeak_changestamp' : 'GoChriNo 6/15/2024 08:56'
+}
+SUSCar >> applyMovement [
+	| t rotation |
+	t := lastPoint + (self deltaTime / self lane length * (self speed / 360)).
+	t >= 1 ifTrue: [self changeLane. t := lastPoint].
+	self applyCautiousness: t.
+	self owner center: (self lane getPositionWithTValue: t).
+	rotation := (lane getRotationWithTValue: t).
+	rotation first = 1
+		ifTrue:[ self rotationDegrees: rotation second ].
+	self lastPoint: t.
 ]
 
 {
@@ -79,7 +148,7 @@ SUSCar >> calculateNewT [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'Len 6/10/2024 01:06'
+	#'squeak_changestamp' : 'GoChriNo 6/14/2024 15:19'
 }
 SUSCar >> changeLane [
 	lane nextLanes isEmpty
@@ -92,8 +161,8 @@ SUSCar >> changeLane [
 			"lane := lane nextLanes first."
 			lane := (lane nextLanes at: (random nextInt: (lane nextLanes size))).
 			lane addCar: self.
-			lastPoint := {0. (Time millisecondClock)}]
-		ifTrue: [{1. (Time millisecondClock)}]
+			lastPoint := 0.]
+		ifTrue: [lastPoint := 1.]
 ]
 
 {
@@ -155,8 +224,21 @@ SUSCar >> fuelLevel: aNumber [
 ]
 
 {
+	#category : #behavior,
+	#'squeak_changestamp' : 'GoChriNo 6/15/2024 18:55'
+}
+SUSCar >> getNextCar [
+
+	| nextCar |
+	nextCar := self lane getPreviousCarOnLane: self.
+	nextCar = self ifTrue: [
+		(self lane nextLanes) do: [:each | each cars isEmpty ifFalse: [^ each cars last]]. ^ self].
+	^ nextCar
+]
+
+{
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'MK 6/10/2024 17:24'
+	#'squeak_changestamp' : 'GoChriNo 6/15/2024 09:23'
 }
 SUSCar >> initialize [
 	super initialize.
@@ -165,14 +247,30 @@ SUSCar >> initialize [
 	self addFlexShellIfNecessary.
 
 	timeRoadStart := Time millisecondClock.
+	lastTime := Time millisecondClock.
+	speed := 0.
 	maxSpeed := 50.
-	acceleration := 10.
+	speedGoal := 50.
+	acceleration := 50.
+	deacceleration := 100.
 	length := 1.
 	driver := 'Unknown'.
 	fuelLevel := 100.
+	isAccelerating := true.
 	
-	lastPoint := {0. Time millisecondClock}.
+	lastPoint := 0.
 	blockedOldLane := false
+]
+
+{
+	#category : #behavior,
+	#'squeak_changestamp' : 'GoChriNo 6/15/2024 19:07'
+}
+SUSCar >> isOnOwnLane: aVehicle [ 
+	self lane cars
+		do: [:each | each == aVehicle
+				ifTrue: [^ true]].
+	^ false
 ]
 
 {

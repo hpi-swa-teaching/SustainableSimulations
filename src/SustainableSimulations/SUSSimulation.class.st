@@ -255,17 +255,18 @@ SUSSimulation >> roads [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'Len 6/10/2024 01:34'
+	#'squeak_changestamp' : 'GoChriNo 6/14/2024 15:16'
 }
 SUSSimulation >> step [
 
 	cars do: [:car | 
-		car move]
+		car applyBehavior.
+		"car move"]
 ]
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'MK 6/4/2024 01:15'
+	#'squeak_changestamp' : 'GoChriNo 6/14/2024 14:58'
 }
 SUSSimulation >> stepTime [
 	^10
