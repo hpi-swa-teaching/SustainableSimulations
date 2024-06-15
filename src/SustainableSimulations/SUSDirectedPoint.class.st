@@ -125,8 +125,8 @@ SUSDirectedPoint >> projectionOf: aPoint [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/12/2024 22:04'
+	#'squeak_changestamp' : 'PM 6/15/2024 15:48'
 }
-SUSDirectedPoint >> relativeOffset: aPoint [
-	^ ((direction rotateBy: 270 degreesToRadians about: 0@0) normalized * aPoint x) + (direction normalized * aPoint y)
+SUSDirectedPoint >> relativeOffset: aPoint [ 
+	^ (direction rotateBy: 270 degreesToRadians about: 0 @ 0) normalized * aPoint x + (direction normalized * aPoint y)
 ]
