@@ -1,89 +1,142 @@
 Class {
 	#name : #SUSCrossIntersectionDrawing,
 	#superclass : #SUSDrawing,
+	#instVars : [
+		'curveA'
+	],
 	#category : #'SustainableSimulations-UI'
 }
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/13/2024 00:51'
+	#'squeak_changestamp' : 'PM 6/15/2024 15:38'
 }
-SUSCrossIntersectionDrawing class >> newWithDegrees: aNumber [
-	^ self new rotationDegrees: aNumber;
-		yourself
+SUSCrossIntersectionDrawing class >> newFrom: aDirectedPoint to: aPoint [
+	| corners min max from to |
+	corners := ({2 negated@0 . 2 negated@4 . 2@4 . 2@0} * SUSDrawing normalLaneWidth) collect: [:each | aDirectedPoint absoluteOffset: each].
+	min := corners min.
+	max := corners max.
+	from := SUSDirectedPoint newWithPosition: (aDirectedPoint position - min) inDirection: aDirectedPoint direction.
+	to := aPoint - min.
+	^ self new addDetailFrom: from to: to;
+		addPathsFrom: from to: to;
+		extent: max - min;
+		position: min;
+		yourself.
 ]
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/12/2024 20:18'
+	#'squeak_changestamp' : 'PM 6/15/2024 14:04'
 }
-SUSCrossIntersectionDrawing >> addCrossInterMarks [
-
-	self addCurveAt: SUSDrawing normalLaneWidth@SUSDrawing normalLaneWidth * 0.55 withRotation: 0.
-	self addCurveAt: SUSDrawing normalLaneWidth@SUSDrawing normalLaneWidth * 3.45 withRotation: 180.
-	self addCurveAt: (SUSDrawing normalLaneWidth * 0.55)@(SUSDrawing normalLaneWidth * 3.45) withRotation: 270.
-	self addCurveAt: (SUSDrawing normalLaneWidth * 3.45)@(SUSDrawing normalLaneWidth * 0.55) withRotation: 90.
-	
-	self addMorphInLayer: ((self generateMarkWithLength: SUSDrawing normalLaneWidth * 0.6) 
-		center: (SUSDrawing normalLaneWidth * 0.3)@(SUSDrawing normalLaneWidth * 2)).
-	self addMorphInLayer: ((self generateMarkWithLength: SUSDrawing normalLaneWidth * 0.6) 
-		center: (SUSDrawing normalLaneWidth * 3.7)@(SUSDrawing normalLaneWidth * 2)).
-	self addMorphInLayer: (((self generateMarkWithLength: SUSDrawing normalLaneWidth * 0.6) 
-		rotationDegrees: 90; addFlexShellIfNecessary) center: (SUSDrawing normalLaneWidth * 2)@(SUSDrawing normalLaneWidth * 0.3)).
-	self addMorphInLayer: (((self generateMarkWithLength: SUSDrawing normalLaneWidth * 0.6)
-		rotationDegrees: 90; addFlexShellIfNecessary) center: (SUSDrawing normalLaneWidth * 2)@(SUSDrawing normalLaneWidth * 3.7)).
-		
-	self addMorphInLayer: (self generateStopMark center: (SUSDrawing normalLaneWidth * 1.5)@(SUSDrawing normalLaneWidth * 0.5)).
-	self addMorphInLayer: (self generateStopMark center: (SUSDrawing normalLaneWidth * 2.5)@(SUSDrawing normalLaneWidth * 3.5))
+SUSCrossIntersectionDrawing >> addBaseFrom: aDirectedPoint [ 
+	| vertices |
+	vertices := {2 negated @ 0. 2 negated @ 4. 2 @ 4. 2 @ 0} * SUSDrawing normalLaneWidth.
+	self addMorphInLayer: ((PolygonMorph
+			vertices: (vertices
+					collect: [:aPoint | aDirectedPoint absoluteOffset: aPoint])
+			color: SUSDrawing colorRoad
+			borderWidth: 4
+			borderColor: SUSDrawing colorRoad) morphicLayerNumber: self baseLayer;
+			 yourself)
 ]
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/12/2024 21:40'
+	#'squeak_changestamp' : 'PM 6/15/2024 15:06'
+}
+SUSCrossIntersectionDrawing >> addCrossInterMarksFrom: aDirectedPoint [
+	self addMarkFrom: (aDirectedPoint absoluteOffset: 0@0) to: (aDirectedPoint absoluteOffset: 0@0.6 * SUSDrawing normalLaneWidth);
+		addMarkFrom: (aDirectedPoint absoluteOffset: 0@3.4 * SUSDrawing normalLaneWidth) to: (aDirectedPoint absoluteOffset: 0@4 * SUSDrawing normalLaneWidth);
+		addMarkFrom: (aDirectedPoint absoluteOffset: 2 negated@2 * SUSDrawing normalLaneWidth) to: (aDirectedPoint absoluteOffset: 1.4 negated@2 * SUSDrawing normalLaneWidth);
+		addMarkFrom: (aDirectedPoint absoluteOffset: 1.4@2 * SUSDrawing normalLaneWidth) to: (aDirectedPoint absoluteOffset: 2@2 * SUSDrawing normalLaneWidth);
+		addMidMarkFrom: (aDirectedPoint absoluteOffset: 1.4 negated@1 * SUSDrawing normalLaneWidth) to: (aDirectedPoint absoluteOffset: 1.4 negated@2 * SUSDrawing normalLaneWidth);
+		addMidMarkFrom: (aDirectedPoint absoluteOffset: 1.4@3 * SUSDrawing normalLaneWidth) to: (aDirectedPoint absoluteOffset: 1.4@2 * SUSDrawing normalLaneWidth).
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'PM 6/15/2024 14:58'
+}
+SUSCrossIntersectionDrawing >> addCurveFrom: aDirectedPoint withVertices: vertices [
+	self addMorphInLayer: ((LineMorph
+			vertices: (vertices * SUSDrawing normalLaneWidth
+					collect: [:aPoint | aDirectedPoint absoluteOffset: aPoint])
+			color: Color transparent
+			borderWidth: SUSDrawing markWidth
+			borderColor: SUSDrawing colorMark) beSmoothCurve; 
+			morphicLayerNumber: self detailLayer;
+			yourself).
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'PM 6/15/2024 14:59'
+}
+SUSCrossIntersectionDrawing >> addCurvesFrom: aDirectedPoint [
+	self addCurveFrom: aDirectedPoint withVertices: {1 negated@0. 1 negated@0.7. 1.3 negated@1. 2 negated@1. 1.3 negated@1. 1 negated@0.7}.
+	self addCurveFrom: aDirectedPoint withVertices: {2 negated@3 . 1.3 negated@3 . 1 negated @ 3.3 . 1 negated @ 4 . 1 negated @ 3.3 . 1.3 negated@3}.
+	self addCurveFrom: aDirectedPoint withVertices: {1@0. 1@0.7. 1.3@1. 2@1. 1.3@1. 1@0.7}.
+	self addCurveFrom: aDirectedPoint withVertices: {2@3 . 1.3@3 . 1 @ 3.3 . 1 @ 4 . 1 @ 3.3 . 1.3@3}.
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'PM 6/15/2024 14:59'
 }
 SUSCrossIntersectionDrawing >> addDetailFrom: aDirectedPoint to: aPoint [
-	self extent: 4@4 * SUSDrawing normalLaneWidth;
-		color: SUSDrawing colorRoad;
-		addCrossInterMarks
+	self color: Color transparent.
+	self addBaseFrom: aDirectedPoint.
+	self addCrossInterMarksFrom: aDirectedPoint.
+	self addCurvesFrom: aDirectedPoint.
 ]
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/12/2024 20:22'
+	#'squeak_changestamp' : 'PM 6/15/2024 14:27'
+}
+SUSCrossIntersectionDrawing >> addMidMarkFrom: aPoint to: anotherPoint [ 
+	self addMorphInLayer: ((LineMorph
+			from: aPoint
+			to: anotherPoint
+			color: SUSDrawing colorMark
+			width: SUSDrawing markWidth * 2) morphicLayerNumber: self detailLayer;
+			 yourself)
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'PM 6/15/2024 15:08'
+}
+SUSCrossIntersectionDrawing >> addPathFrom: aDirectedPoint withVertices: aCollection [
+	self addPathWithVertices: (aCollection * SUSDrawing normalLaneWidth collect: [:aPoint | aDirectedPoint absoluteOffset: aPoint ])
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'PM 6/15/2024 15:24'
 }
 SUSCrossIntersectionDrawing >> addPathsFrom: aDirectedPoint to: aPoint [
 	| factor |
 	factor := SUSDrawing normalLaneWidth.
-	"From top"
-	self addPathWithVertices: ({1.5@0. 1.5@2.5. 4@2.5} * factor). "Left"
-	self addPathWithVertices: ({1.5@0. 1.5@2. 1.5@4} * factor). "Straight"
-	self addPathWithVertices: ({1.5@0. 1.5@1.5. 0@1.5} * factor). "Right"
-	"From bottom"
-	self addPathWithVertices: ({2.5@4. 2.5@2. 2.5@0} * factor). "Straight"
-	self addPathWithVertices: ({2.5@4. 2.5@2.5. 4@2.5} * factor). "Right"
-	self addPathWithVertices: ({2.5@4. 2.5@1.5. 0@1.5} * factor). "Left"
 	"From left"
-	self addPathWithVertices: ({0@2.5. 1.5@2.5. 1.5@4} * factor). "Right"
-	self addPathWithVertices: ({0@2.5. 2.5@2.5. 2.5@0} * factor). "Left"
-	self addPathWithVertices: ({0@2.5. 2@2.5. 4@2.5} * factor). "Straight"
+	self addPathFrom: aDirectedPoint withVertices: { 0.5@0 . 0.5@2.5 . 2 negated@2.5 }. "Left"
+	self addPathFrom: aDirectedPoint withVertices: { 0.5@0 . 0.5@2 . 0.5@4 }. "Straight"
+	self addPathFrom: aDirectedPoint withVertices: { 0.5@0 . 0.5@1.5 . 2@1.5 }. "Right"
 	
-	self addPathWithVertices: ({0@2.5. 2.5@2.5. 2.5@0} * factor). "Left"
+	"From bottom"
+	self addPathFrom: aDirectedPoint withVertices: { 2@2.5 . 0.5@2.5 . 0.5@4 }. "Left"
+	self addPathFrom: aDirectedPoint withVertices: { 2@2.5 . 0@2.5 . 2 negated@2.5 }. "Straight"
+	self addPathFrom: aDirectedPoint withVertices: { 2@2.5 . 0.5 negated@2.5 . 0.5 negated@0 }. "Right"
+	
 	"From right"
-	self addPathWithVertices: ({4@1.5. 2@1.5. 0@1.5} * factor). "Straight"
-	self addPathWithVertices: ({4@1.5. 2.5@1.5. 2.5@0} * factor). "Right"
-	self addPathWithVertices: ({4@1.5. 1.5@1.5. 1.5@4} * factor). "Left"
+	self addPathFrom: aDirectedPoint withVertices: { 0.5 negated@4 . 0.5 negated@1.5 . 2@1.5 }. "Left"
+	self addPathFrom: aDirectedPoint withVertices: { 0.5 negated@4 . 0.5 negated@2 . 0.5 negated@0 }. "Straight"
+	self addPathFrom: aDirectedPoint withVertices: { 0.5 negated@4 . 0.5 negated@2.5 . 2 negated@2.5 }. "Right"
 	
-]
-
-{
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/12/2024 22:18'
-}
-SUSCrossIntersectionDrawing >> generateStopMark [
-
-	^ Morph new 
-		extent: (SUSDrawing normalLaneWidth)@(SUSDrawing markWidth * 3);
-		color: SUSDrawing colorMark;
-		yourself
-
+	"From top"
+	self addPathFrom: aDirectedPoint withVertices: { 2 negated@1.5 . 0.5@1.5 . 0.5@4 }. "Left"
+	self addPathFrom: aDirectedPoint withVertices: { 2 negated@1.5 . 0@1.5 . 2@1.5 }. "Straight"
+	self addPathFrom: aDirectedPoint withVertices: { 2 negated@1.5 . 0.5 negated@1.5 . 0.5 negated@0 }. "Right"
+	
 ]

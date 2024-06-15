@@ -79,24 +79,6 @@ SUSDrawing class >> verticesLineCurve [
 ]
 
 {
-	#category : #drawing,
-	#'squeak_changestamp' : 'Len 5/26/2024 23:03'
-}
-SUSDrawing >> addCurveAt: aPoint withRotation: aNumber [
-
-	self addMorphInLayer: (
-		((LineMorph 
-			vertices: (SUSDrawing verticesLineCurve * SUSDrawing normalLaneWidth)
-			color: (Color r: 0 g: 0 b: 0 alpha: 0)  
-			borderWidth: SUSDrawing markWidth 
-			borderColor: SUSDrawing colorMark)
-			beSmoothCurve;
-			rotationDegrees: aNumber;
-			addFlexShellIfNecessary) 
-	 	center: aPoint)
-]
-
-{
 	#category : #initialization,
 	#'squeak_changestamp' : 'PM 6/12/2024 20:21'
 }
@@ -105,34 +87,29 @@ SUSDrawing >> addDetailFrom: aDirectedPoint to: aPoint [
 ]
 
 {
-	#category : #drawing,
-	#'squeak_changestamp' : 'Len 5/26/2024 22:38'
+	#category : #initialization,
+	#'squeak_changestamp' : 'PM 6/15/2024 13:19'
 }
-SUSDrawing >> addMidMark [
-	|amount|
-	amount := ((self extent x) / (SUSDrawing midMarkLength * 2)) floor.
-	0 to: amount - 1 do: [ :anIndex |
-		self addMorphInLayer: ((LineMorph 
-			from: 0@0
-			to: SUSDrawing midMarkLength@0
-			color: SUSDrawing colorMark 
-			width: SUSDrawing markWidth)
-			position: (SUSDrawing midMarkLength * 2 * anIndex)@(self center y))]
-
-	 
-
+SUSDrawing >> addMarkFrom: aPoint to: anotherPoint [ 
+	self addMorphInLayer: ((LineMorph
+			from: aPoint
+			to: anotherPoint
+			color: SUSDrawing colorMark
+			width: SUSDrawing markWidth) morphicLayerNumber: self detailLayer;
+			 yourself)
 ]
 
 {
 	#category : #drawing,
-	#'squeak_changestamp' : 'Len 6/1/2024 21:32'
+	#'squeak_changestamp' : 'PM 6/15/2024 15:03'
 }
 SUSDrawing >> addPathWithVertices: aCollection [
 	| path |
 	path := CurveMorph vertices: aCollection
-			color: (Color r: 0 g: 0 b: 0 alpha: 0) 
+			color: Color transparent 
 			borderWidth: 2 
 			borderColor: SUSDrawing colorPath.
+	path morphicLayerNumber: self pathLayer.
 	self addMorphInLayer: path.
 	paths add: path
 ]

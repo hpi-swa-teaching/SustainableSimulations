@@ -11,11 +11,11 @@ Class {
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/13/2024 00:48'
+	#'squeak_changestamp' : 'PM 6/15/2024 13:09'
 }
 SUSStraightRoad >> createDrawingFrom: aConnectionPoint to: aPoint [
 	| drawing |
-	drawing := SUSStraightRoadDrawing newFrom: from position to: to position.
+	drawing := SUSStraightRoadDrawing newFrom: from to: to.
 	
 	(drawing paths) do: [:each |
     		self createLaneWithPath: each].
@@ -27,19 +27,19 @@ SUSStraightRoad >> createDrawingFrom: aConnectionPoint to: aPoint [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/12/2024 23:03'
+	#'squeak_changestamp' : 'PM 6/15/2024 13:10'
 }
 SUSStraightRoad >> from: aDirectedPoint to: aPoint [
 	from := aDirectedPoint.
-	to := SUSDirectedPoint newWithPosition: aPoint inDirection: aDirectedPoint direction
+	to := aPoint
 ]
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/12/2024 23:01'
+	#'squeak_changestamp' : 'PM 6/15/2024 13:13'
 }
 SUSStraightRoad >> otherConnectionPointPositionsThan: aConnectionPoint [ 
-	^ { SUSConnectionPoint newForRoad: self at: to}
+	^ { SUSConnectionPoint newForRoad: self at: (SUSDirectedPoint newWithPosition: to inDirection: from direction)}
 ]
 
 {

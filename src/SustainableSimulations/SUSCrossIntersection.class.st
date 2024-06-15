@@ -6,16 +6,17 @@ Class {
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/13/2024 00:52'
+	#'squeak_changestamp' : 'PM 6/15/2024 14:09'
 }
 SUSCrossIntersection >> createDrawingFrom: aConnectionPoint to: aPoint [
 	| drawing |
-	drawing := SUSCrossIntersectionDrawing newWithDegrees: aConnectionPoint direction degrees.
+	drawing := SUSCrossIntersectionDrawing newFrom: aConnectionPoint asDirectedPoint to: aPoint.
 	
 	(drawing paths) do: [:each |
     		self createLaneWithPath: each].
 	
 	self extent: drawing extent.
+	self position: drawing position.
 	^ drawing
 ]
 
@@ -29,16 +30,17 @@ SUSCrossIntersection >> from: aDirectedPoint to: aPoint [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/13/2024 00:56'
+	#'squeak_changestamp' : 'PM 6/15/2024 15:41'
 }
-SUSCrossIntersection >> otherConnectionPointPositionsThan: aConnectionPoint [
-	| positions directions |
-	positions := {0.5 @ 0. 1 @ 0.5. 0.5 @ 1}.
-	directions := {90 . 180. 270 } collect: [:each | aConnectionPoint direction rotateBy: each degreesToRadians about: 0@0 ].
-	^ (1 to: 4)
-		collect: [:index | (SUSConnectionPoint
-				newForRoad: self
-				withDirection: (directions at: index))
-				center: (self extent * positions at: index);
-				 yourself]
+SUSCrossIntersection >> otherConnectionPointPositionsThan: aConnectionPoint [ 
+	| positions directions directedPoint |
+	directedPoint := aConnectionPoint asDirectedPoint.
+	positions := {2 negated @ 2. 0 @ 4. 2 @ 2} * SUSDrawing normalLaneWidth.
+	directions := {90. 0. 270}
+				collect: [:each | aConnectionPoint direction rotateBy: each degreesToRadians about: 0 @ 0].
+	^ ((1 to: 3)
+		collect: [:index | SUSDirectedPoint
+				newWithPosition: (directedPoint absoluteOffset: (positions at: index))
+				inDirection: (directions at: index)])
+		collect: [:aDirectedPoint | SUSConnectionPoint newForRoad: self at: aDirectedPoint]
 ]

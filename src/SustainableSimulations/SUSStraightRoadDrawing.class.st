@@ -6,16 +6,16 @@ Class {
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/12/2024 22:05'
+	#'squeak_changestamp' : 'PM 6/15/2024 15:35'
 }
-SUSStraightRoadDrawing class >> newFrom: aPoint to: anotherPoint [
+SUSStraightRoadDrawing class >> newFrom: aDirectedPoint to: aPoint [
 	| min max from to extent position |
-	min := aPoint min: anotherPoint.
-	max := aPoint max: anotherPoint.
-	from := SUSDirectedPoint newWithPosition: (aPoint - min) inDirection: (anotherPoint - aPoint).
+	min := aDirectedPoint position min: aPoint.
+	max := aDirectedPoint position max: aPoint.
+	from := SUSDirectedPoint newWithPosition: (aDirectedPoint position - min) inDirection: aDirectedPoint direction.
+	to := aPoint - min.
 	extent :=  (from relativeOffset: 2 * SUSDrawing normalLaneWidth@0) + max - min.
 	position := min + (from relativeOffset: SUSDrawing normalLaneWidth negated@0).
-	to := anotherPoint - min.
 	^ self new addDetailFrom: from to: to;
 		addPathsFrom: from to: to;
 		extent: extent;
@@ -25,7 +25,7 @@ SUSStraightRoadDrawing class >> newFrom: aPoint to: anotherPoint [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/13/2024 00:00'
+	#'squeak_changestamp' : 'PM 6/15/2024 13:59'
 }
 SUSStraightRoadDrawing >> addDetailFrom: aDirectedPoint to: aPoint [
 	| length width pointA pointB pointC pointD |
@@ -44,19 +44,6 @@ SUSStraightRoadDrawing >> addDetailFrom: aDirectedPoint to: aPoint [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/12/2024 22:16'
-}
-SUSStraightRoadDrawing >> addMarkFrom: aPoint to: anotherPoint [ 
-	self addMorphInLayer: ((LineMorph
-			from: aPoint
-			to: anotherPoint
-			color: SUSDrawing colorMark
-			width: SUSDrawing markWidth) morphicLayerNumber: self detailLayer;
-			 yourself)
-]
-
-{
-	#category : #'as yet unclassified',
 	#'squeak_changestamp' : 'PM 6/13/2024 00:01'
 }
 SUSStraightRoadDrawing >> addMidMarkFrom: aDirectedPoint to: aPoint [
@@ -71,22 +58,7 @@ SUSStraightRoadDrawing >> addMidMarkFrom: aDirectedPoint to: aPoint [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/12/2024 22:16'
-}
-SUSStraightRoadDrawing >> addPathFrom: aPoint to: anotherPoint [
-	| path |
-	path := CurveMorph vertices: {aPoint. anotherPoint}
-			color: (Color r: 0 g: 0 b: 0 alpha: 0) 
-			borderWidth: 2 
-			borderColor: SUSDrawing colorPath.
-	path morphicLayerNumber: self pathLayer.
-	self addMorphInLayer: path.
-	paths add: path
-]
-
-{
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/12/2024 22:19'
+	#'squeak_changestamp' : 'PM 6/15/2024 15:04'
 }
 SUSStraightRoadDrawing >> addPathsFrom: aDirectedPoint to: aPoint [
 	| length from1 to1 from2 to2  |
@@ -95,7 +67,6 @@ SUSStraightRoadDrawing >> addPathsFrom: aDirectedPoint to: aPoint [
 	to1 := aDirectedPoint absoluteOffset: SUSDrawing normalLaneWidth * 1.5@length.
 	from2 := aDirectedPoint absoluteOffset: SUSDrawing normalLaneWidth * 0.5@length.
 	to2 := aDirectedPoint absoluteOffset: SUSDrawing normalLaneWidth * 0.5@0.
-	self 
-		addPathFrom: from1 to: to1;
-		addPathFrom: from2 to: to2
+	self addPathWithVertices: { from1 . to1 };
+		addPathWithVertices: { from2 . to2 }
 ]

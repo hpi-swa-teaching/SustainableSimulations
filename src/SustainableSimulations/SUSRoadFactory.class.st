@@ -27,10 +27,9 @@ SUSRoadFactory >> askForDegrees [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/13/2024 00:35'
+	#'squeak_changestamp' : 'PM 6/15/2024 13:07'
 }
 SUSRoadFactory >> buildCrossIntersectionFrom: aDirectedPoint to: aPoint [ 
-	Transcript show: 'Hello'.
 	(self canBuildCrossIntersectionFrom: aDirectedPoint to: aPoint)
 		ifFalse: [^ nil].
 	^ SUSCrossIntersection
@@ -41,7 +40,7 @@ SUSRoadFactory >> buildCrossIntersectionFrom: aDirectedPoint to: aPoint [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/12/2024 19:52'
+	#'squeak_changestamp' : 'PM 6/15/2024 15:45'
 }
 SUSRoadFactory >> buildCurvyRoadFrom: aDirectedPoint to: aPoint [ 
 	(self canBuildCurvyRoadFrom: aDirectedPoint to: aPoint)

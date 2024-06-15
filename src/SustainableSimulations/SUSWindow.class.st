@@ -9,13 +9,13 @@ Class {
 
 {
 	#category : #events,
-	#'squeak_changestamp' : 'PM 6/11/2024 00:58'
+	#'squeak_changestamp' : 'PM 6/13/2024 10:23'
 }
 SUSWindow >> addButtons [
-	| row | 
- 	row := AlignmentMorph newRow addAllMorphs: {self createStraightRoadButton . self createCurvyRoadButton . self createCrossIntersectionButton . self createPlaySimulationButton . self createPauseSimulationButton . self createStopSimulationButton . self createSpawnSimulationButton}.
-	self addMorph:  row.
-	row position: 15@45.
+	| row |
+	row := AlignmentMorph newRow addAllMorphs: {self createStraightRoadButton. self createCurvyRoadButton. self createCrossIntersectionButton. self createPlaySimulationButton. self createPauseSimulationButton. self createStopSimulationButton. self createSpawnSimulationButton}.
+	self addMorph: row.
+	row position: 15 @ 45
 ]
 
 {
