@@ -75,6 +75,32 @@ SUSCar >> applyBehavior [
 
 {
 	#category : #behavior,
+	#'squeak_changestamp' : 'GoChriNo 6/15/2024 19:21'
+}
+SUSCar >> applyCautiousness [
+	| nextCar dist diffSpeed |
+	nextCar := self getNextCar.
+	nextCar == self
+		ifTrue: [self color: Color blue.
+			self lane nextLanes isEmpty
+				ifTrue: [dist := self owner center
+								dist: (self lane getPositionWithTValue: 1).
+					dist <= (self speed squared / (self deacceleration * 2) * 1000 / 360)
+						ifTrue: [self isAccelerating: false.
+							self speedGoal: 0]]]
+		ifFalse: [(self isOnOwnLane: nextCar)
+				ifTrue: [dist := nextCar lastPoint - self lastPoint * self lane length]
+				ifFalse: [dist := 1 - self lastPoint * self lane length + (nextCar lastPoint * nextCar lane length)].
+			diffSpeed := self speed - nextCar speed.
+			dist <= (diffSpeed squared / (self deacceleration * 2) * 1000 / 360 + 100)
+				ifTrue: [self isAccelerating: false.
+					self speedGoal: nextCar speed]
+				ifFalse: [self speedGoal: self maxSpeed.
+					self isAccelerating: true]]
+]
+
+{
+	#category : #behavior,
 	#'squeak_changestamp' : 'GoChriNo 6/15/2024 19:18'
 }
 SUSCar >> applyCautiousness: t [ 
@@ -101,13 +127,13 @@ SUSCar >> applyCautiousness: t [
 
 {
 	#category : #behavior,
-	#'squeak_changestamp' : 'GoChriNo 6/15/2024 08:56'
+	#'squeak_changestamp' : 'GoChriNo 6/15/2024 19:21'
 }
 SUSCar >> applyMovement [
 	| t rotation |
 	t := lastPoint + (self deltaTime / self lane length * (self speed / 360)).
 	t >= 1 ifTrue: [self changeLane. t := lastPoint].
-	self applyCautiousness: t.
+	self applyCautiousness.
 	self owner center: (self lane getPositionWithTValue: t).
 	rotation := (lane getRotationWithTValue: t).
 	rotation first = 1
