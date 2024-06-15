@@ -182,9 +182,9 @@ SUSLane >> nextLanes [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/15/2024 21:42'
+	#'squeak_changestamp' : 'PM 6/15/2024 22:43'
 }
-SUSLane >> nextTprev: t advanceByLength: L [
+SUSLane >> nextT3prev: t advanceByLength: L [
 	"See https://gamedev.stackexchange.com/questions/27056/how-to-achieve-uniform-speed-of-movement-on-a-bezier-curve"
 	| A B C v1 v2 |
 	A := path pointInWorld: path vertices first.
@@ -192,7 +192,16 @@ SUSLane >> nextTprev: t advanceByLength: L [
 	C := path pointInWorld: path vertices last.
 	v1 := (2 * A) - (4 * B) + (2 * C).
 	v2 := (2 * A) negated + (2 * B).
-	^ t + L / ((t * v1 + v2) r)
+	^ t + (L / ((t * v1 + v2) r))
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'PM 6/15/2024 22:48'
+}
+SUSLane >> nextTprev: t advanceByLength: L [
+	((path vertices size) == 3) ifTrue: [^ self nextT3prev: t advanceByLength: L].
+	^ t + (L / length)
 ]
 
 {

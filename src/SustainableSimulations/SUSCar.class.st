@@ -6,7 +6,8 @@ Class {
 		'fuelLevel',
 		'timeRoadStart',
 		'blockedOldLane',
-		'oldLane'
+		'oldLane',
+		'lastL'
 	],
 	#category : #'SustainableSimulations-Core'
 }
@@ -37,12 +38,13 @@ SUSCar >> calculateNewMaxT [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'Len 6/10/2024 01:22'
+	#'squeak_changestamp' : 'PM 6/15/2024 21:52'
 }
 SUSCar >> calculateNewT [
 	| difTime t maxT |
 	difTime := (Time millisecondClock) - lastPoint second.
-	t := lastPoint first + (difTime / (lane length / (speed / 360))).
+	lastL := (difTime * (speed / 360)).
+	t := lane nextTprev: lastPoint first advanceByLength: lastL.
 	maxT := self calculateNewMaxT.
 	
 	t > maxT 
@@ -133,7 +135,7 @@ SUSCar >> fuelLevel: aNumber [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'MK 6/10/2024 17:24'
+	#'squeak_changestamp' : 'PM 6/15/2024 21:50'
 }
 SUSCar >> initialize [
 	super initialize.
@@ -147,6 +149,7 @@ SUSCar >> initialize [
 	length := 1.
 	driver := 'Unknown'.
 	fuelLevel := 100.
+	lastL := 0.
 	
 	lastPoint := {0. Time millisecondClock}.
 	blockedOldLane := false
