@@ -25,7 +25,7 @@ SUSConnectionPoint class >> newForRoad: aRoad at: aDirectedPoint [
 
 {
 	#category : #'instance creation',
-	#'squeak_changestamp' : 'PM 6/12/2024 23:39'
+	#'squeak_changestamp' : 'PM 6/15/2024 20:18'
 }
 SUSConnectionPoint class >> newStartingPointForSimulation: aSimulation at: aPoint [
 	^ self new simulation: aSimulation;

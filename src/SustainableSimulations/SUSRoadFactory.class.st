@@ -40,15 +40,19 @@ SUSRoadFactory >> buildCrossIntersectionFrom: aDirectedPoint to: aPoint [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/15/2024 15:45'
+	#'squeak_changestamp' : 'PM 6/15/2024 20:41'
 }
 SUSRoadFactory >> buildCurvyRoadFrom: aDirectedPoint to: aPoint [ 
+	| degrees |
 	(self canBuildCurvyRoadFrom: aDirectedPoint to: aPoint)
 		ifFalse: [^ nil].
+	degrees := self askForDegrees.
 	^ SUSCurvyRoad
 		newOnSimulation: simulation
 		from: aDirectedPoint
-		to: aPoint
+		to: (SUSDirectedPoint
+				newWithPosition: aPoint
+				inDirection: (aDirectedPoint direction rotateBy: degrees about: 0 @ 0) negated)
 ]
 
 {

@@ -26,36 +26,35 @@ SUSCurvyRoad >> addConnectionPoints [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/12/2024 16:58'
+	#'squeak_changestamp' : 'PM 6/15/2024 17:11'
 }
-SUSCurvyRoad >> askForDegrees [
-	^ (UIManager default request: 'Please enter rotation degrees (0 < x < 180)' initialAnswer: 90) asNumber
-]
-
-{
-	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/11/2024 03:44'
-}
-SUSCurvyRoad >> createDrawing [
+SUSCurvyRoad >> createDrawingFrom: aDirectedPoint to: anotherDirectedPoint [
 	| drawing |
-	drawing := SUSDrawing newCurveTo: point withDirection: self directionVector.
+	drawing := SUSCurvyRoadDrawing newFrom: aDirectedPoint asDirectedPoint to: anotherDirectedPoint.
 	
 	(drawing paths) do: [:each |
     		self createLaneWithPath: each].
 
 	self extent: drawing extent.
+	self position: drawing position.
 	^ drawing
 ]
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/12/2024 16:58'
+	#'squeak_changestamp' : 'PM 6/15/2024 16:33'
 }
-SUSCurvyRoad >> from: aDirectedPoint to: aPoint [
-	| degrees |
+SUSCurvyRoad >> from: aDirectedPoint to: anotherDirectedPoint [
 	from := aDirectedPoint.
-	degrees := self askDegrees.
-	to := SUSDirectedPoint newWithPosition: aPoint inDirection: (aDirectedPoint direction rotateBy: degrees about: 0@0).
+	to := anotherDirectedPoint.
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'PM 6/15/2024 16:57'
+}
+SUSCurvyRoad >> otherConnectionPointPositionsThan: aConnectionPoint [ 
+	^ { SUSConnectionPoint newForRoad: self at: to }
 ]
 
 {

@@ -53,7 +53,7 @@ SUSSimulation >> clickedConnectionPoint: anObject [
 
 {
 	#category : #simulation,
-	#'squeak_changestamp' : 'PM 6/12/2024 23:20'
+	#'squeak_changestamp' : 'PM 6/15/2024 20:21'
 }
 SUSSimulation >> clickedWorld: anEvent [
 	clickedConnectionPoint
@@ -229,20 +229,20 @@ SUSSimulation >> stopSimulation [
 
 {
 	#category : #'event handling',
-	#'squeak_changestamp' : 'PM 6/13/2024 00:15'
+	#'squeak_changestamp' : 'PM 6/15/2024 20:23'
 }
 SUSSimulation >> tryToBuildRoadTo: aPoint [ 
 	| canBuildRoad wasStartingPoint |
 	wasStartingPoint := clickedConnectionPoint isStartingPoint.
 	wasStartingPoint
-		ifTrue: [clickedConnectionPoint direction: aPoint - clickedConnectionPoint position].
+		ifTrue: [clickedConnectionPoint direction: aPoint - clickedConnectionPoint center].
 	canBuildRoad := roadFactory canBuildRoadFrom: clickedConnectionPoint to: aPoint.
 	canBuildRoad
 		ifTrue: [self
 				addMorph: (roadFactory buildRoadFrom: clickedConnectionPoint to: aPoint)].
 	wasStartingPoint
 		ifTrue: [canBuildRoad
-				ifTrue: [clickedConnectionPoint direction: (clickedConnectionPoint position - aPoint)]
+				ifTrue: [clickedConnectionPoint direction: (clickedConnectionPoint center - aPoint)]
 				ifFalse: [clickedConnectionPoint direction: 0 @ 0]].
 	^ canBuildRoad
 ]

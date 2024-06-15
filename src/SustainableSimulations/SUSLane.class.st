@@ -182,6 +182,21 @@ SUSLane >> nextLanes [
 
 {
 	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'PM 6/15/2024 21:42'
+}
+SUSLane >> nextTprev: t advanceByLength: L [
+	"See https://gamedev.stackexchange.com/questions/27056/how-to-achieve-uniform-speed-of-movement-on-a-bezier-curve"
+	| A B C v1 v2 |
+	A := path pointInWorld: path vertices first.
+	B := path pointInWorld: (path vertices at: 2).
+	C := path pointInWorld: path vertices last.
+	v1 := (2 * A) - (4 * B) + (2 * C).
+	v2 := (2 * A) negated + (2 * B).
+	^ t + L / ((t * v1 + v2) r)
+]
+
+{
+	#category : #'as yet unclassified',
 	#'squeak_changestamp' : 'MK 5/28/2024 19:27'
 }
 SUSLane >> path: aLineMorph [
