@@ -2,31 +2,18 @@ Class {
 	#name : #SUSCurvyRoad,
 	#superclass : #SUSAbstractRoad,
 	#instVars : [
-		'point',
-		'degrees',
+		'from',
+		'to',
 		'speedLimit'
 	],
-	#category : #SustainableSimulations
+	#category : #'SustainableSimulations-Roads'
 }
-
-{
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/11/2024 03:41'
-}
-SUSCurvyRoad class >> newOnSimulation: aSimulation to: aPoint withDegrees: aNumber withSpeedLimit: anotherNumber [
-	^ self new simulation: aSimulation;
-		speedLimit: anotherNumber;
-		point: aPoint;
-		degrees: aNumber;
-		postInitialization;
-		yourself
-]
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/11/2024 04:06'
+	#'squeak_changestamp' : 'PM 6/12/2024 22:47'
 }
-SUSCurvyRoad >> createConnectionPoints [
+SUSCurvyRoad >> addConnectionPoints [
 	| previousConnectionPoint nextConnectionPoint |
 	previousConnectionPoint := (SUSConnectionPoint newForRoad: self withDirection: (-1@0))
 		center: 0@SUSDrawing normalLaneWidth;
@@ -55,26 +42,35 @@ SUSCurvyRoad >> createDrawing [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/11/2024 03:35'
+	#'squeak_changestamp' : 'PM 6/15/2024 17:11'
 }
-SUSCurvyRoad >> degrees [
-	^ degrees
+SUSCurvyRoad >> createDrawingFrom: aDirectedPoint to: anotherDirectedPoint [
+	| drawing |
+	drawing := SUSCurvyRoadDrawing newFrom: aDirectedPoint asDirectedPoint to: anotherDirectedPoint.
+	
+	(drawing paths) do: [:each |
+    		self createLaneWithPath: each].
+
+	self extent: drawing extent.
+	self position: drawing position.
+	^ drawing
 ]
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/11/2024 03:35'
+	#'squeak_changestamp' : 'PM 6/15/2024 16:33'
 }
-SUSCurvyRoad >> degrees: anObject [
-	degrees := anObject
+SUSCurvyRoad >> from: aDirectedPoint to: anotherDirectedPoint [
+	from := aDirectedPoint.
+	to := anotherDirectedPoint.
 ]
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/11/2024 05:36'
+	#'squeak_changestamp' : 'PM 6/15/2024 16:57'
 }
-SUSCurvyRoad >> directionVector [
-	^ 1@0 rotateBy: (180 - degrees) degreesToRadians about: 0@0
+SUSCurvyRoad >> otherConnectionPointPositionsThan: aConnectionPoint [ 
+	^ { SUSConnectionPoint newForRoad: self at: to }
 ]
 
 {

@@ -1,46 +1,46 @@
 Class {
 	#name : #SUSCrossIntersection,
 	#superclass : #SUSAbstractRoad,
-	#category : #SustainableSimulations
+	#category : #'SustainableSimulations-Roads'
 }
-
-{
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 5/28/2024 01:43'
-}
-SUSCrossIntersection class >> newOnSimulation: aSimulation [
-	^ self new simulation: aSimulation;
-		postInitialization;
-		yourself
-]
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'GoChriNo 6/10/2024 17:03'
+	#'squeak_changestamp' : 'PM 6/15/2024 14:09'
 }
-SUSCrossIntersection >> createConnectionPoints [
-	| positions directions |
-	positions := {0 @ 0.5. 0.5 @ 0. 1 @ 0.5. 0.5 @ 1}.
-	directions := {-1 @ 0. 0 @ -1. 1 @ 0. 0 @ 1}.
-	^ (1 to: 4)
-		collect: [:index | (SUSConnectionPoint
-				newForRoad: self
-				withDirection: (directions at: index))
-				center: (self extent * positions at: index);
-				 yourself]
-]
-
-{
-	#category : #accessing,
-	#'squeak_changestamp' : 'Len 6/1/2024 21:35'
-}
-SUSCrossIntersection >> createDrawing [
+SUSCrossIntersection >> createDrawingFrom: aConnectionPoint to: aPoint [
 	| drawing |
-	drawing := SUSDrawing newCrossIntersetion.
+	drawing := SUSCrossIntersectionDrawing newFrom: aConnectionPoint asDirectedPoint to: aPoint.
 	
 	(drawing paths) do: [:each |
     		self createLaneWithPath: each].
 	
 	self extent: drawing extent.
+	self position: drawing position.
 	^ drawing
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'PM 6/11/2024 05:58'
+}
+SUSCrossIntersection >> from: aDirectedPoint to: aPoint [
+	"Do nothing, as cross intersections have a fixed size"
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'PM 6/15/2024 15:41'
+}
+SUSCrossIntersection >> otherConnectionPointPositionsThan: aConnectionPoint [ 
+	| positions directions directedPoint |
+	directedPoint := aConnectionPoint asDirectedPoint.
+	positions := {2 negated @ 2. 0 @ 4. 2 @ 2} * SUSDrawing normalLaneWidth.
+	directions := {90. 0. 270}
+				collect: [:each | aConnectionPoint direction rotateBy: each degreesToRadians about: 0 @ 0].
+	^ ((1 to: 3)
+		collect: [:index | SUSDirectedPoint
+				newWithPosition: (directedPoint absoluteOffset: (positions at: index))
+				inDirection: (directions at: index)])
+		collect: [:aDirectedPoint | SUSConnectionPoint newForRoad: self at: aDirectedPoint]
 ]

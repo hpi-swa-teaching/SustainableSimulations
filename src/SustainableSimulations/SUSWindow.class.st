@@ -9,13 +9,13 @@ Class {
 
 {
 	#category : #events,
-	#'squeak_changestamp' : 'PM 6/11/2024 00:58'
+	#'squeak_changestamp' : 'PM 6/13/2024 10:23'
 }
 SUSWindow >> addButtons [
-	| row | 
- 	row := AlignmentMorph newRow addAllMorphs: {self createStraightRoadButton . self createCurvyRoadButton . self createCrossIntersectionButton . self createPlaySimulationButton . self createPauseSimulationButton . self createStopSimulationButton . self createSpawnSimulationButton}.
-	self addMorph:  row.
-	row position: 15@45.
+	| row |
+	row := AlignmentMorph newRow addAllMorphs: {self createStraightRoadButton. self createCurvyRoadButton. self createCrossIntersectionButton. self createPlaySimulationButton. self createPauseSimulationButton. self createStopSimulationButton. self createSpawnSimulationButton}.
+	self addMorph: row.
+	row position: 15 @ 45
 ]
 
 {
@@ -135,20 +135,20 @@ SUSWindow >> createStraightRoadButton [
 
 {
 	#category : #events,
-	#'squeak_changestamp' : 'PM 6/11/2024 00:55'
+	#'squeak_changestamp' : 'PM 6/12/2024 19:57'
 }
 SUSWindow >> crossIntersectionMode [
 
-	simulation buildMode: #CrossIntersection
+	simulation selectedSpawnType: #CrossIntersection
 ]
 
 {
 	#category : #events,
-	#'squeak_changestamp' : 'PM 6/11/2024 00:56'
+	#'squeak_changestamp' : 'PM 6/12/2024 19:57'
 }
 SUSWindow >> curvyRoadMode [
 
-	simulation buildMode: #CurvyRoad
+	simulation selectedSpawnType: #CurvyRoad
 ]
 
 {
@@ -262,11 +262,11 @@ SUSWindow >> playSimulation [
 
 {
 	#category : #events,
-	#'squeak_changestamp' : 'PM 6/11/2024 00:55'
+	#'squeak_changestamp' : 'PM 6/12/2024 19:57'
 }
 SUSWindow >> spawnCarMode [
 
-	simulation buildMode: #SpawnCar
+	simulation selectedSpawnType: #SpawnCar
 ]
 
 {
@@ -279,9 +279,9 @@ SUSWindow >> stopSimulation [
 
 {
 	#category : #events,
-	#'squeak_changestamp' : 'PM 6/11/2024 00:55'
+	#'squeak_changestamp' : 'PM 6/12/2024 19:57'
 }
 SUSWindow >> straightRoadMode [
 
-	simulation buildMode: #StraightRoad
+	simulation selectedSpawnType: #StraightRoad
 ]

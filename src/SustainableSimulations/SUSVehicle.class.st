@@ -10,7 +10,7 @@ Class {
 		'lane',
 		'lastPoint'
 	],
-	#category : #SustainableSimulations
+	#category : #'SustainableSimulations-Core'
 }
 
 {
@@ -33,13 +33,14 @@ SUSVehicle >> acceleration: aNumber [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'MK 6/10/2024 17:23'
+	#'squeak_changestamp' : 'PM 6/13/2024 00:19'
 }
 SUSVehicle >> initialize [
 	super initialize.
 	maxSpeed := 100.
 	acceleration := 1.
 	length := 1.
+	self morphicLayerNumber: 15.
 	"position := 0 @ 0."
 	
 ]

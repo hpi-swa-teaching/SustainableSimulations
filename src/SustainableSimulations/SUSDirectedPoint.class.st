@@ -5,7 +5,7 @@ Class {
 		'position',
 		'direction'
 	],
-	#category : #'SustainableSimulations-Utils'
+	#category : #'SustainableSimulations-Core'
 }
 
 {
@@ -20,7 +20,15 @@ SUSDirectedPoint class >> newWithPosition: aPoint inDirection: anotherPoint [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/11/2024 02:27'
+	#'squeak_changestamp' : 'PM 6/12/2024 22:05'
+}
+SUSDirectedPoint >> absoluteOffset: aPoint [
+	^ (self relativeOffset: aPoint)+ self position
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'PM 6/11/2024 14:41'
 }
 SUSDirectedPoint >> calculateIntersectionPoint: aLine [
 	| x1 y1 x2 y2 dx1 dy1 dx2 dy2 denominator t1 t2 |
@@ -52,15 +60,47 @@ SUSDirectedPoint >> direction [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/11/2024 02:09'
+	#'squeak_changestamp' : 'PM 6/13/2024 00:13'
 }
-SUSDirectedPoint >> direction: anObject [
-	direction := anObject
+SUSDirectedPoint >> direction: anObject [ 
+	direction := anObject normalized
 ]
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/11/2024 02:09'
+	#'squeak_changestamp' : 'PM 6/12/2024 23:40'
+}
+SUSDirectedPoint >> initialize [
+	direction := 0@0.
+	position := 0@0
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'PM 6/13/2024 00:07'
+}
+SUSDirectedPoint >> isPointBehind: aPoint [
+	| t x1 x21 y1 y21 |
+	x1 := position x asFloat.
+	y1 := position y asFloat.
+	x21 := direction x asFloat.
+	y21 := direction y asFloat.
+	t := ((aPoint y asFloat - y1 / x21) + (aPoint x asFloat - x1 / y21))
+			/ ((x21 / y21) + (y21 / x21)).
+	^ t < 0
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'PM 6/12/2024 19:39'
+}
+SUSDirectedPoint >> linearDist: aPoint [
+	^ self position dist: (self projectionOf: aPoint)
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'PM 6/12/2024 22:27'
 }
 SUSDirectedPoint >> position [
 	^ position
@@ -68,8 +108,25 @@ SUSDirectedPoint >> position [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/11/2024 02:09'
+	#'squeak_changestamp' : 'PM 6/12/2024 22:27'
 }
 SUSDirectedPoint >> position: anObject [
 	position := anObject
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'PM 6/12/2024 23:27'
+}
+SUSDirectedPoint >> projectionOf: aPoint [
+	direction = (0@0) ifTrue: [ ^ aPoint ].
+	^ aPoint nearestPointAlongLineFrom: self position to: (self position + direction)
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'PM 6/15/2024 15:48'
+}
+SUSDirectedPoint >> relativeOffset: aPoint [ 
+	^ (direction rotateBy: 270 degreesToRadians about: 0 @ 0) normalized * aPoint x + (direction normalized * aPoint y)
 ]

@@ -2,76 +2,44 @@ Class {
 	#name : #SUSStraightRoad,
 	#superclass : #SUSAbstractRoad,
 	#instVars : [
-		'length',
+		'from',
+		'to',
 		'speedLimit'
 	],
-	#category : #SustainableSimulations
+	#category : #'SustainableSimulations-Roads'
 }
-
-{
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 5/27/2024 23:45'
-}
-SUSStraightRoad class >> newOnSimulation: aSimulation withLength: aNumber [
-	^ self newOnSimulation: aSimulation withLength: aNumber withSpeedLimit: aSimulation defaultSpeedLimit
-]
-
-{
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 5/27/2024 23:51'
-}
-SUSStraightRoad class >> newOnSimulation: aSimulation withLength: aNumber withSpeedLimit: anotherNumber [
-	^ self new simulation: aSimulation;
-		length: aNumber;
-		speedLimit: anotherNumber;
-		postInitialization;
-		yourself
-]
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 5/28/2024 01:16'
+	#'squeak_changestamp' : 'PM 6/15/2024 13:09'
 }
-SUSStraightRoad >> createConnectionPoints [
-	| previousConnectionPoint nextConnectionPoint |
-	previousConnectionPoint := (SUSConnectionPoint newForRoad: self withDirection: (-1@0))
-		center: (self extent * (0@0.5));
-		yourself.
-	nextConnectionPoint := (SUSConnectionPoint newForRoad: self withDirection: (1@0))
-		center: (self extent * (1@0.5));
-		yourself.
-	^ {previousConnectionPoint . nextConnectionPoint}
-]
-
-{
-	#category : #accessing,
-	#'squeak_changestamp' : 'Len 6/1/2024 20:10'
-}
-SUSStraightRoad >> createDrawing [
+SUSStraightRoad >> createDrawingFrom: aConnectionPoint to: aPoint [
 	| drawing |
-	drawing := SUSDrawing newNormalRoadWithLength: self length.
+	drawing := SUSStraightRoadDrawing newFrom: from to: to.
 	
 	(drawing paths) do: [:each |
     		self createLaneWithPath: each].
 
 	self extent: drawing extent.
+	self position: drawing position.
 	^ drawing
 ]
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 5/27/2024 23:42'
+	#'squeak_changestamp' : 'PM 6/15/2024 13:10'
 }
-SUSStraightRoad >> length [
-	^ length
+SUSStraightRoad >> from: aDirectedPoint to: aPoint [
+	from := aDirectedPoint.
+	to := aPoint
 ]
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 5/27/2024 23:42'
+	#'squeak_changestamp' : 'PM 6/15/2024 13:13'
 }
-SUSStraightRoad >> length: anObject [
-	length := anObject
+SUSStraightRoad >> otherConnectionPointPositionsThan: aConnectionPoint [ 
+	^ { SUSConnectionPoint newForRoad: self at: (SUSDirectedPoint newWithPosition: to inDirection: from direction)}
 ]
 
 {
