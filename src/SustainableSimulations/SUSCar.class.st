@@ -50,7 +50,7 @@ SUSCar class >> newOnSimulation: aSimulation withSpeed: aNumber onRoad: aRoad [
 
 {
 	#category : #behavior,
-	#'squeak_changestamp' : 'GoChriNo 6/15/2024 09:25'
+	#'squeak_changestamp' : 'GoChriNo 6/16/2024 11:15'
 }
 SUSCar >> applyAcceleration [
 	self speed < speedGoal
@@ -64,18 +64,18 @@ SUSCar >> applyAcceleration [
 
 {
 	#category : #behavior,
-	#'squeak_changestamp' : 'GoChriNo 6/14/2024 15:09'
+	#'squeak_changestamp' : 'GoChriNo 6/16/2024 11:15'
 }
 SUSCar >> applyBehavior [
 	self deltaTime: Time millisecondClock - self lastTime.
 	self lastTime: Time millisecondClock.
 	self applyAcceleration.
-	self applyMovement.
+	self applyMovement
 ]
 
 {
 	#category : #behavior,
-	#'squeak_changestamp' : 'GoChriNo 6/15/2024 19:28'
+	#'squeak_changestamp' : 'GoChriNo 6/16/2024 11:14'
 }
 SUSCar >> applyCautiousness [
 	| nextCar dist diffSpeed |
@@ -87,7 +87,8 @@ SUSCar >> applyCautiousness [
 								dist: (self lane getPositionWithTValue: 1).
 					dist <= (self speed squared / (self deacceleration * 2) * 1000 / 360)
 						ifTrue: [self isAccelerating: false.
-							self speedGoal: 0] ifFalse: [self speedGoal: self maxSpeed]]]
+							self speedGoal: 0]
+						ifFalse: [self speedGoal: self maxSpeed]]]
 		ifFalse: [(self isOnOwnLane: nextCar)
 				ifTrue: [dist := nextCar lastPoint - self lastPoint * self lane length]
 				ifFalse: [dist := 1 - self lastPoint * self lane length + (nextCar lastPoint * nextCar lane length)].
@@ -101,53 +102,25 @@ SUSCar >> applyCautiousness [
 
 {
 	#category : #behavior,
-	#'squeak_changestamp' : 'GoChriNo 6/15/2024 19:21'
+	#'squeak_changestamp' : 'GoChriNo 6/16/2024 11:14'
 }
 SUSCar >> applyMovement [
 	| t rotation |
 	t := lastPoint + (self deltaTime / self lane length * (self speed / 360)).
-	t >= 1 ifTrue: [self changeLane. t := lastPoint].
+	t >= 1
+		ifTrue: [self changeLane.
+			t := lastPoint].
 	self applyCautiousness.
-	self owner center: (self lane getPositionWithTValue: t).
-	rotation := (lane getRotationWithTValue: t).
+	self owner
+		center: (self lane getPositionWithTValue: t).
+	rotation := lane getRotationWithTValue: t.
 	rotation first = 1
-		ifTrue:[ self rotationDegrees: rotation second ].
-	self lastPoint: t.
+		ifTrue: [self rotationDegrees: rotation second].
+	self lastPoint: t
 ]
 
 {
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'Len 6/10/2024 00:10'
-}
-SUSCar >> calculateNewMaxT [
-	| previousCar |
-	previousCar := lane getPreviousCarOnLane: self.
-	previousCar = self 
-		ifFalse: [ ^ ((previousCar lastPoint first) * lane length) - 50 / (lane length)].
-	^ 1
-]
-
-{
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'Len 6/10/2024 01:22'
-}
-SUSCar >> calculateNewT [
-	| difTime t maxT |
-	difTime := (Time millisecondClock) - lastPoint second.
-	t := lastPoint first + (difTime / (lane length / (speed / 360))).
-	maxT := self calculateNewMaxT.
-	
-	t > maxT 
-		ifTrue: [t := maxT].
-	t > lane blockedT
-		ifTrue: [t := lane blockedT].
-	
-	self updateLaneConnectionsWithT: t.
-	^ {t. (Time millisecondClock)}
-]
-
-{
-	#category : #'as yet unclassified',
+	#category : #behavior,
 	#'squeak_changestamp' : 'GoChriNo 6/14/2024 15:19'
 }
 SUSCar >> changeLane [
@@ -166,7 +139,7 @@ SUSCar >> changeLane [
 ]
 
 {
-	#category : #'as yet unclassified',
+	#category : #visualization,
 	#'squeak_changestamp' : 'MK 5/19/2024 13:00'
 }
 SUSCar >> drawFrontMarkerOn: aCanvas [
@@ -177,7 +150,7 @@ SUSCar >> drawFrontMarkerOn: aCanvas [
 ]
 
 {
-	#category : #'as yet unclassified',
+	#category : #visualization,
 	#'squeak_changestamp' : 'MK 5/19/2024 13:00'
 }
 SUSCar >> drawOn: aCanvas [
@@ -186,7 +159,7 @@ SUSCar >> drawOn: aCanvas [
 ]
 
 {
-	#category : #'as yet unclassified',
+	#category : #accessing,
 	#'squeak_changestamp' : 'ek 5/19/2024 16:45'
 }
 SUSCar >> driver [
@@ -195,7 +168,7 @@ SUSCar >> driver [
 ]
 
 {
-	#category : #'as yet unclassified',
+	#category : #accessing,
 	#'squeak_changestamp' : 'ek 5/19/2024 16:39'
 }
 SUSCar >> driver: aString [
@@ -204,7 +177,7 @@ SUSCar >> driver: aString [
 ]
 
 {
-	#category : #'as yet unclassified',
+	#category : #accessing,
 	#'squeak_changestamp' : 'ek 5/19/2024 16:46'
 }
 SUSCar >> fuelLevel [
@@ -214,7 +187,7 @@ SUSCar >> fuelLevel [
 ]
 
 {
-	#category : #'as yet unclassified',
+	#category : #accessing,
 	#'squeak_changestamp' : 'ek 5/19/2024 16:38'
 }
 SUSCar >> fuelLevel: aNumber [
@@ -225,19 +198,21 @@ SUSCar >> fuelLevel: aNumber [
 
 {
 	#category : #behavior,
-	#'squeak_changestamp' : 'GoChriNo 6/15/2024 18:55'
+	#'squeak_changestamp' : 'GoChriNo 6/16/2024 11:14'
 }
 SUSCar >> getNextCar [
-
 	| nextCar |
 	nextCar := self lane getPreviousCarOnLane: self.
-	nextCar = self ifTrue: [
-		(self lane nextLanes) do: [:each | each cars isEmpty ifFalse: [^ each cars last]]. ^ self].
+	nextCar = self
+		ifTrue: [self lane nextLanes
+				do: [:each | each cars isEmpty
+						ifFalse: [^ each cars last]].
+			^ self].
 	^ nextCar
 ]
 
 {
-	#category : #'as yet unclassified',
+	#category : #initialization,
 	#'squeak_changestamp' : 'GoChriNo 6/15/2024 09:23'
 }
 SUSCar >> initialize [
@@ -264,31 +239,10 @@ SUSCar >> initialize [
 
 {
 	#category : #behavior,
-	#'squeak_changestamp' : 'GoChriNo 6/15/2024 19:07'
+	#'squeak_changestamp' : 'GoChriNo 6/16/2024 11:14'
 }
 SUSCar >> isOnOwnLane: aVehicle [ 
-	self lane cars
-		do: [:each | each == aVehicle
-				ifTrue: [^ true]].
-	^ false
-]
-
-{
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'Len 6/10/2024 01:40'
-}
-SUSCar >> move [
-	| t rotation |
-	lastPoint := self calculateNewT.
-	t := lastPoint first.
-	(t >= 1)
-		ifTrue: [
-			self changeLane.
-			t := lastPoint first.].
-	self owner center: (lane getPositionWithTValue: t).
-	rotation := (lane getRotationWithTValue: t).
-	rotation first = 1
-		ifTrue:[ self rotationDegrees: rotation second ]
+	^ self lane == aVehicle lane
 ]
 
 {
@@ -305,7 +259,7 @@ SUSCar >> placeCarOnRoad: aRoad [
 ]
 
 {
-	#category : #'as yet unclassified',
+	#category : #initialization,
 	#'squeak_changestamp' : 'Len 6/9/2024 23:58'
 }
 SUSCar >> postInitialization [
@@ -315,19 +269,4 @@ SUSCar >> postInitialization [
 	lane addCar: self.
 	
 	self center: (lane getPositionWithTValue: 0)
-]
-
-{
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'Len 6/10/2024 01:21'
-}
-SUSCar >> updateLaneConnectionsWithT: aNumber [
-	blockedOldLane
-		ifTrue: [ | pos |
-			pos := lane length * aNumber.
-			pos > 50
-				ifTrue: [
-					oldLane updateBlocked: -1.
-					blockedOldLane := false.]
-				ifFalse: [oldLane updateBlocked: 50 - pos]]
 ]

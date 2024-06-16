@@ -253,13 +253,11 @@ SUSSimulation >> roads [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'GoChriNo 6/14/2024 15:16'
+	#'squeak_changestamp' : 'GoChriNo 6/16/2024 11:13'
 }
 SUSSimulation >> step [
-
-	cars do: [:car | 
-		car applyBehavior.
-		"car move"]
+	cars
+		do: [:car | car applyBehavior]
 ]
 
 {
