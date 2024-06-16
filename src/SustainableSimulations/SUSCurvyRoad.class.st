@@ -39,7 +39,7 @@ SUSCurvyRoad >> createConnectionPoints [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/11/2024 03:44'
+	#'squeak_changestamp' : 'Len 6/11/2024 23:39'
 }
 SUSCurvyRoad >> createDrawing [
 	| drawing |
@@ -48,7 +48,8 @@ SUSCurvyRoad >> createDrawing [
 	(drawing paths) do: [:each |
     		self createLaneWithPath: each].
 
-	self extent: drawing extent.
+	self extent: drawing extent;
+		color: (Color r: 0 g: 0 b: 0 alpha: 0).
 	^ drawing
 ]
 

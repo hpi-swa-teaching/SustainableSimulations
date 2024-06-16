@@ -63,12 +63,13 @@ SUSDrawing class >> newCrossIntersetion [
 
 {
 	#category : #'instance creation',
-	#'squeak_changestamp' : 'PM 6/11/2024 04:15'
+	#'squeak_changestamp' : 'Len 6/11/2024 23:39'
 }
 SUSDrawing class >> newCurveTo: aPoint withDirection: anotherPoint [
 	^ (SUSDrawing new
 		extent: aPoint abs;
-		color: SUSDrawing colorRoad)
+		color: (Color r: 0 g: 0 b: 0 alpha: 0))
+		drawCurveRoadTo: aPoint withDirection: anotherPoint;
 		generateCurvePathsTo: aPoint withDirection: anotherPoint
 ]
 
@@ -192,6 +193,31 @@ SUSDrawing >> addStraightMarks [
 		(self generateMarkWithLength: self extent x - (SUSDrawing markWidth)) 
 		position: 0@(self extent y - (SUSDrawing markWidth * 2))).
 	self addMidMark
+]
+
+{
+	#category : #drawing,
+	#'squeak_changestamp' : 'Len 6/11/2024 23:36'
+}
+SUSDrawing >> drawCurveRoadTo: aPosition withDirection: aDirection [
+	| vertices delta lane | 
+	delta := aDirection normal normalized * SUSDrawing normalLaneWidth * 0.5.
+	vertices := self generateCurvePathFrom: (0@1 * SUSDrawing normalLaneWidth) To: (aPosition) withDirection: aDirection.
+	lane := SUSLane newLaneWithPath: (CurveMorph vertices: vertices color: (Color r: 0 g: 0 b: 0 alpha: 0) 
+		borderWidth: 2 borderColor: SUSDrawing colorPath).
+	
+	0 to: 1 by: 0.01 do: [:t | 
+		| aMorph rotation |
+		aMorph := (SUSDrawing new
+			extent: 20@(SUSDrawing normalLaneWidth * 2);
+			color: SUSDrawing colorRoad)
+			addStraightMarks;
+			addFlexShellIfNecessary.
+		self addMorphInLayer: aMorph.
+		aMorph center: (lane getPositionWithTValue: t).
+		rotation := (lane getRotationWithTValue:  t).
+		rotation first = 1 ifTrue: [aMorph rotationDegrees: rotation second]]
+
 ]
 
 {
