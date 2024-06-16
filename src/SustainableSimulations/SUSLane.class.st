@@ -24,6 +24,25 @@ SUSLane class >> newLaneWithPath: aLineMorph [
 
 {
 	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'Len 6/16/2024 19:12'
+}
+SUSLane >> TESTgetRotation3VerticesWithTValue: aNumber [
+	| p1 p2 p3 dx dy |
+	p1 := path pointInWorld: path vertices first.
+	p2 := path pointInWorld: (path vertices at: 2).
+	p3 := path pointInWorld: path vertices last.
+	
+	dx := (p2 x - p1 x) * 2 * (1 - aNumber) + (p3 x - p2 x) * 2 * aNumber.
+	dy := (p2 y - p1 y) * 2 * (1 - aNumber) + (p3 y - p2 y) * 2 * aNumber.
+	
+	dx = 0 ifTrue: [
+		dy > 0 ifTrue: [^ {1. 90}] ifFalse: [dy < 0 ifTrue: [^ {1. -90}] ifFalse: [^ {0. -90}]]].
+	dx < 0 ifTrue: [^ {1. (dy / dx) arcTan radiansToDegrees + 180}].
+	^ {1. (dy / dx) arcTan radiansToDegrees}
+]
+
+{
+	#category : #'as yet unclassified',
 	#'squeak_changestamp' : 'MK 5/28/2024 19:11'
 }
 SUSLane >> addCar: aCar [
@@ -50,14 +69,45 @@ SUSLane >> blockedT [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'Len 6/10/2024 01:43'
+	#'squeak_changestamp' : 'Len 6/16/2024 19:01'
 }
 SUSLane >> calculateLength [
+	((path vertices size) == 3) 
+		ifTrue: [self calculateLength3Vertices]
+		ifFalse: [self calculateLength2Vertices]
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'Len 6/16/2024 18:56'
+}
+SUSLane >> calculateLength2Vertices [
 	| p1 p2 |
 	p1 := path vertices first.
 	p2 := path vertices last.
 	
 	length := (((p1 x - p2 x) squared) + ((p1 y - p2 y)) squared) sqrt
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'Len 6/16/2024 19:00'
+}
+SUSLane >> calculateLength3Vertices [
+	| n sum |
+	n := 100.
+	sum := 0.
+
+	1 to: n do: [:i | 
+		| point1 point2 segmentLength |
+		point1 := self getPosition3VerticesWithTValue: (i - 1) / n.
+		point2 := self getPosition3VerticesWithTValue: i / n.
+		segmentLength := point1 dist: point2.
+		sum := sum + segmentLength].
+	length := sum
+
+
+
 ]
 
 {
@@ -127,21 +177,29 @@ SUSLane >> getRotation2VerticesWithTValue: aNumber [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'Len 6/10/2024 10:33'
+	#'squeak_changestamp' : 'Len 6/16/2024 19:17'
 }
 SUSLane >> getRotation3VerticesWithTValue: aNumber [
-	| p1 p2 p3 dx dy |
+	| p1 p2 p3 dx dy t flip |
 	p1 := path pointInWorld: path vertices first.
 	p2 := path pointInWorld: (path vertices at: 2).
 	p3 := path pointInWorld: path vertices last.
+	flip := 0.
 	
-	dx := (p2 x - p1 x) * 2 * (1 - aNumber) + (p3 x - p2 x) * 2 * aNumber.
-	dy := (p2 y - p1 y) * 2 * (1 - aNumber) + (p3 y - p2 y) * 2 * aNumber.
+	(aNumber >= 0.5)
+		ifTrue: [
+			dx := (p2 x - p1 x) * 2 * (1 - aNumber) + (p3 x - p2 x) * 2 * aNumber.
+			dy := (p2 y - p1 y) * 2 * (1 - aNumber) + (p3 y - p2 y) * 2 * aNumber]
+		ifFalse: [
+			t := 1 - aNumber.
+			flip  := 180.
+			dx := (p2 x - p3 x) * 2 * (1 - t) + (p1 x - p2 x) * 2 * t.
+			dy := (p2 y - p3 y) * 2 * (1 - t) + (p1 y - p2 y) * 2 * t].
 	
 	dx = 0 ifTrue: [
 		dy > 0 ifTrue: [^ {1. 90}] ifFalse: [dy < 0 ifTrue: [^ {1. -90}] ifFalse: [^ {0. -90}]]].
-	dx < 0 ifTrue: [^ {1. (dy / dx) arcTan radiansToDegrees + 180}].
-	^ {1. (dy / dx) arcTan radiansToDegrees}
+	dx < 0 ifTrue: [^ {1. (dy / dx) arcTan radiansToDegrees + 180 + flip}].
+	^ {1. (dy / dx) arcTan radiansToDegrees + flip}
 ]
 
 {

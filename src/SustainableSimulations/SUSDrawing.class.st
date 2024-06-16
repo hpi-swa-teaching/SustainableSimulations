@@ -19,11 +19,11 @@ SUSDrawing class >> colorMark [
 
 {
 	#category : #'class variables',
-	#'squeak_changestamp' : 'PM 6/11/2024 00:22'
+	#'squeak_changestamp' : 'Len 6/16/2024 19:08'
 }
 SUSDrawing class >> colorPath [
-	"^ self colorRoad"
-	^ Color red
+	^ (Color r:0 g:0 b:0 alpha:0)
+	"^ Color red"
 ]
 
 {

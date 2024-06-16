@@ -27,11 +27,12 @@ SUSCrossIntersectionDrawing class >> newFrom: aDirectedPoint to: aPoint [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/15/2024 14:04'
+	#'squeak_changestamp' : 'Len 6/16/2024 19:48'
 }
 SUSCrossIntersectionDrawing >> addBaseFrom: aDirectedPoint [ 
 	| vertices |
-	vertices := {2 negated @ 0. 2 negated @ 4. 2 @ 4. 2 @ 0} * SUSDrawing normalLaneWidth.
+	"vertices := {2 negated @ 0. 2 negated @ 4. 2 @ 4. 2 @ 0} * SUSDrawing normalLaneWidth."
+	vertices := {2 negated @ 1. 2 negated @ 3. 1 negated @ 3. 1 negated @ 4. 1 @ 4. 1 @ 3. 2 @ 3. 2 @ 1. 1 @ 1. 1 @ 0. 1 negated @ 0. 1 negated @ 1.} * SUSDrawing normalLaneWidth.
 	self addMorphInLayer: ((PolygonMorph
 			vertices: (vertices
 					collect: [:aPoint | aDirectedPoint absoluteOffset: aPoint])
@@ -82,12 +83,12 @@ SUSCrossIntersectionDrawing >> addCurvesFrom: aDirectedPoint [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/15/2024 14:59'
+	#'squeak_changestamp' : 'Len 6/16/2024 19:42'
 }
 SUSCrossIntersectionDrawing >> addDetailFrom: aDirectedPoint to: aPoint [
 	self color: Color transparent.
 	self addBaseFrom: aDirectedPoint.
-	self addCrossInterMarksFrom: aDirectedPoint.
+	"self addCrossInterMarksFrom: aDirectedPoint."
 	self addCurvesFrom: aDirectedPoint.
 ]
 
