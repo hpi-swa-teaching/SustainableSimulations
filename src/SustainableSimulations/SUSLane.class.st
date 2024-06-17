@@ -111,6 +111,36 @@ SUSLane >> calculateLength3Vertices [
 ]
 
 {
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 6/15/2024 09:53'
+}
+SUSLane >> cars [
+	^ cars
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 6/15/2024 09:53'
+}
+SUSLane >> cars: anObject [
+	cars := anObject
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'GoChriNo 6/14/2024 15:28'
+}
+SUSLane >> getNextCarOnLane: aCar [
+	| next |
+	next := false.
+	cars do: [:each |
+		next ifTrue: [^ each].
+		aCar = each ifTrue: [next := true].
+		].
+	^ aCar
+]
+
+{
 	#category : #'as yet unclassified',
 	#'squeak_changestamp' : 'Len 6/9/2024 20:07'
 }

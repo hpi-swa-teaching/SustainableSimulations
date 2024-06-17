@@ -5,12 +5,17 @@ Class {
 		'maxSpeed',
 		'speed',
 		'acceleration',
+		'deacceleration',
+		'speedGoal',
 		'length',
 		'simulation',
 		'lane',
-		'lastPoint'
+		'lastPoint',
+		'lastTime',
+		'deltaTime',
+		'isAccelerating'
 	],
-	#category : #'SustainableSimulations-Core'
+	#category : #SustainableSimulations
 }
 
 {
@@ -32,6 +37,38 @@ SUSVehicle >> acceleration: aNumber [
 ]
 
 {
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 6/15/2024 09:23'
+}
+SUSVehicle >> deacceleration [
+	^ deacceleration
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 6/15/2024 09:23'
+}
+SUSVehicle >> deacceleration: anObject [
+	deacceleration := anObject
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 6/14/2024 15:00'
+}
+SUSVehicle >> deltaTime [
+	^ deltaTime
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 6/14/2024 15:00'
+}
+SUSVehicle >> deltaTime: anObject [
+	deltaTime := anObject
+]
+
+{
 	#category : #'as yet unclassified',
 	#'squeak_changestamp' : 'PM 6/13/2024 00:19'
 }
@@ -46,11 +83,51 @@ SUSVehicle >> initialize [
 ]
 
 {
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 6/14/2024 15:56'
+}
+SUSVehicle >> isAccelerating [
+	^ isAccelerating
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 6/14/2024 15:56'
+}
+SUSVehicle >> isAccelerating: anObject [
+	isAccelerating := anObject
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 6/14/2024 15:08'
+}
+SUSVehicle >> lane [
+	^ lane
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 6/14/2024 15:08'
+}
+SUSVehicle >> lane: anObject [
+	lane := anObject
+]
+
+{
 	#category : #'as yet unclassified',
 	#'squeak_changestamp' : 'Len 6/10/2024 00:05'
 }
 SUSVehicle >> lastPoint [
 	^ lastPoint
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 6/14/2024 15:10'
+}
+SUSVehicle >> lastPoint: anObject [
+	lastPoint := anObject
 ]
 
 {
@@ -60,6 +137,22 @@ SUSVehicle >> lastPoint [
 SUSVehicle >> lastPointTime: aNumber [
 
 	lastPoint  := {(lastPoint first). (lastPoint second + aNumber)}
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 6/14/2024 14:36'
+}
+SUSVehicle >> lastTime [
+	^ lastTime
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 6/14/2024 14:36'
+}
+SUSVehicle >> lastTime: anObject [
+	lastTime := anObject
 ]
 
 {
@@ -136,4 +229,20 @@ SUSVehicle >> speed [
 }
 SUSVehicle >> speed: aNumber [
 	speed := aNumber.
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 6/14/2024 15:51'
+}
+SUSVehicle >> speedGoal [
+	^ speedGoal
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 6/14/2024 15:51'
+}
+SUSVehicle >> speedGoal: anObject [
+	speedGoal := anObject
 ]
