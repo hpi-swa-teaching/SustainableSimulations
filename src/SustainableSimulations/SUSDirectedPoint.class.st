@@ -60,10 +60,10 @@ SUSDirectedPoint >> direction [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/13/2024 00:13'
+	#'squeak_changestamp' : 'MK 6/15/2024 13:35'
 }
 SUSDirectedPoint >> direction: anObject [ 
-	direction := anObject normalized
+	direction := anObject 
 ]
 
 {
@@ -77,16 +77,22 @@ SUSDirectedPoint >> initialize [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/13/2024 00:07'
+	#'squeak_changestamp' : 'MK 6/15/2024 16:45'
 }
 SUSDirectedPoint >> isPointBehind: aPoint [
-	| t x1 x21 y1 y21 |
+	| x1 y1 x21 y21 t |
 	x1 := position x asFloat.
 	y1 := position y asFloat.
 	x21 := direction x asFloat.
 	y21 := direction y asFloat.
-	t := ((aPoint y asFloat - y1 / x21) + (aPoint x asFloat - x1 / y21))
-			/ ((x21 / y21) + (y21 / x21)).
+
+	x21 = 0 ifTrue: [
+		y21 = 0 ifTrue: [ ^false ].
+		y21 > 0 ifTrue: [^ aPoint y < y1]
+			ifFalse: [ ^ aPoint y > y1]
+		].
+
+	t := (aPoint x asFloat - x1) / x21.
 	^ t < 0
 ]
 
@@ -125,8 +131,13 @@ SUSDirectedPoint >> projectionOf: aPoint [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/15/2024 15:48'
+	#'squeak_changestamp' : 'MK 6/15/2024 15:09'
 }
-SUSDirectedPoint >> relativeOffset: aPoint [ 
-	^ (direction rotateBy: 270 degreesToRadians about: 0 @ 0) normalized * aPoint x + (direction normalized * aPoint y)
+SUSDirectedPoint >> relativeOffset: aPoint [
+	| rotatedDirection normDirection offset |
+	rotatedDirection := (direction rotateBy: 270 degreesToRadians about: 0@0) normalized.
+	normDirection := direction normalized.
+	
+	offset := ((rotatedDirection * aPoint x) + (normDirection * aPoint y)).
+	^ (offset x rounded) @ (offset y rounded)
 ]
