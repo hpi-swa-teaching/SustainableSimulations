@@ -96,11 +96,11 @@ SUSRoadFactory >> canBuildCrossIntersectionFrom: aConnectionPoint to: aPoint [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/17/2024 10:32'
+	#'squeak_changestamp' : 'PM 6/17/2024 20:04'
 }
 SUSRoadFactory >> canBuildCurvyRoadFrom: aConnectionPoint to: aPoint [
 	| directedPoint |
-	self flag: #Todo. "calculate min road length"
+	self flag: #Todo. "calculate min road length; disallow illegal turns, needs aPoint to be a DirectedPoint"
 	directedPoint := aConnectionPoint asDirectedPoint.
 	^ ((directedPoint isBehind: aPoint) > 0) and: ((directedPoint isAbove: aPoint) ~= 0)
 ]
