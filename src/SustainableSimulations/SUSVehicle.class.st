@@ -15,7 +15,7 @@ Class {
 		'deltaTime',
 		'isAccelerating'
 	],
-	#category : #SustainableSimulations
+	#category : #'SustainableSimulations-Core'
 }
 
 {

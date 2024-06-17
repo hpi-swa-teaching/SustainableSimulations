@@ -201,7 +201,7 @@ SUSSimulation >> startingPointPosition [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'GoChriNo 6/16/2024 11:13'
+	#'squeak_changestamp' : 'GoChriNo 6/17/2024 12:08'
 }
 SUSSimulation >> step [
 	cars

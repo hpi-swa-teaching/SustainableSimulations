@@ -14,45 +14,19 @@ Class {
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/13/2024 00:19'
+	#'squeak_changestamp' : 'GoChriNo 6/17/2024 12:12'
 }
 SUSCar class >> newOnRoad: aRoad withSpeed: aNumber [
 	^ self new 
 		simulation: aRoad simulation;
-		speed: aNumber;
-		placeCarOnRoad: aRoad;
-		yourself
-]
-
-{
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'GoChriNo 6/14/2024 15:59'
-}
-SUSCar class >> newOnSimulation: aSimulation withSpeed: aNumber [
-	^ self new 
-		simulation: aSimulation;
 		maxSpeed: aNumber;
-		speedGoal: aNumber;
-		postInitialization;
-		yourself
-]
-
-{
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'GoChriNo 6/14/2024 15:59'
-}
-SUSCar class >> newOnSimulation: aSimulation withSpeed: aNumber onRoad: aRoad [
-	^ self new 
-		simulation: aSimulation;
-		maxSpeed: aNumber;
-		speedGoal: aNumber;
 		placeCarOnRoad: aRoad;
 		yourself
 ]
 
 {
 	#category : #behavior,
-	#'squeak_changestamp' : 'GoChriNo 6/16/2024 11:15'
+	#'squeak_changestamp' : 'GoChriNo 6/17/2024 12:12'
 }
 SUSCar >> applyAcceleration [
 	self speed < speedGoal
@@ -104,11 +78,13 @@ SUSCar >> applyCautiousness [
 
 {
 	#category : #behavior,
-	#'squeak_changestamp' : 'GoChriNo 6/16/2024 11:14'
+	#'squeak_changestamp' : 'GoChriNo 6/17/2024 12:06'
 }
 SUSCar >> applyMovement [
 	| t rotation |
 	t := lastPoint + (self deltaTime / self lane length * (self speed / 360)).
+	
+	"t := lane nextTprev: lastPoint advanceByLength: (self deltaTime * (self speed / 360))."
 	t >= 1
 		ifTrue: [self changeLane.
 			t := lastPoint].
@@ -235,7 +211,7 @@ SUSCar >> getNextCar [
 
 {
 	#category : #initialization,
-	#'squeak_changestamp' : 'GoChriNo 6/15/2024 09:23'
+	#'squeak_changestamp' : 'GoChriNo 6/17/2024 12:12'
 }
 SUSCar >> initialize [
 	super initialize.
