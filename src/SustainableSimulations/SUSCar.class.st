@@ -51,29 +51,26 @@ SUSCar >> applyBehavior [
 
 {
 	#category : #behavior,
-	#'squeak_changestamp' : 'GoChriNo 6/16/2024 11:14'
+	#'squeak_changestamp' : 'GoChriNo 6/17/2024 12:41'
 }
 SUSCar >> applyCautiousness [
 	| nextCar dist diffSpeed |
 	nextCar := self getNextCar.
 	nextCar == self
-		ifTrue: [self color: Color blue.
-			self lane nextLanes isEmpty
+		ifTrue: [self lane nextLanes isEmpty
 				ifTrue: [dist := self owner center
 								dist: (self lane getPositionWithTValue: 1).
-					dist <= (self speed squared / (self deacceleration * 2) * 1000 / 360)
-						ifTrue: [self isAccelerating: false.
-							self speedGoal: 0]
-						ifFalse: [self speedGoal: self maxSpeed]]]
+					dist <= (self speed squared / (self deacceleration * 2) * 1000 / 360 + 10 + (0.5 * self speed))
+						ifTrue: [self speedGoal: 0]
+						ifFalse: [self speedGoal: self maxSpeed]]
+				ifFalse: [self speedGoal: self maxSpeed]]
 		ifFalse: [(self isOnOwnLane: nextCar)
 				ifTrue: [dist := nextCar lastPoint - self lastPoint * self lane length]
 				ifFalse: [dist := 1 - self lastPoint * self lane length + (nextCar lastPoint * nextCar lane length)].
 			diffSpeed := self speed - nextCar speed.
-			dist <= (diffSpeed squared / (self deacceleration * 2) * 1000 / 360 + 100)
-				ifTrue: [self isAccelerating: false.
-					self speedGoal: nextCar speed]
-				ifFalse: [self speedGoal: self maxSpeed.
-					self isAccelerating: true]]
+			dist <= (diffSpeed squared / (self deacceleration * 2) * 1000 / 360 + 50 + (0.5 * self speed))
+				ifTrue: [self speedGoal: nextCar speed]
+				ifFalse: [self speedGoal: self maxSpeed]]
 ]
 
 {
