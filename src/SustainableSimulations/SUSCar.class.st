@@ -78,13 +78,11 @@ SUSCar >> applyCautiousness [
 
 {
 	#category : #behavior,
-	#'squeak_changestamp' : 'GoChriNo 6/17/2024 12:06'
+	#'squeak_changestamp' : 'GoChriNo 6/17/2024 12:18'
 }
 SUSCar >> applyMovement [
 	| t rotation |
-	t := lastPoint + (self deltaTime / self lane length * (self speed / 360)).
-	
-	"t := lane nextTprev: lastPoint advanceByLength: (self deltaTime * (self speed / 360))."
+	t := lane nextTprev: lastPoint advanceByLength: (self deltaTime * (self speed / 360)).
 	t >= 1
 		ifTrue: [self changeLane.
 			t := lastPoint].
@@ -211,7 +209,7 @@ SUSCar >> getNextCar [
 
 {
 	#category : #initialization,
-	#'squeak_changestamp' : 'GoChriNo 6/17/2024 12:12'
+	#'squeak_changestamp' : 'GoChriNo 6/17/2024 12:19'
 }
 SUSCar >> initialize [
 	super initialize.
