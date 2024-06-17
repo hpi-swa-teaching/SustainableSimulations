@@ -63,21 +63,44 @@ SUSDirectedPointTests >> testParallelLines [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'MK 6/15/2024 16:38'
+	#'squeak_changestamp' : 'PM 6/17/2024 09:57'
 }
-SUSDirectedPointTests >> testPointBehind [
-	| directedPoint behindPoint pointAhead |
+SUSDirectedPointTests >> testPointAbove [
+	| directedPoint pointOnLine pointAbove pointBelow |
 
 	directedPoint := SUSDirectedPoint new.
 	directedPoint position: 0@0.
 	directedPoint direction: 1@0.
 
-	behindPoint := (-1)@0.
-	Transcript show: (directedPoint isPointBehind: behindPoint).
-	self assert: (directedPoint isPointBehind: behindPoint).
+	pointOnLine := 2@0.
+	self assert: (directedPoint isAbove: pointOnLine) = 0.
 
-	pointAhead := 1@0.
-	self deny: (directedPoint isPointBehind: pointAhead).
+	pointAbove := 2@1.
+	self assert: (directedPoint isAbove: pointAbove) > 0.
+	
+	pointBelow := 2@3 negated.
+	self assert: (directedPoint isAbove: pointBelow) < 0.
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'PM 6/17/2024 10:31'
+}
+SUSDirectedPointTests >> testPointBehind [
+	| directedPoint pointBehind pointAhead pointOnLine |
+
+	directedPoint := SUSDirectedPoint new.
+	directedPoint position: 0@0.
+	directedPoint direction: 1@0.
+
+	pointBehind := 1 negated@2.
+	self assert: ((directedPoint isBehind: pointBehind) < 0).
+
+	pointAhead := 3@2.
+	self assert: ((directedPoint isBehind: pointAhead) > 0).
+	
+	pointOnLine := 0@1 negated.
+	self assert: ((directedPoint isBehind: pointOnLine) = 0)
 ]
 
 {

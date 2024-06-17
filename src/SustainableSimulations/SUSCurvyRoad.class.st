@@ -58,11 +58,11 @@ SUSCurvyRoad >> createDrawingFrom: aDirectedPoint to: anotherDirectedPoint [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/15/2024 16:33'
+	#'squeak_changestamp' : 'PM 6/17/2024 10:24'
 }
 SUSCurvyRoad >> from: aDirectedPoint to: anotherDirectedPoint [
 	from := aDirectedPoint.
-	to := anotherDirectedPoint.
+	to := anotherDirectedPoint
 ]
 
 {

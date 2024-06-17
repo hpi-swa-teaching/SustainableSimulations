@@ -77,23 +77,22 @@ SUSDirectedPoint >> initialize [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'MK 6/15/2024 16:45'
+	#'squeak_changestamp' : 'PM 6/17/2024 09:55'
 }
-SUSDirectedPoint >> isPointBehind: aPoint [
-	| x1 y1 x21 y21 t |
-	x1 := position x asFloat.
-	y1 := position y asFloat.
-	x21 := direction x asFloat.
-	y21 := direction y asFloat.
+SUSDirectedPoint >> isAbove: aPoint [
+	"> 0 aPoint is above line, = 0 aPoint is on line,  < 0 aPoint is below line"
+	^ direction crossProduct: (aPoint - position).
+]
 
-	x21 = 0 ifTrue: [
-		y21 = 0 ifTrue: [ ^false ].
-		y21 > 0 ifTrue: [^ aPoint y < y1]
-			ifFalse: [ ^ aPoint y > y1]
-		].
-
-	t := (aPoint x asFloat - x1) / x21.
-	^ t < 0
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'PM 6/17/2024 10:31'
+}
+SUSDirectedPoint >> isBehind: aPoint [
+	"<0: nach Positon; = 0 genau auf linie mit positon; > 0: vor Position"
+	0@0 = direction ifTrue: [ ^ 0 ].
+	^ (aPoint - position) dotProduct: direction
+	
 ]
 
 {

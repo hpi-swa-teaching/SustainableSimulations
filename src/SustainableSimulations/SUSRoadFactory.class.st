@@ -40,19 +40,23 @@ SUSRoadFactory >> buildCrossIntersectionFrom: aDirectedPoint to: aPoint [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/15/2024 20:41'
+	#'squeak_changestamp' : 'PM 6/17/2024 10:18'
 }
 SUSRoadFactory >> buildCurvyRoadFrom: aDirectedPoint to: aPoint [ 
-	| degrees |
+	| degrees direction isUp|
 	(self canBuildCurvyRoadFrom: aDirectedPoint to: aPoint)
 		ifFalse: [^ nil].
 	degrees := self askForDegrees.
+	isUp := (aDirectedPoint asDirectedPoint isAbove: aPoint) > 0.
+	isUp ifTrue: [degrees := 180 - degrees].
+	direction := aDirectedPoint direction rotateBy: degrees degreesToRadians about: 0 @ 0.
+	isUp ifTrue: [direction := direction negated].
 	^ SUSCurvyRoad
 		newOnSimulation: simulation
 		from: aDirectedPoint
 		to: (SUSDirectedPoint
 				newWithPosition: aPoint
-				inDirection: (aDirectedPoint direction rotateBy: degrees about: 0 @ 0) negated)
+				inDirection: direction)
 ]
 
 {
@@ -92,11 +96,13 @@ SUSRoadFactory >> canBuildCrossIntersectionFrom: aConnectionPoint to: aPoint [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/12/2024 23:48'
+	#'squeak_changestamp' : 'PM 6/17/2024 10:32'
 }
 SUSRoadFactory >> canBuildCurvyRoadFrom: aConnectionPoint to: aPoint [
+	| directedPoint |
 	self flag: #Todo. "calculate min road length"
-	^ true
+	directedPoint := aConnectionPoint asDirectedPoint.
+	^ ((directedPoint isBehind: aPoint) > 0) and: ((directedPoint isAbove: aPoint) ~= 0)
 ]
 
 {
@@ -115,10 +121,10 @@ SUSRoadFactory >> canBuildRoadFrom: aConnectionPoint to: aPoint [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/13/2024 00:08'
+	#'squeak_changestamp' : 'PM 6/17/2024 10:32'
 }
 SUSRoadFactory >> canBuildStraightRoadFrom: aConnectionPoint to: aPoint [ 
-	^ ((aConnectionPoint asDirectedPoint isPointBehind: aPoint) not)
+	^ ((aConnectionPoint asDirectedPoint isBehind: aPoint) > 0)
 		and: (aConnectionPoint asDirectedPoint linearDist: aPoint)
 				>= self minRoadLength
 ]

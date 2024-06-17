@@ -79,20 +79,21 @@ SUSCurvyRoadDrawing >> addMarksFrom: aDirectedPoint to: anotherDirectedPoint [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/15/2024 20:40'
+	#'squeak_changestamp' : 'PM 6/17/2024 10:16'
 }
-SUSCurvyRoadDrawing >> addPathsFrom: aDirectedPoint to: anotherDirectedPoint [
-	| pointA pointB pointC pointD pointE pointF |
+SUSCurvyRoadDrawing >> addPathsFrom: aDirectedPoint to: anotherDirectedPoint [ 
+	| pointA pointB pointC pointD pointE pointF isUp |
+	isUp := (aDirectedPoint isAbove: anotherDirectedPoint position) < 0.
 	pointA := aDirectedPoint absoluteOffset: 0.5 * SUSDrawing normalLaneWidth @ 0.
+	pointD := aDirectedPoint absoluteOffset: 0.5 * SUSDrawing normalLaneWidth negated @ 0.
 	pointC := anotherDirectedPoint absoluteOffset: 0.5 * SUSDrawing normalLaneWidth @ 0.
+	pointF := anotherDirectedPoint absoluteOffset: 0.5 * SUSDrawing normalLaneWidth negated @ 0.
 	pointB := (SUSDirectedPoint newWithPosition: pointA inDirection: aDirectedPoint direction)
 				calculateIntersectionPoint: (SUSDirectedPoint newWithPosition: pointC inDirection: anotherDirectedPoint direction).
-	pointD := aDirectedPoint absoluteOffset: 0.5 * SUSDrawing normalLaneWidth negated @ 0.
-	pointF := anotherDirectedPoint absoluteOffset: 0.5 * SUSDrawing normalLaneWidth negated @ 0.
 	pointE := (SUSDirectedPoint newWithPosition: pointD inDirection: aDirectedPoint direction)
 				calculateIntersectionPoint: (SUSDirectedPoint newWithPosition: pointF inDirection: anotherDirectedPoint direction).
-	self addPathWithVertices: { pointA . pointB . pointC } ;
-		addPathWithVertices: { pointD . pointE . pointF }
+	self addPathWithVertices: {pointA. pointB. pointC};
+		 addPathWithVertices: {pointD. pointE. pointF}
 ]
 
 {

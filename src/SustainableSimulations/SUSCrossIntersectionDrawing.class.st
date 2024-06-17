@@ -72,24 +72,23 @@ SUSCrossIntersectionDrawing >> addCurveFrom: aDirectedPoint withVertices: vertic
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/15/2024 14:59'
+	#'squeak_changestamp' : 'PM 6/17/2024 10:21'
 }
 SUSCrossIntersectionDrawing >> addCurvesFrom: aDirectedPoint [
-	self addCurveFrom: aDirectedPoint withVertices: {1 negated@0. 1 negated@0.7. 1.3 negated@1. 2 negated@1. 1.3 negated@1. 1 negated@0.7}.
-	self addCurveFrom: aDirectedPoint withVertices: {2 negated@3 . 1.3 negated@3 . 1 negated @ 3.3 . 1 negated @ 4 . 1 negated @ 3.3 . 1.3 negated@3}.
-	self addCurveFrom: aDirectedPoint withVertices: {1@0. 1@0.7. 1.3@1. 2@1. 1.3@1. 1@0.7}.
-	self addCurveFrom: aDirectedPoint withVertices: {2@3 . 1.3@3 . 1 @ 3.3 . 1 @ 4 . 1 @ 3.3 . 1.3@3}.
+	self addCurveFrom: aDirectedPoint withVertices: {1 negated@0. 1 negated@0.7. 1.3 negated@1. 2 negated@1. 1.3 negated@1. 1 negated@0.7};
+		addCurveFrom: aDirectedPoint withVertices: {2 negated@3 . 1.3 negated@3 . 1 negated @ 3.3 . 1 negated @ 4 . 1 negated @ 3.3 . 1.3 negated@3};
+		addCurveFrom: aDirectedPoint withVertices: {1@0. 1@0.7. 1.3@1. 2@1. 1.3@1. 1@0.7};
+		addCurveFrom: aDirectedPoint withVertices: {2@3 . 1.3@3 . 1 @ 3.3 . 1 @ 4 . 1 @ 3.3 . 1.3@3}.
 ]
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'Len 6/16/2024 19:42'
+	#'squeak_changestamp' : 'PM 6/17/2024 10:22'
 }
 SUSCrossIntersectionDrawing >> addDetailFrom: aDirectedPoint to: aPoint [
-	self color: Color transparent.
-	self addBaseFrom: aDirectedPoint.
-	"self addCrossInterMarksFrom: aDirectedPoint."
-	self addCurvesFrom: aDirectedPoint.
+	self color: Color transparent;
+		addBaseFrom: aDirectedPoint;
+		addCurvesFrom: aDirectedPoint
 ]
 
 {
@@ -115,29 +114,29 @@ SUSCrossIntersectionDrawing >> addPathFrom: aDirectedPoint withVertices: aCollec
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/15/2024 15:24'
+	#'squeak_changestamp' : 'PM 6/17/2024 10:23'
 }
 SUSCrossIntersectionDrawing >> addPathsFrom: aDirectedPoint to: aPoint [
 	| factor |
 	factor := SUSDrawing normalLaneWidth.
 	"From left"
-	self addPathFrom: aDirectedPoint withVertices: { 0.5@0 . 0.5@2.5 . 2 negated@2.5 }. "Left"
-	self addPathFrom: aDirectedPoint withVertices: { 0.5@0 . 0.5@2 . 0.5@4 }. "Straight"
-	self addPathFrom: aDirectedPoint withVertices: { 0.5@0 . 0.5@1.5 . 2@1.5 }. "Right"
+	self addPathFrom: aDirectedPoint withVertices: { 0.5@0 . 0.5@2.5 . 2 negated@2.5 }; "Left"
+		addPathFrom: aDirectedPoint withVertices: { 0.5@0 . 0.5@2 . 0.5@4 }; "Straight"
+		addPathFrom: aDirectedPoint withVertices: { 0.5@0 . 0.5@1.5 . 2@1.5 }. "Right"
 	
 	"From bottom"
-	self addPathFrom: aDirectedPoint withVertices: { 2@2.5 . 0.5@2.5 . 0.5@4 }. "Left"
-	self addPathFrom: aDirectedPoint withVertices: { 2@2.5 . 0@2.5 . 2 negated@2.5 }. "Straight"
-	self addPathFrom: aDirectedPoint withVertices: { 2@2.5 . 0.5 negated@2.5 . 0.5 negated@0 }. "Right"
+	self addPathFrom: aDirectedPoint withVertices: { 2@2.5 . 0.5@2.5 . 0.5@4 }; "Left"
+		addPathFrom: aDirectedPoint withVertices: { 2@2.5 . 0@2.5 . 2 negated@2.5 }; "Straight"
+		addPathFrom: aDirectedPoint withVertices: { 2@2.5 . 0.5 negated@2.5 . 0.5 negated@0 }. "Right"
 	
 	"From right"
-	self addPathFrom: aDirectedPoint withVertices: { 0.5 negated@4 . 0.5 negated@1.5 . 2@1.5 }. "Left"
-	self addPathFrom: aDirectedPoint withVertices: { 0.5 negated@4 . 0.5 negated@2 . 0.5 negated@0 }. "Straight"
-	self addPathFrom: aDirectedPoint withVertices: { 0.5 negated@4 . 0.5 negated@2.5 . 2 negated@2.5 }. "Right"
+	self addPathFrom: aDirectedPoint withVertices: { 0.5 negated@4 . 0.5 negated@1.5 . 2@1.5 }; "Left"
+		addPathFrom: aDirectedPoint withVertices: { 0.5 negated@4 . 0.5 negated@2 . 0.5 negated@0 }; "Straight"
+		addPathFrom: aDirectedPoint withVertices: { 0.5 negated@4 . 0.5 negated@2.5 . 2 negated@2.5 }. "Right"
 	
 	"From top"
-	self addPathFrom: aDirectedPoint withVertices: { 2 negated@1.5 . 0.5@1.5 . 0.5@4 }. "Left"
-	self addPathFrom: aDirectedPoint withVertices: { 2 negated@1.5 . 0@1.5 . 2@1.5 }. "Straight"
-	self addPathFrom: aDirectedPoint withVertices: { 2 negated@1.5 . 0.5 negated@1.5 . 0.5 negated@0 }. "Right"
+	self addPathFrom: aDirectedPoint withVertices: { 2 negated@1.5 . 0.5@1.5 . 0.5@4 }; "Left"
+		addPathFrom: aDirectedPoint withVertices: { 2 negated@1.5 . 0@1.5 . 2@1.5 }; "Straight"
+		addPathFrom: aDirectedPoint withVertices: { 2 negated@1.5 . 0.5 negated@1.5 . 0.5 negated@0 } "Right"
 	
 ]
