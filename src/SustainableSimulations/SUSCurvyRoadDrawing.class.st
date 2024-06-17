@@ -33,52 +33,21 @@ SUSCurvyRoadDrawing class >> newFrom: aDirectedPoint to: aPoint [
 ]
 
 {
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'Len 6/16/2024 19:31'
+	#category : #drawing,
+	#'squeak_changestamp' : 'Len 6/17/2024 21:47'
 }
 SUSCurvyRoadDrawing >> addDetailFrom: aDirectedPoint to: anotherDirectedPoint [ 
-	| lane |
+	| vertices |
 	self color: Color transparent.
-	lane := self generateLaneWithVertices: (self calculateBezierVerticesFrom: aDirectedPoint to: anotherDirectedPoint withOffset: 0).
-	self drawRoadWithLane: lane
+	vertices := self generateVerticesFrom: aDirectedPoint to: anotherDirectedPoint.
+	self drawRoadWithVertices: vertices.
+	self drawMarkWithVertices: (vertices first) withMarkWidth: SUSDrawing markWidth.
+	self drawMarkWithVertices: (vertices second)withMarkWidth: SUSDrawing markWidth * 0.75. 
+	self drawMarkWithVertices: (vertices third) withMarkWidth: SUSDrawing markWidth
 ]
 
 {
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'Len 6/16/2024 18:35'
-}
-SUSCurvyRoadDrawing >> addDetailFromOld: aDirectedPoint to: anotherDirectedPoint [ 
-	| pointA pointB pointC pointD pointE pointF |
-	pointA := aDirectedPoint absoluteOffset: SUSDrawing normalLaneWidth negated@ 0.
-	pointC := anotherDirectedPoint absoluteOffset: SUSDrawing normalLaneWidth negated@ 0.
-	pointB := aDirectedPoint calculateIntersectionPoint: anotherDirectedPoint.
-	pointD := aDirectedPoint absoluteOffset: SUSDrawing normalLaneWidth @ 0.
-	pointF := anotherDirectedPoint absoluteOffset: SUSDrawing normalLaneWidth @ 0.
-	pointE := (SUSDirectedPoint newWithPosition: pointD inDirection: aDirectedPoint direction)
-				calculateIntersectionPoint: (SUSDirectedPoint newWithPosition: pointF inDirection: anotherDirectedPoint direction).
-	self color: Color transparent.
-	self addMorphInLayer: ((MixedCurveMorph
-			vertices: {pointA. pointB. pointC. pointF. pointE. pointD}
-			color: SUSDrawing colorRoad
-			borderWidth: 4
-			borderColor: SUSDrawing colorRoad) morphicLayerNumber: self baseLayer;
-			toggleSmoothing;
-			clickVertex: 1 event: nil fromHandle: nil;
-			clickVertex: 3 event: nil fromHandle: nil;
-			clickVertex: 4 event: nil fromHandle: nil;
-			clickVertex: 6 event: nil fromHandle: nil;
-			 yourself)
-]
-
-{
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'Len 6/16/2024 19:22'
-}
-SUSCurvyRoadDrawing >> addMarksFrom: aDirectedPoint to: anotherDirectedPoint [ 
-]
-
-{
-	#category : #'as yet unclassified',
+	#category : #drawing,
 	#'squeak_changestamp' : 'PM 6/17/2024 10:16'
 }
 SUSCurvyRoadDrawing >> addPathsFrom: aDirectedPoint to: anotherDirectedPoint [ 
@@ -97,7 +66,7 @@ SUSCurvyRoadDrawing >> addPathsFrom: aDirectedPoint to: anotherDirectedPoint [
 ]
 
 {
-	#category : #'as yet unclassified',
+	#category : #calculation,
 	#'squeak_changestamp' : 'Len 6/16/2024 18:51'
 }
 SUSCurvyRoadDrawing >> buildLaneWithVertices: vertices [
@@ -107,7 +76,7 @@ SUSCurvyRoadDrawing >> buildLaneWithVertices: vertices [
 ]
 
 {
-	#category : #'as yet unclassified',
+	#category : #calculation,
 	#'squeak_changestamp' : 'Len 6/16/2024 19:20'
 }
 SUSCurvyRoadDrawing >> calculateBezierVerticesFrom: aDirectedPoint to: anotherDirectedPoint withOffset: aNumber [
@@ -120,24 +89,95 @@ SUSCurvyRoadDrawing >> calculateBezierVerticesFrom: aDirectedPoint to: anotherDi
 ]
 
 {
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'Len 6/16/2024 19:35'
+	#category : #calculation,
+	#'squeak_changestamp' : 'Len 6/17/2024 21:45'
 }
-SUSCurvyRoadDrawing >> drawRoadWithLane: aLane [
-	| factor |
-	factor := 1 / (aLane length / (SUSCurvyRoadDrawing curveResolution * 0.5)). 
+SUSCurvyRoadDrawing >> calculateVerticesWithL: laneLeft M: laneMid R: laneRight [
+	| factor t verticesLeft verticesRight verticesMid|
+	verticesLeft := OrderedCollection new.
+	verticesRight := OrderedCollection new.
+	verticesMid := OrderedCollection new.
+	factor := laneMid length / (laneMid length / SUSCurvyRoadDrawing curveResolution).
+	t := 0.
 	
-	0 to: 1 by: factor do: [:t | 
-		| aMorph rotation |
-		aMorph := self generateRoadPartWithLenght: (SUSCurvyRoadDrawing curveResolution).
-		self addMorphInLayer: aMorph.
-		aMorph center: (aLane getPositionWithTValue: t) + (0@(SUSDrawing markWidth * 0.5)).
-		rotation := (aLane getRotationWithTValue:  t).
-		rotation first = 1 ifTrue: [aMorph rotationDegrees: rotation second]]
+	0 to: laneMid length by: factor do: [:length | 
+		verticesLeft addLast: (laneLeft getPosition3VerticesWithTValue: t).
+		verticesMid addLast: (laneMid getPosition3VerticesWithTValue: t).
+		verticesRight addLast: (laneRight getPosition3VerticesWithTValue: t).
+		t := laneMid nextTprev: t advanceByLength: factor].
+	
+	verticesLeft addLast: (laneLeft getPosition3VerticesWithTValue: 1).
+	verticesMid addLast: (laneMid getPosition3VerticesWithTValue: 1).
+	verticesRight addLast: (laneRight getPosition3VerticesWithTValue: 1).
+	
+	^ {verticesLeft. verticesMid. verticesRight}
+	
+
 ]
 
 {
-	#category : #'as yet unclassified',
+	#category : #drawing,
+	#'squeak_changestamp' : 'Len 6/17/2024 21:40'
+}
+SUSCurvyRoadDrawing >> drawMarkWithVertices: vertices [
+	| markVertices |
+	markVertices := OrderedCollection new.
+	markVertices addAll: vertices.
+	markVertices addAll: (vertices reverse).
+	
+	self addMorphInLayer: ((LineMorph
+			vertices: markVertices
+			color: Color transparent
+			borderWidth: SUSDrawing markWidth
+			borderColor: SUSDrawing colorMark) beSmoothCurve; 
+			morphicLayerNumber: self detailLayer;
+			yourself).
+]
+
+{
+	#category : #drawing,
+	#'squeak_changestamp' : 'Len 6/17/2024 21:46'
+}
+SUSCurvyRoadDrawing >> drawMarkWithVertices: vertices withMarkWidth: width [
+	| markVertices |
+	markVertices := OrderedCollection new.
+	markVertices addAll: vertices.
+	markVertices addAll: (vertices reverse).
+	
+	self addMorphInLayer: ((LineMorph
+			vertices: markVertices
+			color: Color transparent
+			borderWidth: width
+			borderColor: SUSDrawing colorMark) beSmoothCurve; 
+			morphicLayerNumber: self detailLayer;
+			yourself).
+]
+
+{
+	#category : #drawing,
+	#'squeak_changestamp' : 'Len 6/17/2024 21:34'
+}
+SUSCurvyRoadDrawing >> drawRoadWithVertices: vertices [
+	| roadVertices morph |
+	roadVertices := OrderedCollection new.
+	roadVertices addAll: vertices first.
+	roadVertices addAll: (vertices third reverse).
+	
+	morph := (MixedCurveMorph
+			vertices: roadVertices
+			color: SUSDrawing colorRoad
+			borderWidth: 4
+			borderColor: SUSDrawing colorRoad) morphicLayerNumber: self baseLayer;
+			toggleSmoothing;
+			yourself.
+	
+	1 to: roadVertices size do: [:index | morph clickVertex: index event: nil fromHandle: nil].
+	
+	self addMorphInLayer: morph
+]
+
+{
+	#category : #calculation,
 	#'squeak_changestamp' : 'Len 6/16/2024 18:51'
 }
 SUSCurvyRoadDrawing >> generateLaneWithVertices: vertices [
@@ -147,15 +187,16 @@ SUSCurvyRoadDrawing >> generateLaneWithVertices: vertices [
 ]
 
 {
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'Len 6/16/2024 19:36'
+	#category : #calculation,
+	#'squeak_changestamp' : 'Len 6/17/2024 21:35'
 }
-SUSCurvyRoadDrawing >> generateRoadPartWithLenght: aNumber [
-	^ (SUSStraightRoadDrawing new
-			extent: aNumber@(SUSDrawing normalLaneWidth * 2);
-			color: SUSDrawing colorRoad)
-			addMarkFrom: 0@0 to: aNumber@0;
-			addMarkFrom: (aNumber * 0.25)@(SUSDrawing normalLaneWidth) to: (aNumber * 0.75)@(SUSDrawing normalLaneWidth);
-			addMarkFrom: 0@(SUSDrawing normalLaneWidth * 2) to: aNumber@(SUSDrawing normalLaneWidth * 2);
-			addFlexShellIfNecessary
+SUSCurvyRoadDrawing >> generateVerticesFrom: aDirectedPoint to: anotherDirectedPoint [ 
+	| laneLeft laneMid laneRight|
+	laneLeft := self generateLaneWithVertices: (self calculateBezierVerticesFrom: aDirectedPoint to: anotherDirectedPoint withOffset: SUSDrawing normalLaneWidth negated).
+	laneMid := self generateLaneWithVertices: (self calculateBezierVerticesFrom: aDirectedPoint to: anotherDirectedPoint withOffset: 0).
+	laneRight := self generateLaneWithVertices: (self calculateBezierVerticesFrom: aDirectedPoint to: anotherDirectedPoint withOffset: SUSDrawing normalLaneWidth).
+	
+	^ self calculateVerticesWithL: laneLeft M: laneMid R: laneRight
+	
+
 ]

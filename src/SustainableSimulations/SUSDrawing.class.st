@@ -19,7 +19,7 @@ SUSDrawing class >> colorMark [
 
 {
 	#category : #'class variables',
-	#'squeak_changestamp' : 'PM 6/17/2024 16:23'
+	#'squeak_changestamp' : 'PM 6/17/2024 22:03'
 }
 SUSDrawing class >> colorPath [
 	^ Color transparent
@@ -80,7 +80,7 @@ SUSDrawing class >> verticesLineCurve [
 ]
 
 {
-	#category : #initialization,
+	#category : #drawing,
 	#'squeak_changestamp' : 'PM 6/12/2024 20:21'
 }
 SUSDrawing >> addDetailFrom: aDirectedPoint to: aPoint [
@@ -88,7 +88,7 @@ SUSDrawing >> addDetailFrom: aDirectedPoint to: aPoint [
 ]
 
 {
-	#category : #initialization,
+	#category : #drawing,
 	#'squeak_changestamp' : 'PM 6/15/2024 13:19'
 }
 SUSDrawing >> addMarkFrom: aPoint to: anotherPoint [ 
@@ -116,7 +116,7 @@ SUSDrawing >> addPathWithVertices: aCollection [
 ]
 
 {
-	#category : #initialization,
+	#category : #drawing,
 	#'squeak_changestamp' : 'PM 6/12/2024 20:21'
 }
 SUSDrawing >> addPathsFrom: aDirectedPoint to: aPoint [
@@ -125,7 +125,7 @@ SUSDrawing >> addPathsFrom: aDirectedPoint to: aPoint [
 ]
 
 {
-	#category : #initialization,
+	#category : #layer,
 	#'squeak_changestamp' : 'PM 6/12/2024 23:09'
 }
 SUSDrawing >> baseLayer [
@@ -133,81 +133,11 @@ SUSDrawing >> baseLayer [
 ]
 
 {
-	#category : #initialization,
+	#category : #layer,
 	#'squeak_changestamp' : 'PM 6/12/2024 23:09'
 }
 SUSDrawing >> detailLayer [
 	^ 28
-]
-
-{
-	#category : #drawing,
-	#'squeak_changestamp' : 'Len 6/11/2024 23:36'
-}
-SUSDrawing >> drawCurveRoadTo: aPosition withDirection: aDirection [
-	| vertices delta lane | 
-	delta := aDirection normal normalized * SUSDrawing normalLaneWidth * 0.5.
-	vertices := self generateCurvePathFrom: (0@1 * SUSDrawing normalLaneWidth) To: (aPosition) withDirection: aDirection.
-	lane := SUSLane newLaneWithPath: (CurveMorph vertices: vertices color: (Color r: 0 g: 0 b: 0 alpha: 0) 
-		borderWidth: 2 borderColor: SUSDrawing colorPath).
-	
-	0 to: 1 by: 0.01 do: [:t | 
-		| aMorph rotation |
-		aMorph := (SUSDrawing new
-			extent: 20@(SUSDrawing normalLaneWidth * 2);
-			color: SUSDrawing colorRoad)
-			addStraightMarks;
-			addFlexShellIfNecessary.
-		self addMorphInLayer: aMorph.
-		aMorph center: (lane getPositionWithTValue: t).
-		rotation := (lane getRotationWithTValue:  t).
-		rotation first = 1 ifTrue: [aMorph rotationDegrees: rotation second]]
-
-]
-
-{
-	#category : #drawing,
-	#'squeak_changestamp' : 'PM 6/11/2024 05:32'
-}
-SUSDrawing >> generateCurvePathFrom: aPointPosition To: anotherPointPosition withDirection: anotherPointDirection [
-	| midpoint lineA lineB |
-	lineA := SUSDirectedPoint newWithPosition: aPointPosition inDirection: 1@0.
-	lineB := SUSDirectedPoint newWithPosition: anotherPointPosition inDirection: anotherPointDirection.
-	midpoint := lineA calculateIntersectionPoint: lineB.
-	^ {aPointPosition . midpoint . anotherPointPosition }
-]
-
-{
-	#category : #drawing,
-	#'squeak_changestamp' : 'PM 6/11/2024 05:19'
-}
-SUSDrawing >> generateCurvePathOldFrom: aPointPosition To: anotherPointPosition withDirection: anotherPointDirection [
-	| aPointDirection directionA directionB lineA lineB middlePoint | 
-	aPointDirection := 1@0.
-	directionA := (anotherPointPosition - aPointPosition) normalized.
-	directionA := (aPointDirection normalized + directionA) normalized.
-	directionB := (aPointPosition - anotherPointPosition) normalized.
-	directionB := (anotherPointDirection normalized + directionB) normalized.
-	
-	lineA := SUSDirectedPoint newWithPosition: aPointPosition inDirection: directionA.
-	lineB := SUSDirectedPoint newWithPosition: anotherPointPosition inDirection: directionB.
-	
-	middlePoint := lineA calculateIntersectionPoint: lineB.
-	
-	^ {aPointPosition . middlePoint . anotherPointPosition }
-]
-
-{
-	#category : #drawing,
-	#'squeak_changestamp' : 'PM 6/11/2024 05:35'
-}
-SUSDrawing >> generateCurvePathsTo: aPosition withDirection: aDirection [
-	| verticesA verticesB delta | 
-	delta := aDirection normal normalized * SUSDrawing normalLaneWidth * 0.5.
-	verticesA := self generateCurvePathFrom: (0@0.5 * SUSDrawing normalLaneWidth) To: (aPosition + delta) withDirection: aDirection.
-	verticesB := self generateCurvePathFrom: (0@1.5 * SUSDrawing normalLaneWidth) To: (aPosition - delta) withDirection: aDirection.
-	self addPathWithVertices: verticesA.
-	self addPathWithVertices: verticesB.
 ]
 
 {
@@ -221,7 +151,7 @@ SUSDrawing >> initialize [
 ]
 
 {
-	#category : #initialization,
+	#category : #layer,
 	#'squeak_changestamp' : 'PM 6/12/2024 23:09'
 }
 SUSDrawing >> pathLayer [
@@ -229,7 +159,7 @@ SUSDrawing >> pathLayer [
 ]
 
 {
-	#category : #initialization,
+	#category : #accessing,
 	#'squeak_changestamp' : 'Len 6/1/2024 20:13'
 }
 SUSDrawing >> paths [

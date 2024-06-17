@@ -24,7 +24,7 @@ SUSStraightRoadDrawing class >> newFrom: aDirectedPoint to: aPoint [
 ]
 
 {
-	#category : #'as yet unclassified',
+	#category : #drawing,
 	#'squeak_changestamp' : 'PM 6/15/2024 13:59'
 }
 SUSStraightRoadDrawing >> addDetailFrom: aDirectedPoint to: aPoint [
@@ -43,7 +43,7 @@ SUSStraightRoadDrawing >> addDetailFrom: aDirectedPoint to: aPoint [
 ]
 
 {
-	#category : #'as yet unclassified',
+	#category : #drawing,
 	#'squeak_changestamp' : 'PM 6/13/2024 00:01'
 }
 SUSStraightRoadDrawing >> addMidMarkFrom: aDirectedPoint to: aPoint [
@@ -57,7 +57,7 @@ SUSStraightRoadDrawing >> addMidMarkFrom: aDirectedPoint to: aPoint [
 ]
 
 {
-	#category : #'as yet unclassified',
+	#category : #drawing,
 	#'squeak_changestamp' : 'PM 6/15/2024 15:04'
 }
 SUSStraightRoadDrawing >> addPathsFrom: aDirectedPoint to: aPoint [

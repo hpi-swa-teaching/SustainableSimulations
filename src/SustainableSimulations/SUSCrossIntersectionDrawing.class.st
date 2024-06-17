@@ -26,12 +26,11 @@ SUSCrossIntersectionDrawing class >> newFrom: aDirectedPoint to: aPoint [
 ]
 
 {
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'Len 6/16/2024 19:48'
+	#category : #drawing,
+	#'squeak_changestamp' : 'Len 6/17/2024 21:50'
 }
 SUSCrossIntersectionDrawing >> addBaseFrom: aDirectedPoint [ 
 	| vertices |
-	"vertices := {2 negated @ 0. 2 negated @ 4. 2 @ 4. 2 @ 0} * SUSDrawing normalLaneWidth."
 	vertices := {2 negated @ 1. 2 negated @ 3. 1 negated @ 3. 1 negated @ 4. 1 @ 4. 1 @ 3. 2 @ 3. 2 @ 1. 1 @ 1. 1 @ 0. 1 negated @ 0. 1 negated @ 1.} * SUSDrawing normalLaneWidth.
 	self addMorphInLayer: ((PolygonMorph
 			vertices: (vertices
@@ -43,7 +42,7 @@ SUSCrossIntersectionDrawing >> addBaseFrom: aDirectedPoint [
 ]
 
 {
-	#category : #'as yet unclassified',
+	#category : #drawing,
 	#'squeak_changestamp' : 'PM 6/15/2024 15:06'
 }
 SUSCrossIntersectionDrawing >> addCrossInterMarksFrom: aDirectedPoint [
@@ -56,7 +55,7 @@ SUSCrossIntersectionDrawing >> addCrossInterMarksFrom: aDirectedPoint [
 ]
 
 {
-	#category : #'as yet unclassified',
+	#category : #drawing,
 	#'squeak_changestamp' : 'PM 6/15/2024 14:58'
 }
 SUSCrossIntersectionDrawing >> addCurveFrom: aDirectedPoint withVertices: vertices [
@@ -71,7 +70,7 @@ SUSCrossIntersectionDrawing >> addCurveFrom: aDirectedPoint withVertices: vertic
 ]
 
 {
-	#category : #'as yet unclassified',
+	#category : #drawing,
 	#'squeak_changestamp' : 'PM 6/17/2024 10:21'
 }
 SUSCrossIntersectionDrawing >> addCurvesFrom: aDirectedPoint [
@@ -82,7 +81,7 @@ SUSCrossIntersectionDrawing >> addCurvesFrom: aDirectedPoint [
 ]
 
 {
-	#category : #'as yet unclassified',
+	#category : #drawing,
 	#'squeak_changestamp' : 'PM 6/17/2024 10:22'
 }
 SUSCrossIntersectionDrawing >> addDetailFrom: aDirectedPoint to: aPoint [
@@ -92,7 +91,7 @@ SUSCrossIntersectionDrawing >> addDetailFrom: aDirectedPoint to: aPoint [
 ]
 
 {
-	#category : #'as yet unclassified',
+	#category : #drawing,
 	#'squeak_changestamp' : 'PM 6/15/2024 14:27'
 }
 SUSCrossIntersectionDrawing >> addMidMarkFrom: aPoint to: anotherPoint [ 
@@ -105,7 +104,7 @@ SUSCrossIntersectionDrawing >> addMidMarkFrom: aPoint to: anotherPoint [
 ]
 
 {
-	#category : #'as yet unclassified',
+	#category : #drawing,
 	#'squeak_changestamp' : 'PM 6/15/2024 15:08'
 }
 SUSCrossIntersectionDrawing >> addPathFrom: aDirectedPoint withVertices: aCollection [
@@ -113,7 +112,7 @@ SUSCrossIntersectionDrawing >> addPathFrom: aDirectedPoint withVertices: aCollec
 ]
 
 {
-	#category : #'as yet unclassified',
+	#category : #drawing,
 	#'squeak_changestamp' : 'PM 6/17/2024 10:23'
 }
 SUSCrossIntersectionDrawing >> addPathsFrom: aDirectedPoint to: aPoint [
