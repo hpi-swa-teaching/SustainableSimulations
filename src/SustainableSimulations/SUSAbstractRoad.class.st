@@ -237,14 +237,14 @@ SUSAbstractRoad >> unselect [
 
 {
 	#category : #drawing,
-	#'squeak_changestamp' : 'Len 6/11/2024 23:16'
+	#'squeak_changestamp' : 'Len 6/17/2024 21:42'
 }
 SUSAbstractRoad >> updateLanes: aRoad [
 	lanes do: [:each | 
 		|pos1|
 		pos1 := each getPositionWithTValue: 1.
 		aRoad lanes do: [:anotherEach |
-			((pos1 dist: (anotherEach getPositionWithTValue: 0))<5)
+			((pos1 dist: (anotherEach getPositionWithTValue: 0))<10)
 				ifTrue: [each addNextLane: anotherEach]]]
 		
 		

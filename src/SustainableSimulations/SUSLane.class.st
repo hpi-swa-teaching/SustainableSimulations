@@ -24,25 +24,6 @@ SUSLane class >> newLaneWithPath: aLineMorph [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'Len 6/16/2024 19:12'
-}
-SUSLane >> TESTgetRotation3VerticesWithTValue: aNumber [
-	| p1 p2 p3 dx dy |
-	p1 := path pointInWorld: path vertices first.
-	p2 := path pointInWorld: (path vertices at: 2).
-	p3 := path pointInWorld: path vertices last.
-	
-	dx := (p2 x - p1 x) * 2 * (1 - aNumber) + (p3 x - p2 x) * 2 * aNumber.
-	dy := (p2 y - p1 y) * 2 * (1 - aNumber) + (p3 y - p2 y) * 2 * aNumber.
-	
-	dx = 0 ifTrue: [
-		dy > 0 ifTrue: [^ {1. 90}] ifFalse: [dy < 0 ifTrue: [^ {1. -90}] ifFalse: [^ {0. -90}]]].
-	dx < 0 ifTrue: [^ {1. (dy / dx) arcTan radiansToDegrees + 180}].
-	^ {1. (dy / dx) arcTan radiansToDegrees}
-]
-
-{
-	#category : #'as yet unclassified',
 	#'squeak_changestamp' : 'MK 5/28/2024 19:11'
 }
 SUSLane >> addCar: aCar [
