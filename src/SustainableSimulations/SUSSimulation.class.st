@@ -150,14 +150,15 @@ SUSSimulation >> mouseDown: anEvent [
 
 {
 	#category : #'event handling',
-	#'squeak_changestamp' : 'PM 6/18/2024 14:33'
+	#'squeak_changestamp' : 'PM 6/18/2024 16:05'
 }
 SUSSimulation >> notifyClickedAt: aConnectionPoint [ 
 	clickedConnectionPoint
 		ifNil: [self activeConnectionPoint: aConnectionPoint]
 		ifNotNil: [aConnectionPoint == clickedConnectionPoint
 				ifTrue: [self activeConnectionPoint: nil]
-				ifFalse: [self buildConnectingRoadTo: aConnectionPoint]]
+				ifFalse: [self buildConnectingRoadTo: aConnectionPoint].
+			self activeConnectionPoint: nil]
 ]
 
 {
