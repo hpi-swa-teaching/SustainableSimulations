@@ -70,14 +70,16 @@ SUSVehicle >> deltaTime: anObject [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/13/2024 00:19'
+	#'squeak_changestamp' : 'PM 6/18/2024 11:31'
 }
 SUSVehicle >> initialize [
 	super initialize.
+	
 	maxSpeed := 100.
 	acceleration := 1.
 	length := 1.
-	self morphicLayerNumber: 15.
+	
+	self morphicLayerNumber: 15
 	"position := 0 @ 0."
 	
 ]

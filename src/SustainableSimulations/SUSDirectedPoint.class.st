@@ -28,6 +28,14 @@ SUSDirectedPoint >> absoluteOffset: aPoint [
 
 {
 	#category : #accessing,
+	#'squeak_changestamp' : 'PM 6/18/2024 10:14'
+}
+SUSDirectedPoint >> basicType [
+	^ #SUSDirectedPoint
+]
+
+{
+	#category : #accessing,
 	#'squeak_changestamp' : 'PM 6/11/2024 14:41'
 }
 SUSDirectedPoint >> calculateIntersectionPoint: aLine [

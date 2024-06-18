@@ -51,6 +51,14 @@ SUSConnectionPoint >> askForDegrees [
 
 {
 	#category : #drawing,
+	#'squeak_changestamp' : 'PM 6/18/2024 10:37'
+}
+SUSConnectionPoint >> basicType [
+	^ #SUSConnectionPoint
+]
+
+{
+	#category : #drawing,
 	#'squeak_changestamp' : 'PM 6/13/2024 00:17'
 }
 SUSConnectionPoint >> connectRoad: aRoad [ 

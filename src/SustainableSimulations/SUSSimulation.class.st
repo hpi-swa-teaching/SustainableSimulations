@@ -62,28 +62,6 @@ SUSSimulation >> clickedWorld: anEvent [
 ]
 
 {
-	#category : #connection,
-	#'squeak_changestamp' : 'Len 6/1/2024 21:05'
-}
-SUSSimulation >> connectRoad: aRoad with: anotherRoad [
-	anotherRoad isFixed
-		ifTrue: [ anotherRoad connectWith: aRoad ]
-		ifFalse: [ aRoad connectWith: anotherRoad ].
-	aRoad updateLanes: anotherRoad.
-	anotherRoad updateLanes: aRoad.
-]
-
-{
-	#category : #connection,
-	#'squeak_changestamp' : 'PM 5/28/2024 01:58'
-}
-SUSSimulation >> connectSavedRoadWith: aRoad [
-	roadToConnect == aRoad
-		ifFalse: [ self connectRoad: roadToConnect with: aRoad ].
-	roadToConnect  := nil
-]
-
-{
 	#category : #accessing,
 	#'squeak_changestamp' : 'PM 5/27/2024 23:43'
 }
@@ -101,12 +79,10 @@ SUSSimulation >> handlesMouseDown: anEvent [
 
 {
 	#category : #initialization,
-	#'squeak_changestamp' : 'PM 6/12/2024 22:24'
+	#'squeak_changestamp' : 'PM 6/18/2024 11:31'
 }
 SUSSimulation >> initialize [
 	super initialize.
-	
-	self color: Color gray.
 	
 	roadToConnect := nil.
 	cars := OrderedCollection new.
@@ -116,7 +92,8 @@ SUSSimulation >> initialize [
 	timePaused := 0.
 	roadFactory := SUSRoadFactory newForSimulation: self.
 	
-	self addStartingPoint.
+	self color: Color gray;
+		addStartingPoint
 ]
 
 {

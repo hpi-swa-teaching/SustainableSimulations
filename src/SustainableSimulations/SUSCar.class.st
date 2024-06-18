@@ -40,13 +40,13 @@ SUSCar >> applyAcceleration [
 
 {
 	#category : #behavior,
-	#'squeak_changestamp' : 'GoChriNo 6/16/2024 11:15'
+	#'squeak_changestamp' : 'PM 6/18/2024 10:33'
 }
 SUSCar >> applyBehavior [
-	self deltaTime: Time millisecondClock - self lastTime.
-	self lastTime: Time millisecondClock.
-	self applyAcceleration.
-	self applyMovement
+	self deltaTime: Time millisecondClock - self lastTime;
+		lastTime: Time millisecondClock;
+		applyAcceleration;
+		applyMovement
 ]
 
 {
@@ -206,14 +206,11 @@ SUSCar >> getNextCar [
 
 {
 	#category : #initialization,
-	#'squeak_changestamp' : 'GoChriNo 6/17/2024 12:19'
+	#'squeak_changestamp' : 'PM 6/18/2024 11:32'
 }
 SUSCar >> initialize [
 	super initialize.
-	self extent: 30@15;
-		color: Color red.
-	self addFlexShellIfNecessary.
-
+	
 	timeRoadStart := Time millisecondClock.
 	lastTime := Time millisecondClock.
 	speed := 0.
@@ -225,9 +222,12 @@ SUSCar >> initialize [
 	driver := 'Unknown'.
 	fuelLevel := 100.
 	isAccelerating := true.
-	
 	lastPoint := 0.
-	blockedOldLane := false
+	blockedOldLane := false.
+	
+	self extent: 30@15;
+		color: Color red;
+		addFlexShellIfNecessary
 ]
 
 {

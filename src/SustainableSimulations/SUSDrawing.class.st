@@ -142,12 +142,14 @@ SUSDrawing >> detailLayer [
 
 {
 	#category : #initialization,
-	#'squeak_changestamp' : 'PM 6/12/2024 22:17'
+	#'squeak_changestamp' : 'PM 6/18/2024 11:32'
 }
 SUSDrawing >> initialize [
 	super initialize.
-	self morphicLayerNumber: self baseLayer.
-	paths := OrderedCollection new
+	
+	paths := OrderedCollection new.
+	
+	self morphicLayerNumber: self baseLayer
 ]
 
 {
