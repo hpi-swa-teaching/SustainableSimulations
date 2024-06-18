@@ -4,7 +4,6 @@ Class {
 	#instVars : [
 		'simulation',
 		'adjacentRoads',
-		'isFixed',
 		'lanes',
 		'connectionPoints',
 		'from',
@@ -69,15 +68,15 @@ SUSAbstractRoad >> handlesMouseDown: anEvent [
 
 {
 	#category : #initialization,
-	#'squeak_changestamp' : 'PM 6/12/2024 23:06'
+	#'squeak_changestamp' : 'PM 6/18/2024 18:49'
 }
 SUSAbstractRoad >> initialize [
 	super initialize.
 	
-	isFixed := false.
 	lanes := OrderedCollection new.
 	
-	self color: Color transparent.
+	self color: Color transparent;
+		sticky: true
 ]
 
 {
@@ -93,14 +92,6 @@ SUSAbstractRoad >> initializeFrom: aConnectionPoint to: aPoint [
 		addConnectionPoints.
 	adjacentRoads := Array new: connectionPoints size.
 	simulation addRoad: self
-]
-
-{
-	#category : #accessing,
-	#'squeak_changestamp' : 'PM 5/28/2024 02:04'
-}
-SUSAbstractRoad >> isFixed [
-	^ isFixed
 ]
 
 {
@@ -138,12 +129,13 @@ SUSAbstractRoad >> simulation: anObject [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/13/2024 00:20'
+	#'squeak_changestamp' : 'PM 6/18/2024 18:56'
 }
 SUSAbstractRoad >> spawnCar [
-	simulation addMorphInLayer: (SUSCar
-		newOnRoad: self
-		withSpeed: (UIManager default request: 'Please enter car speed' initialAnswer: 50) asNumber)
+	[simulation
+		addMorphInLayer: (SUSCar newOnRoad: self withSpeed: (UIManager default request: 'Please enter car speed' initialAnswer: 50) asNumber)]
+		on: NumberParserError
+		do: []
 ]
 
 {

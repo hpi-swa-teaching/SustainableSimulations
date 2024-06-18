@@ -19,30 +19,6 @@ SUSWindow >> addButtons [
 ]
 
 {
-	#category : #'user interface',
-	#'squeak_changestamp' : 'MK 6/3/2024 21:18'
-}
-SUSWindow >> askForCarSpeed [
-	^ (UIManager default request: 'Please enter car speed' initialAnswer: 50) asNumber
-]
-
-{
-	#category : #'user interface',
-	#'squeak_changestamp' : 'PM 5/28/2024 01:21'
-}
-SUSWindow >> askForLength [
-	^ (UIManager default request: 'Please enter length' initialAnswer: 200) asNumber
-]
-
-{
-	#category : #'user interface',
-	#'squeak_changestamp' : 'PM 5/28/2024 01:21'
-}
-SUSWindow >> askForSpeedLimit [
-	^ (UIManager default request: 'Please enter speed limit' initialAnswer: simulation defaultSpeedLimit) asNumber
-]
-
-{
 	#category : #initialization,
 	#'squeak_changestamp' : 'GoChriNo 6/10/2024 17:13'
 }

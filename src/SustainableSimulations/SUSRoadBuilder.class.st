@@ -5,7 +5,8 @@ Class {
 		'selectedRoadType',
 		'simulation',
 		'from',
-		'to'
+		'to',
+		'invalid'
 	],
 	#category : #'SustainableSimulations-Roads'
 }
@@ -42,7 +43,7 @@ SUSRoadBuilder >> addFromDirectionToTo [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/18/2024 14:14'
+	#'squeak_changestamp' : 'PM 6/18/2024 18:53'
 }
 SUSRoadBuilder >> addUserDirectionToTo [
 	| degrees direction isUp |
@@ -53,6 +54,7 @@ SUSRoadBuilder >> addUserDirectionToTo [
 			direction := from direction rotateBy: degrees degreesToRadians about: 0 @ 0.
 			isUp ifTrue: [direction := direction negated].
 			to := SUSDirectedPoint newWithPosition: to inDirection: direction]
+		ifFalse: [invalid := true]
 ]
 
 {
@@ -125,19 +127,20 @@ SUSRoadBuilder >> buildStraightRoad [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/18/2024 13:46'
+	#'squeak_changestamp' : 'PM 6/18/2024 18:53'
 }
 SUSRoadBuilder >> canBuildCrossIntersection [
-	^ true
+	^ invalid not
 ]
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/18/2024 14:20'
+	#'squeak_changestamp' : 'PM 6/18/2024 18:58'
 }
 SUSRoadBuilder >> canBuildCurvyRoad [
 	| directedPoint midpoint |
 	self flag: #Todo. "calculate min road length"
+	invalid ifTrue: [^ false ].
 	directedPoint := from asDirectedPoint.
 	midpoint := directedPoint calculateIntersectionPoint: self toDirectedPoint.
 	^ (directedPoint isBehind: self toPoint) > 0
@@ -147,12 +150,12 @@ SUSRoadBuilder >> canBuildCurvyRoad [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/18/2024 13:55'
+	#'squeak_changestamp' : 'PM 6/18/2024 18:53'
 }
 SUSRoadBuilder >> canBuildStraightRoad [
 	^ ((from asDirectedPoint isBehind: self toPoint) > 0)
-		and: (from asDirectedPoint linearDist: self toPoint)
-				>= self minRoadLength
+		and: (from asDirectedPoint linearDist: self toPoint) >= self minRoadLength
+		and: invalid not
 ]
 
 {
@@ -165,10 +168,11 @@ SUSRoadBuilder >> from: anObject [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/12/2024 19:44'
+	#'squeak_changestamp' : 'PM 6/18/2024 18:52'
 }
 SUSRoadBuilder >> initialize [
-	selectedRoadType := #StraightRoad
+	selectedRoadType := #StraightRoad.
+	invalid := false
 ]
 
 {
