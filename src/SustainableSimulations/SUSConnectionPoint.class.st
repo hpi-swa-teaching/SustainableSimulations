@@ -13,11 +13,10 @@ Class {
 
 {
 	#category : #'instance creation',
-	#'squeak_changestamp' : 'PM 6/12/2024 23:41'
+	#'squeak_changestamp' : 'PM 6/18/2024 15:27'
 }
-SUSConnectionPoint class >> newForRoad: aRoad at: aDirectedPoint [
-	^ self new simulation: aRoad simulation;
-		connectRoad: aRoad;
+SUSConnectionPoint class >> newForSimulation: aSimulation at: aDirectedPoint [
+	^ self new simulation: aSimulation;
 		center: aDirectedPoint position;
 		direction: aDirectedPoint direction;
 		yourself
@@ -59,13 +58,14 @@ SUSConnectionPoint >> basicType [
 
 {
 	#category : #drawing,
-	#'squeak_changestamp' : 'PM 6/13/2024 00:17'
+	#'squeak_changestamp' : 'PM 6/18/2024 15:48'
 }
 SUSConnectionPoint >> connectRoad: aRoad [ 
 	isStartingPoint
 		ifTrue: [firstRoad := aRoad]
 		ifFalse: [secondRoad := aRoad.
 			firstRoad updateLanes: secondRoad.
+			secondRoad updateLanes: firstRoad.
 			simulation removeMorph: self].
 	isStartingPoint := false
 ]
@@ -84,6 +84,14 @@ SUSConnectionPoint >> direction [
 }
 SUSConnectionPoint >> direction: anObject [
 	direction := anObject
+]
+
+{
+	#category : #initialization,
+	#'squeak_changestamp' : 'PM 6/18/2024 15:46'
+}
+SUSConnectionPoint >> flipDirection [
+	direction := direction negated.
 ]
 
 {

@@ -48,7 +48,7 @@ SUSCurvyRoadDrawing >> addDetailFrom: aDirectedPoint to: anotherDirectedPoint [
 
 {
 	#category : #drawing,
-	#'squeak_changestamp' : 'PM 6/17/2024 10:16'
+	#'squeak_changestamp' : 'PM 6/18/2024 15:56'
 }
 SUSCurvyRoadDrawing >> addPathsFrom: aDirectedPoint to: anotherDirectedPoint [ 
 	| pointA pointB pointC pointD pointE pointF isUp |
@@ -62,7 +62,7 @@ SUSCurvyRoadDrawing >> addPathsFrom: aDirectedPoint to: anotherDirectedPoint [
 	pointE := (SUSDirectedPoint newWithPosition: pointD inDirection: aDirectedPoint direction)
 				calculateIntersectionPoint: (SUSDirectedPoint newWithPosition: pointF inDirection: anotherDirectedPoint direction).
 	self addPathWithVertices: {pointA. pointB. pointC};
-		 addPathWithVertices: {pointD. pointE. pointF}
+		 addPathWithVertices: {pointF. pointE. pointD}
 ]
 
 {

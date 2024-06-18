@@ -2,8 +2,6 @@ Class {
 	#name : #SUSStraightRoad,
 	#superclass : #SUSAbstractRoad,
 	#instVars : [
-		'from',
-		'to',
 		'speedLimit'
 	],
 	#category : #'SustainableSimulations-Roads'
@@ -11,11 +9,11 @@ Class {
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/15/2024 13:09'
+	#'squeak_changestamp' : 'PM 6/18/2024 14:56'
 }
-SUSStraightRoad >> createDrawingFrom: aConnectionPoint to: aPoint [
+SUSStraightRoad >> createDrawing [
 	| drawing |
-	drawing := SUSStraightRoadDrawing newFrom: from to: to.
+	drawing := SUSStraightRoadDrawing newFrom: from to: to position.
 	
 	(drawing paths) do: [:each |
     		self createLaneWithPath: each].
@@ -23,23 +21,6 @@ SUSStraightRoad >> createDrawingFrom: aConnectionPoint to: aPoint [
 	self extent: drawing extent.
 	self position: drawing position.
 	^ drawing
-]
-
-{
-	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/15/2024 13:10'
-}
-SUSStraightRoad >> from: aDirectedPoint to: aPoint [
-	from := aDirectedPoint.
-	to := aPoint
-]
-
-{
-	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/15/2024 13:13'
-}
-SUSStraightRoad >> otherConnectionPointPositionsThan: aConnectionPoint [ 
-	^ { SUSConnectionPoint newForRoad: self at: (SUSDirectedPoint newWithPosition: to inDirection: from direction)}
 ]
 
 {

@@ -2,12 +2,13 @@ Class {
 	#name : #SUSAbstractRoad,
 	#superclass : #Morph,
 	#instVars : [
-		'connectionPoints',
 		'simulation',
-		'lastClickedAtConnectionPoint',
 		'adjacentRoads',
 		'isFixed',
-		'lanes'
+		'lanes',
+		'connectionPoints',
+		'from',
+		'to'
 	],
 	#category : #'SustainableSimulations-Roads'
 }
@@ -24,86 +25,28 @@ SUSAbstractRoad class >> newOnSimulation: aSimulation from: aConnectionPoint to:
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/12/2024 23:41'
+	#'squeak_changestamp' : 'PM 6/18/2024 15:35'
 }
-SUSAbstractRoad >> addConnectionPointsWith: aConnectionPoint [
-	| others | 
-	others := self otherConnectionPointPositionsThan: aConnectionPoint.
-	others do: [ :each | simulation addMorphInLayer: each ].
-	connectionPoints := OrderedCollection new.
-	aConnectionPoint connectRoad: self.
-	connectionPoints add: aConnectionPoint.
-	connectionPoints addAll: others
+SUSAbstractRoad >> addConnectionPoints [
+	connectionPoints := self connectionPointPositions
+				collect: [:each | simulation getOrCreateConnectionPointAt: each].
+	connectionPoints
+		do: [:each | each connectRoad: self]
 ]
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/13/2024 00:47'
+	#'squeak_changestamp' : 'PM 6/18/2024 15:29'
 }
-SUSAbstractRoad >> addDrawingFrom: aConnectionPoint to: aPoint [
-	self addMorph: (self createDrawingFrom: aConnectionPoint to: aPoint)
-]
-
-{
-	#category : #'event handling',
-	#'squeak_changestamp' : 'GoChriNo 6/5/2024 09:02'
-}
-SUSAbstractRoad >> clickedAtConnectionPoint: aConnectionPoint [
-	self unselect.
-	self sticky: true.
-	lastClickedAtConnectionPoint == aConnectionPoint
-		ifTrue: [ lastClickedAtConnectionPoint := nil ]
-		ifFalse: [ lastClickedAtConnectionPoint := aConnectionPoint ].
-	
-	simulation notifyClickedAt: self.
-]
-
-{
-	#category : #connection,
-	#'squeak_changestamp' : 'PM 5/28/2024 01:24'
-}
-SUSAbstractRoad >> connectWith: aRoad [
-	aRoad position: (lastClickedAtConnectionPoint position + aRoad deltaPositionToConnectionPoint).
-	self connectionDoneWith: aRoad.
-	aRoad connectionDoneWith: self
-]
-
-{
-	#category : #connection,
-	#'squeak_changestamp' : 'PM 5/28/2024 02:04'
-}
-SUSAbstractRoad >> connectionDoneWith: aRoad [
-	| index |
-	index := connectionPoints indexOf: lastClickedAtConnectionPoint.
-	adjacentRoads at: index put: aRoad.
-	
-	isFixed := true.
-	
-	self removeMorph: lastClickedAtConnectionPoint;
-		unselect
+SUSAbstractRoad >> connectionPointPositions [
+	^ { from . to }
 ]
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'GoChriNo 6/5/2024 13:24'
+	#'squeak_changestamp' : 'PM 6/18/2024 14:54'
 }
-SUSAbstractRoad >> connectionPoints [
-	^ connectionPoints
-]
-
-{
-	#category : #accessing,
-	#'squeak_changestamp' : 'GoChriNo 6/5/2024 13:24'
-}
-SUSAbstractRoad >> connectionPoints: anObject [
-	connectionPoints := anObject
-]
-
-{
-	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/13/2024 00:43'
-}
-SUSAbstractRoad >> createDrawingFrom: aConnectionPoint to: aPoint [
+SUSAbstractRoad >> createDrawing [
 	self subclassResponsibility
 ]
 
@@ -114,23 +57,6 @@ SUSAbstractRoad >> createDrawingFrom: aConnectionPoint to: aPoint [
 SUSAbstractRoad >> createLaneWithPath: aLineMorph [
 	
 	lanes add: (SUSLane newLaneWithPath: aLineMorph)
-]
-
-{
-	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/11/2024 02:45'
-}
-SUSAbstractRoad >> deltaPositionToConnectionPoint [
-	^ self position - (connectionPoints at: 1) center
-]
-
-{
-	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/11/2024 05:56'
-}
-SUSAbstractRoad >> from: aDirectedPoint to: aPoint [
-	"initialize this road from aDirectedPoint to aPoint"
-	self subclassResponsibility
 ]
 
 {
@@ -156,15 +82,17 @@ SUSAbstractRoad >> initialize [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/13/2024 00:43'
+	#'squeak_changestamp' : 'PM 6/18/2024 15:32'
 }
-SUSAbstractRoad >> initializeFrom: aConnectionPoint to: aPoint [
-	self from: aConnectionPoint asDirectedPoint to: aPoint;
-		addDrawingFrom: aConnectionPoint to: aPoint;
-		addConnectionPointsWith: aConnectionPoint.
-	
+SUSAbstractRoad >> initializeFrom: aConnectionPoint to: aPoint [ 
+	from := aConnectionPoint asDirectedPoint.
+	aPoint basicType == #SUSConnectionPoint
+		ifTrue: [to := aPoint asDirectedPoint]
+		ifFalse: [to := aPoint].
+	self addMorph: self createDrawing;
+		addConnectionPoints.
 	adjacentRoads := Array new: connectionPoints size.
-	self simulation addRoad: self
+	simulation addRoad: self
 ]
 
 {
@@ -190,15 +118,6 @@ SUSAbstractRoad >> lanes [
 SUSAbstractRoad >> mouseDown: anEvent [
 	(simulation selectedSpawnType = #SpawnCar) 
 		ifTrue: [ self spawnCar ]
-]
-
-{
-	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/12/2024 22:50'
-}
-SUSAbstractRoad >> otherConnectionPointPositionsThan: aConnectionPoint [
-	"Create SUSConnectionPoints for this road and return them as list"
-	self subclassResponsibility
 ]
 
 {
@@ -237,14 +156,14 @@ SUSAbstractRoad >> unselect [
 
 {
 	#category : #drawing,
-	#'squeak_changestamp' : 'Len 6/17/2024 21:42'
+	#'squeak_changestamp' : 'PM 6/18/2024 15:54'
 }
 SUSAbstractRoad >> updateLanes: aRoad [
 	lanes do: [:each | 
 		|pos1|
 		pos1 := each getPositionWithTValue: 1.
 		aRoad lanes do: [:anotherEach |
-			((pos1 dist: (anotherEach getPositionWithTValue: 0))<10)
+			((pos1 dist: (anotherEach getPositionWithTValue: 0))<20)
 				ifTrue: [each addNextLane: anotherEach]]]
 		
 		
