@@ -43,7 +43,7 @@ SUSRoadBuilder >> addFromDirectionToTo [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/18/2024 18:53'
+	#'squeak_changestamp' : 'PM 6/18/2024 19:16'
 }
 SUSRoadBuilder >> addUserDirectionToTo [
 	| degrees direction isUp |
@@ -54,20 +54,22 @@ SUSRoadBuilder >> addUserDirectionToTo [
 			direction := from direction rotateBy: degrees degreesToRadians about: 0 @ 0.
 			isUp ifTrue: [direction := direction negated].
 			to := SUSDirectedPoint newWithPosition: to inDirection: direction]
-		ifFalse: [invalid := true]
+		ifFalse: [degrees = 0
+				ifTrue: [self selectedRoadType: #StraightRoad]
+				ifFalse: [invalid := true]]
 ]
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/18/2024 14:11'
+	#'squeak_changestamp' : 'PM 6/18/2024 19:15'
 }
 SUSRoadBuilder >> askForDegrees [
 	| degrees |
 	[degrees := (UIManager default request: 'Please enter rotation degrees (0 < x < 180)' initialAnswer: 90) asNumber]
 		on: NumberParserError
-		do: [:e | degrees := 0].
-	(degrees < 1 or: degrees > 179)
-		ifTrue: [^ 0]
+		do: [:e | degrees := -1].
+	(degrees < 0 or: degrees > 179)
+		ifTrue: [^ -1]
 		ifFalse: [^ degrees]
 ]
 

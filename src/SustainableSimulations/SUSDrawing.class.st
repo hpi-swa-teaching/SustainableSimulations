@@ -19,7 +19,7 @@ SUSDrawing class >> colorMark [
 
 {
 	#category : #'class variables',
-	#'squeak_changestamp' : 'PM 6/17/2024 22:03'
+	#'squeak_changestamp' : 'PM 6/18/2024 19:06'
 }
 SUSDrawing class >> colorPath [
 	^ Color transparent
