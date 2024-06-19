@@ -13,7 +13,8 @@ Class {
 		'lastPoint',
 		'lastTime',
 		'deltaTime',
-		'isAccelerating'
+		'isAccelerating',
+		'route'
 	],
 	#category : #'SustainableSimulations-Core'
 }

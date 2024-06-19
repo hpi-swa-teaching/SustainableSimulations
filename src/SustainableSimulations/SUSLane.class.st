@@ -109,6 +109,33 @@ SUSLane >> cars: anObject [
 
 {
 	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'GoChriNo 6/19/2024 13:36'
+}
+SUSLane >> getLengthToT3: t [
+	| A B C v1 v2 |
+	A := path pointInWorld: path vertices first.
+	B := path pointInWorld: (path vertices at: 2).
+	C := path pointInWorld: path vertices last.
+	v1 := (2 * A) - (4 * B) + (2 * C).
+	v2 := (2 * A) negated + (2 * B).
+	^ t * (v2 r)
+	
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'GoChriNo 6/19/2024 13:34'
+}
+SUSLane >> getLengthToT: t [
+
+	((path vertices size) == 3) ifTrue: [^ self getLengthToT3: t].
+	^ t * length
+
+	
+]
+
+{
+	#category : #'as yet unclassified',
 	#'squeak_changestamp' : 'GoChriNo 6/14/2024 15:28'
 }
 SUSLane >> getNextCarOnLane: aCar [

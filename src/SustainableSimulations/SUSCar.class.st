@@ -26,6 +26,16 @@ SUSCar class >> newOnRoad: aRoad withSpeed: aNumber [
 
 {
 	#category : #behavior,
+	#'squeak_changestamp' : 'GoChriNo 6/19/2024 22:12'
+}
+SUSCar >> addRouteEntryAt: anIndex FromPrevLane: aLane [
+
+	route size < anIndex ifTrue: [route
+						addLast: (Random new nextInt: aLane nextLanes size)]
+]
+
+{
+	#category : #behavior,
 	#'squeak_changestamp' : 'GoChriNo 6/17/2024 12:12'
 }
 SUSCar >> applyAcceleration [
@@ -51,31 +61,46 @@ SUSCar >> applyBehavior [
 
 {
 	#category : #behavior,
-	#'squeak_changestamp' : 'GoChriNo 6/17/2024 12:41'
+	#'squeak_changestamp' : 'GoChriNo 6/19/2024 22:36'
 }
-SUSCar >> applyCautiousness [
-	| nextCar dist diffSpeed |
-	nextCar := self getNextCar.
+SUSCar >> applyCautiousness: t [ 
+	| dist nextCar maxDist i currentLane break |
+	maxDist := self speed squared / (self deacceleration * 2) * 1000 / 360 + 100 + (0.5 * self speed).
+	dist := 0.
+	i := 0.
+	nextCar := lane getPreviousCarOnLane: self.
+	currentLane := lane.
+	break := false.
+	speedGoal := maxSpeed.
 	nextCar == self
-		ifTrue: [self lane nextLanes isEmpty
-				ifTrue: [dist := self owner center
-								dist: (self lane getPositionWithTValue: 1).
-					dist <= (self speed squared / (self deacceleration * 2) * 1000 / 360 + 10 + (0.5 * self speed))
-						ifTrue: [self speedGoal: 0]
-						ifFalse: [self speedGoal: self maxSpeed]]
-				ifFalse: [self speedGoal: self maxSpeed]]
-		ifFalse: [(self isOnOwnLane: nextCar)
-				ifTrue: [dist := nextCar lastPoint - self lastPoint * self lane length]
-				ifFalse: [dist := 1 - self lastPoint * self lane length + (nextCar lastPoint * nextCar lane length)].
-			diffSpeed := self speed - nextCar speed.
-			dist <= (diffSpeed squared / (self deacceleration * 2) * 1000 / 360 + 50 + (0.5 * self speed))
-				ifTrue: [self speedGoal: nextCar speed]
-				ifFalse: [self speedGoal: self maxSpeed]]
+		ifTrue: [dist := lane length
+						- (lane getLengthToT: t)]
+		ifFalse: [dist := (nextCar lane getLengthToT: nextCar lastPoint)
+						- (lane getLengthToT: t)].
+	[dist <= maxDist]
+		whileTrue: [i := i + 1.
+			nextCar ~= self
+				ifTrue: [speedGoal := (nextCar speed min: maxSpeed).
+					^ self].
+			currentLane nextLanes isEmpty
+				ifTrue: [speedGoal := 0.
+					^ self].
+			self addRouteEntryAt: i FromPrevLane: currentLane.
+			currentLane := currentLane nextLanes
+						at: (route at: i).
+			currentLane cars isEmpty
+				ifTrue: [dist := dist + currentLane length]
+				ifFalse: [nextCar := currentLane cars last.
+					nextCar == self
+						ifTrue: [^ self].
+					dist := dist
+								+ (currentLane getLengthToT: nextCar lastPoint).
+					maxDist := (self speed - nextCar speed) squared / (self deacceleration * 2) * 1000 / 360 + 100 + (0.5 * self speed)]]
 ]
 
 {
 	#category : #behavior,
-	#'squeak_changestamp' : 'GoChriNo 6/17/2024 12:18'
+	#'squeak_changestamp' : 'GoChriNo 6/19/2024 22:36'
 }
 SUSCar >> applyMovement [
 	| t rotation |
@@ -83,7 +108,7 @@ SUSCar >> applyMovement [
 	t >= 1
 		ifTrue: [self changeLane.
 			t := lastPoint].
-	self applyCautiousness.
+	self applyCautiousness: t.
 	self owner
 		center: (self lane getPositionWithTValue: t).
 	rotation := lane getRotationWithTValue: t.
@@ -114,19 +139,18 @@ SUSCar >> calculateNewT [
 
 {
 	#category : #behavior,
-	#'squeak_changestamp' : 'GoChriNo 6/14/2024 15:19'
+	#'squeak_changestamp' : 'GoChriNo 6/19/2024 22:16'
 }
 SUSCar >> changeLane [
 	lane nextLanes isEmpty
 		ifFalse: [
-			| random |
-			random := Random new.
 			lane removeCar: self.
 			blockedOldLane := true.
 			oldLane := lane.
-			"lane := lane nextLanes first."
-			lane := (lane nextLanes at: (random nextInt: (lane nextLanes size))).
+			self addRouteEntryAt: 1 FromPrevLane: lane.
+			lane := lane nextLanes at: (route at: 1).
 			lane addCar: self.
+			route removeFirst.
 			lastPoint := 0.]
 		ifTrue: [lastPoint := 1.]
 ]
@@ -206,7 +230,7 @@ SUSCar >> getNextCar [
 
 {
 	#category : #initialization,
-	#'squeak_changestamp' : 'PM 6/18/2024 11:32'
+	#'squeak_changestamp' : 'GoChriNo 6/19/2024 13:15'
 }
 SUSCar >> initialize [
 	super initialize.
@@ -224,6 +248,7 @@ SUSCar >> initialize [
 	isAccelerating := true.
 	lastPoint := 0.
 	blockedOldLane := false.
+	route := OrderedCollection new.
 	
 	self extent: 30@15;
 		color: Color red;
