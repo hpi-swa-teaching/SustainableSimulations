@@ -14,11 +14,12 @@ Class {
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/12/2024 23:43'
+	#'squeak_changestamp' : 'Len 6/20/2024 19:58'
 }
 SUSAbstractRoad class >> newOnSimulation: aSimulation from: aConnectionPoint to: aPoint [
 	^ self new simulation: aSimulation;
 		initializeFrom: aConnectionPoint to: aPoint;
+		postInitialize;
 		yourself
 ]
 
@@ -113,6 +114,14 @@ SUSAbstractRoad >> mouseDown: anEvent [
 
 {
 	#category : #accessing,
+	#'squeak_changestamp' : 'Len 6/20/2024 19:58'
+}
+SUSAbstractRoad >> postInitialize [
+	self subclassResponsibility
+]
+
+{
+	#category : #accessing,
 	#'squeak_changestamp' : 'PM 5/27/2024 23:15'
 }
 SUSAbstractRoad >> simulation [
@@ -148,7 +157,7 @@ SUSAbstractRoad >> unselect [
 
 {
 	#category : #drawing,
-	#'squeak_changestamp' : 'PM 6/18/2024 15:54'
+	#'squeak_changestamp' : 'Len 6/20/2024 20:20'
 }
 SUSAbstractRoad >> updateLanes: aRoad [
 	lanes do: [:each | 

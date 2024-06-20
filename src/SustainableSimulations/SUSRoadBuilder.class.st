@@ -101,7 +101,7 @@ SUSRoadBuilder >> buildCurvyRoad [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/18/2024 14:38'
+	#'squeak_changestamp' : 'Len 6/20/2024 19:13'
 }
 SUSRoadBuilder >> buildRoad [
 	selectedRoadType = #StraightRoad
@@ -110,6 +110,8 @@ SUSRoadBuilder >> buildRoad [
 		ifTrue: [^ self buildCurvyRoad ].
 	selectedRoadType = #CrossIntersection
 		ifTrue: [^ self buildCrossIntersection ].
+	selectedRoadType = #Tunnel
+		ifTrue: [^ self buildTunnel ].
 	^ false
 ]
 
@@ -125,6 +127,19 @@ SUSRoadBuilder >> buildStraightRoad [
 		from: from
 		to: to
 	
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'Len 6/20/2024 19:13'
+}
+SUSRoadBuilder >> buildTunnel [
+	self canBuildTunnel
+		ifFalse: [^ nil].
+	^ SUSTunnel
+		newOnSimulation: simulation
+		from: from
+		to: to
 ]
 
 {
@@ -161,6 +176,14 @@ SUSRoadBuilder >> canBuildStraightRoad [
 ]
 
 {
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'Len 6/20/2024 19:10'
+}
+SUSRoadBuilder >> canBuildTunnel [
+	^ invalid not
+]
+
+{
 	#category : #accessing,
 	#'squeak_changestamp' : 'PM 6/18/2024 13:39'
 }
@@ -179,7 +202,7 @@ SUSRoadBuilder >> initialize [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/18/2024 13:47'
+	#'squeak_changestamp' : 'Len 6/20/2024 19:12'
 }
 SUSRoadBuilder >> isValid [
 	selectedRoadType = #StraightRoad
@@ -188,6 +211,8 @@ SUSRoadBuilder >> isValid [
 		ifTrue: [^ self canBuildCurvyRoad].
 	selectedRoadType = #CrossIntersection
 		ifTrue: [^ self canBuildCrossIntersection].
+	selectedRoadType = #Tunnel
+		ifTrue: [^ self canBuildTunnel].
 	^ false
 ]
 

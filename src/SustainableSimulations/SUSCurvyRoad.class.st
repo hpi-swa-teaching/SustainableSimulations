@@ -25,6 +25,13 @@ SUSCurvyRoad >> createDrawing [
 
 {
 	#category : #accessing,
+	#'squeak_changestamp' : 'Len 6/20/2024 19:59'
+}
+SUSCurvyRoad >> postInitialize [
+]
+
+{
+	#category : #accessing,
 	#'squeak_changestamp' : 'PM 6/11/2024 00:37'
 }
 SUSCurvyRoad >> speedLimit [

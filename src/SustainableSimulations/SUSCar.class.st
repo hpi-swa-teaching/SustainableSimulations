@@ -267,7 +267,7 @@ SUSCar >> isOnOwnLane: aVehicle [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'MK 6/10/2024 23:31'
+	#'squeak_changestamp' : 'Len 6/20/2024 20:21'
 }
 SUSCar >> placeCarOnRoad: aRoad [
 

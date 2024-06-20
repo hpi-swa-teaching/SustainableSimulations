@@ -25,6 +25,13 @@ SUSStraightRoad >> createDrawing [
 
 {
 	#category : #accessing,
+	#'squeak_changestamp' : 'Len 6/20/2024 19:59'
+}
+SUSStraightRoad >> postInitialize [
+]
+
+{
+	#category : #accessing,
 	#'squeak_changestamp' : 'PM 5/27/2024 23:43'
 }
 SUSStraightRoad >> speedLimit [
