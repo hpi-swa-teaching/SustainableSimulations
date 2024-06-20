@@ -61,16 +61,15 @@ SUSCar >> applyBehavior [
 
 {
 	#category : #behavior,
-	#'squeak_changestamp' : 'GoChriNo 6/19/2024 22:36'
+	#'squeak_changestamp' : 'GoChriNo 6/20/2024 08:03'
 }
 SUSCar >> applyCautiousness: t [ 
-	| dist nextCar maxDist i currentLane break |
+	| dist nextCar maxDist i currentLane |
 	maxDist := self speed squared / (self deacceleration * 2) * 1000 / 360 + 100 + (0.5 * self speed).
 	dist := 0.
 	i := 0.
 	nextCar := lane getPreviousCarOnLane: self.
 	currentLane := lane.
-	break := false.
 	speedGoal := maxSpeed.
 	nextCar == self
 		ifTrue: [dist := lane length
@@ -80,7 +79,7 @@ SUSCar >> applyCautiousness: t [
 	[dist <= maxDist]
 		whileTrue: [i := i + 1.
 			nextCar ~= self
-				ifTrue: [speedGoal := (nextCar speed min: maxSpeed).
+				ifTrue: [speedGoal := nextCar speed min: maxSpeed.
 					^ self].
 			currentLane nextLanes isEmpty
 				ifTrue: [speedGoal := 0.
@@ -92,10 +91,13 @@ SUSCar >> applyCautiousness: t [
 				ifTrue: [dist := dist + currentLane length]
 				ifFalse: [nextCar := currentLane cars last.
 					nextCar == self
-						ifTrue: [^ self].
-					dist := dist
-								+ (currentLane getLengthToT: nextCar lastPoint).
-					maxDist := (self speed - nextCar speed) squared / (self deacceleration * 2) * 1000 / 360 + 100 + (0.5 * self speed)]]
+						ifTrue: [nextCar := currentLane getPreviousCarOnLane: nextCar].
+					nextCar == self
+						ifTrue: [nextCar == self
+								ifTrue: [dist := dist + currentLane length]]
+						ifFalse: [dist := dist
+										+ (currentLane getLengthToT: nextCar lastPoint).
+							maxDist := (self speed - nextCar speed) squared / (self deacceleration * 2) * 1000 / 360 + 100 + (0.5 * self speed)]]]
 ]
 
 {
