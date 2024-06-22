@@ -71,6 +71,14 @@ SUSSimulation >> buildConnectingRoadTo: aConnectionPoint [
 ]
 
 {
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'MK 6/23/2024 01:22'
+}
+SUSSimulation >> cars [
+	^cars
+]
+
+{
 	#category : #simulation,
 	#'squeak_changestamp' : 'PM 6/18/2024 14:32'
 }

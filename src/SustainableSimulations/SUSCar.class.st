@@ -36,16 +36,12 @@ SUSCar >> addRouteEntryAt: anIndex FromPrevLane: aLane [
 
 {
 	#category : #behavior,
-	#'squeak_changestamp' : 'GoChriNo 6/17/2024 12:12'
+	#'squeak_changestamp' : 'MK 6/23/2024 01:40'
 }
 SUSCar >> applyAcceleration [
-	self speed < speedGoal
-		ifTrue: [self speed: self speed + (self acceleration * 0.001 * self deltaTime).
-			self speed > self speedGoal
-				ifTrue: [self speed: self speedGoal]]
-		ifFalse: [self speed: self speed - (self deacceleration * 0.001 * self deltaTime).
-			self speed < self speedGoal
-				ifTrue: [self speed: self speedGoal]]
+	speed < speedGoal
+		ifTrue: [speed := (speed + (acceleration * 0.001 * deltaTime) min: speedGoal)]
+		ifFalse: [speed := (speed - (deacceleration * 0.001 * deltaTime) max:  speedGoal)]
 ]
 
 {
