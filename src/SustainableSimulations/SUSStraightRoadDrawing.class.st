@@ -6,7 +6,7 @@ Class {
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/15/2024 15:35'
+	#'squeak_changestamp' : 'Len 6/22/2024 21:58'
 }
 SUSStraightRoadDrawing class >> newFrom: aDirectedPoint to: aPoint [
 	| min max from to extent position |
@@ -20,12 +20,12 @@ SUSStraightRoadDrawing class >> newFrom: aDirectedPoint to: aPoint [
 		addPathsFrom: from to: to;
 		extent: extent;
 		position: position;
-		yourself.
+		yourself
 ]
 
 {
 	#category : #drawing,
-	#'squeak_changestamp' : 'PM 6/15/2024 13:59'
+	#'squeak_changestamp' : 'Len 6/22/2024 21:49'
 }
 SUSStraightRoadDrawing >> addDetailFrom: aDirectedPoint to: aPoint [
 	| length width pointA pointB pointC pointD |
@@ -35,11 +35,11 @@ SUSStraightRoadDrawing >> addDetailFrom: aDirectedPoint to: aPoint [
 	pointB := (aDirectedPoint absoluteOffset: 2 * width@0).
 	pointC := (aDirectedPoint absoluteOffset: 2 * width@length).
 	pointD := (aDirectedPoint absoluteOffset: 0@length).
-	self color: Color transparent.
-	self addMorphInLayer: ((PolygonMorph vertices: { pointA . pointB . pointC . pointD } color: SUSDrawing colorRoad borderWidth: 4 borderColor: SUSDrawing colorRoad) morphicLayerNumber: self baseLayer; yourself).
-	self addMarkFrom: pointA to: pointD.
-	self addMarkFrom: pointB to: pointC.
-	self addMidMarkFrom: aDirectedPoint to: aPoint
+	self color: Color transparent;
+	 	addMorphInLayer: ((PolygonMorph vertices: { pointA . pointB . pointC . pointD } color: SUSDrawing colorRoad borderWidth: 4 borderColor: SUSDrawing colorRoad) morphicLayerNumber: self baseLayer; yourself);
+		addMarkFrom: pointA to: pointD;
+		addMarkFrom: pointB to: pointC;
+		addMidMarkFrom: aDirectedPoint to: aPoint
 ]
 
 {

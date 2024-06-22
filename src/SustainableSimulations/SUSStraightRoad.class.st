@@ -9,17 +9,15 @@ Class {
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/18/2024 14:56'
+	#'squeak_changestamp' : 'Len 6/22/2024 22:09'
 }
 SUSStraightRoad >> createDrawing [
 	| drawing |
 	drawing := SUSStraightRoadDrawing newFrom: from to: to position.
-	
-	(drawing paths) do: [:each |
-    		self createLaneWithPath: each].
-
-	self extent: drawing extent.
-	self position: drawing position.
+	drawing paths
+		do: [:each | self createLaneWithPath: each].
+	self extent: drawing extent;
+		 position: drawing position.
 	^ drawing
 ]
 

@@ -1,15 +1,12 @@
 Class {
 	#name : #SUSTunnelDrawing,
 	#superclass : #SUSDrawing,
-	#instVars : [
-		'curveA'
-	],
 	#category : #'SustainableSimulations-UI'
 }
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'Len 6/20/2024 19:22'
+	#'squeak_changestamp' : 'Len 6/22/2024 21:58'
 }
 SUSTunnelDrawing class >> newFrom: aDirectedPoint to: aPoint [
 	| corners min max from to |
@@ -22,12 +19,12 @@ SUSTunnelDrawing class >> newFrom: aDirectedPoint to: aPoint [
 		addPathsFrom: from to: to;
 		extent: max - min;
 		position: min;
-		yourself.
+		yourself
 ]
 
 {
 	#category : #drawing,
-	#'squeak_changestamp' : 'Len 6/20/2024 20:05'
+	#'squeak_changestamp' : 'Len 6/22/2024 21:51'
 }
 SUSTunnelDrawing >> addBaseFrom: aDirectedPoint [ 
 	| vertices |
@@ -43,30 +40,28 @@ SUSTunnelDrawing >> addBaseFrom: aDirectedPoint [
 
 {
 	#category : #drawing,
-	#'squeak_changestamp' : 'Len 6/20/2024 19:21'
+	#'squeak_changestamp' : 'Len 6/22/2024 21:51'
 }
-SUSTunnelDrawing >> addDetailFrom: aDirectedPoint to: aPoint [
+SUSTunnelDrawing >> addDetailFrom: aDirectedPoint to: aPoint [ 
 	self color: Color transparent;
-		addBaseFrom: aDirectedPoint
+		 addBaseFrom: aDirectedPoint
 ]
 
 {
 	#category : #drawing,
-	#'squeak_changestamp' : 'PM 6/15/2024 15:08'
+	#'squeak_changestamp' : 'Len 6/22/2024 21:51'
 }
-SUSTunnelDrawing >> addPathFrom: aDirectedPoint withVertices: aCollection [
-	self addPathWithVertices: (aCollection * SUSDrawing normalLaneWidth collect: [:aPoint | aDirectedPoint absoluteOffset: aPoint ])
+SUSTunnelDrawing >> addPathFrom: aDirectedPoint withVertices: aCollection [ 
+	self
+		addPathWithVertices: (aCollection * SUSDrawing normalLaneWidth
+				collect: [:aPoint | aDirectedPoint absoluteOffset: aPoint])
 ]
 
 {
 	#category : #drawing,
-	#'squeak_changestamp' : 'Len 6/20/2024 20:20'
+	#'squeak_changestamp' : 'Len 6/22/2024 21:51'
 }
-SUSTunnelDrawing >> addPathsFrom: aDirectedPoint to: aPoint [
-	self addPathFrom: aDirectedPoint withVertices: { -0.5@1 . -0.5@0}; 
-		addPathFrom: aDirectedPoint withVertices: { 0.5@0 . 0.5@3}
-		
-	
-
-	
+SUSTunnelDrawing >> addPathsFrom: aDirectedPoint to: aPoint [ 
+	self addPathFrom: aDirectedPoint withVertices: {-0.5 @ 1. -0.5 @ 0};
+		 addPathFrom: aDirectedPoint withVertices: {0.5 @ 0. 0.5 @ 3}
 ]

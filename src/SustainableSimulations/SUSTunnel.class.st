@@ -31,34 +31,31 @@ SUSTunnel >> connectionPointPositions [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'Len 6/20/2024 19:14'
+	#'squeak_changestamp' : 'Len 6/22/2024 22:09'
 }
 SUSTunnel >> createDrawing [
 	| drawing |
 	drawing := SUSTunnelDrawing newFrom: from to: to position.
-	
-	(drawing paths) do: [:each |
-    		self createLaneWithPath: each].
-	
-	self extent: drawing extent.
-	self position: drawing position.
+	drawing paths
+		do: [:each | self createLaneWithPath: each].
+	self extent: drawing extent;
+	 	position: drawing position.
 	^ drawing
 ]
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'Len 6/20/2024 20:37'
+	#'squeak_changestamp' : 'Len 6/22/2024 22:09'
 }
 SUSTunnel >> initialize [
 	super initialize.
-
 	frequency := 1.
 	lastTime := Time millisecondClock - (frequency * 1000)
 ]
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'Len 6/20/2024 20:25'
+	#'squeak_changestamp' : 'Len 6/22/2024 22:09'
 }
 SUSTunnel >> postInitialize [
 	simulation addTunnel: self.
@@ -67,8 +64,9 @@ SUSTunnel >> postInitialize [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'Len 6/20/2024 20:06'
+	#'squeak_changestamp' : 'Len 6/22/2024 22:08'
 }
 SUSTunnel >> spawnCarFromTunnel [
-	simulation addMorphInLayer: (SUSCar newOnRoad: self withSpeed: 50 asNumber)
+	simulation
+		addMorphInLayer: (SUSCar newOnRoad: self withSpeed: 50 asNumber)
 ]

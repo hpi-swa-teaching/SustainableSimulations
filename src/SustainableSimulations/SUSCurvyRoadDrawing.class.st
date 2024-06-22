@@ -34,16 +34,16 @@ SUSCurvyRoadDrawing class >> newFrom: aDirectedPoint to: aPoint [
 
 {
 	#category : #drawing,
-	#'squeak_changestamp' : 'Len 6/17/2024 21:47'
+	#'squeak_changestamp' : 'Len 6/22/2024 22:02'
 }
 SUSCurvyRoadDrawing >> addDetailFrom: aDirectedPoint to: anotherDirectedPoint [ 
 	| vertices |
-	self color: Color transparent.
 	vertices := self generateVerticesFrom: aDirectedPoint to: anotherDirectedPoint.
-	self drawRoadWithVertices: vertices.
-	self drawMarkWithVertices: (vertices first) withMarkWidth: SUSDrawing markWidth.
-	self drawMarkWithVertices: (vertices second)withMarkWidth: SUSDrawing markWidth * 0.75. 
-	self drawMarkWithVertices: (vertices third) withMarkWidth: SUSDrawing markWidth
+	self color: Color transparent;
+		 drawRoadWithVertices: vertices;
+		 drawMarkWithVertices: vertices first withMarkWidth: SUSDrawing markWidth;
+		 drawMarkWithVertices: vertices second withMarkWidth: SUSDrawing markWidth * 0.75;
+		 drawMarkWithVertices: vertices third withMarkWidth: SUSDrawing markWidth
 ]
 
 {
@@ -63,16 +63,6 @@ SUSCurvyRoadDrawing >> addPathsFrom: aDirectedPoint to: anotherDirectedPoint [
 				calculateIntersectionPoint: (SUSDirectedPoint newWithPosition: pointF inDirection: anotherDirectedPoint direction).
 	self addPathWithVertices: {pointA. pointB. pointC};
 		 addPathWithVertices: {pointF. pointE. pointD}
-]
-
-{
-	#category : #calculation,
-	#'squeak_changestamp' : 'Len 6/16/2024 18:51'
-}
-SUSCurvyRoadDrawing >> buildLaneWithVertices: vertices [
-	^ SUSLane newLaneWithPath: (CurveMorph vertices: vertices color: (Color r: 0 g: 0 b: 0 alpha: 0) 
-		borderWidth: 2 borderColor: SUSDrawing colorPath)
-	
 ]
 
 {
@@ -113,25 +103,6 @@ SUSCurvyRoadDrawing >> calculateVerticesWithL: laneLeft M: laneMid R: laneRight 
 	^ {verticesLeft. verticesMid. verticesRight}
 	
 
-]
-
-{
-	#category : #drawing,
-	#'squeak_changestamp' : 'Len 6/17/2024 21:40'
-}
-SUSCurvyRoadDrawing >> drawMarkWithVertices: vertices [
-	| markVertices |
-	markVertices := OrderedCollection new.
-	markVertices addAll: vertices.
-	markVertices addAll: (vertices reverse).
-	
-	self addMorphInLayer: ((LineMorph
-			vertices: markVertices
-			color: Color transparent
-			borderWidth: SUSDrawing markWidth
-			borderColor: SUSDrawing colorMark) beSmoothCurve; 
-			morphicLayerNumber: self detailLayer;
-			yourself).
 ]
 
 {

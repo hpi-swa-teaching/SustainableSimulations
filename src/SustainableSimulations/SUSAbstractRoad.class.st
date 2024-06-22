@@ -149,24 +149,16 @@ SUSAbstractRoad >> spawnCar [
 
 {
 	#category : #drawing,
-	#'squeak_changestamp' : 'PM 5/28/2024 01:03'
+	#'squeak_changestamp' : 'Len 6/22/2024 22:07'
 }
-SUSAbstractRoad >> unselect [
-	lastClickedAtConnectionPoint ifNotNil: [lastClickedAtConnectionPoint unselect ]
-]
-
-{
-	#category : #drawing,
-	#'squeak_changestamp' : 'Len 6/20/2024 20:20'
-}
-SUSAbstractRoad >> updateLanes: aRoad [
-	lanes do: [:each | 
-		|pos1|
-		pos1 := each getPositionWithTValue: 1.
-		aRoad lanes do: [:anotherEach |
-			((pos1 dist: (anotherEach getPositionWithTValue: 0))<20)
-				ifTrue: [each addNextLane: anotherEach]]]
-		
-		
-	
+SUSAbstractRoad >> updateLanes: aRoad [ 
+	lanes
+		do: [:each | 
+			| pos1 |
+			pos1 := each getPositionWithTValue: 1.
+			aRoad lanes
+				do: [:anotherEach | (pos1
+							dist: (anotherEach getPositionWithTValue: 0))
+							< 20
+						ifTrue: [each addNextLane: anotherEach]]]
 ]
