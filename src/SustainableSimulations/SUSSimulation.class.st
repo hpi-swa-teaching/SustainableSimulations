@@ -63,7 +63,7 @@ SUSSimulation >> addTunnel: aTunnel [
 
 {
 	#category : #'event handling',
-	#'squeak_changestamp' : 'PM 6/18/2024 15:46'
+	#'squeak_changestamp' : 'GoChriNo 6/22/2024 09:51'
 }
 SUSSimulation >> buildConnectingRoadTo: aConnectionPoint [ 
 	| builder valid |
