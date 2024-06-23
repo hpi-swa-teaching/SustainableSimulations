@@ -59,9 +59,9 @@ SUSTunnelDrawing >> addPathFrom: aDirectedPoint withVertices: aCollection [
 
 {
 	#category : #drawing,
-	#'squeak_changestamp' : 'Len 6/22/2024 21:51'
+	#'squeak_changestamp' : 'Len 6/23/2024 10:29'
 }
 SUSTunnelDrawing >> addPathsFrom: aDirectedPoint to: aPoint [ 
 	self addPathFrom: aDirectedPoint withVertices: {-0.5 @ 1. -0.5 @ 0};
-		 addPathFrom: aDirectedPoint withVertices: {0.5 @ 0. 0.5 @ 3}
+		 addPathFrom: aDirectedPoint withVertices: {0.5 @ 0. 0.5 @ 5}
 ]

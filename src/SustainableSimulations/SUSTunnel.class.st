@@ -45,11 +45,11 @@ SUSTunnel >> createDrawing [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'Len 6/22/2024 22:09'
+	#'squeak_changestamp' : 'Len 6/23/2024 10:21'
 }
 SUSTunnel >> initialize [
 	super initialize.
-	frequency := 1.
+	frequency := 10.
 	lastTime := Time millisecondClock - (frequency * 1000)
 ]
 
