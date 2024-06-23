@@ -19,7 +19,7 @@ SUSDrawing class >> colorMark [
 
 {
 	#category : #'class variables',
-	#'squeak_changestamp' : 'PM 6/18/2024 19:06'
+	#'squeak_changestamp' : 'Len 6/20/2024 20:35'
 }
 SUSDrawing class >> colorPath [
 	^ Color transparent
@@ -51,32 +51,11 @@ SUSDrawing class >> midMarkLength [
 ]
 
 {
-	#category : #'instance creation',
-	#'squeak_changestamp' : 'Len 6/11/2024 23:39'
-}
-SUSDrawing class >> newCurveTo: aPoint withDirection: anotherPoint [
-	^ (SUSDrawing new
-		extent: aPoint abs;
-		color: (Color r: 0 g: 0 b: 0 alpha: 0))
-		drawCurveRoadTo: aPoint withDirection: anotherPoint;
-		generateCurvePathsTo: aPoint withDirection: anotherPoint
-]
-
-{
 	#category : #'class variables',
 	#'squeak_changestamp' : 'MK 6/23/2024 02:44'
 }
 SUSDrawing class >> normalLaneWidth [ 
 	^ 50
-]
-
-{
-	#category : #'class variables',
-	#'squeak_changestamp' : 'Len 5/26/2024 22:54'
-}
-SUSDrawing class >> verticesLineCurve [
-
-	^ {0@1. 0.7@1. 1@0.7. 1@0. 1@0.7. 0.7@1.}
 ]
 
 {
@@ -142,13 +121,11 @@ SUSDrawing >> detailLayer [
 
 {
 	#category : #initialization,
-	#'squeak_changestamp' : 'PM 6/18/2024 11:32'
+	#'squeak_changestamp' : 'Len 6/22/2024 21:57'
 }
 SUSDrawing >> initialize [
 	super initialize.
-	
 	paths := OrderedCollection new.
-	
 	self morphicLayerNumber: self baseLayer
 ]
 

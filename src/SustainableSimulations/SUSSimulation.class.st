@@ -4,6 +4,8 @@ Class {
 	#instVars : [
 		'roadToConnect',
 		'cars',
+		'killedCars',
+		'tunnels',
 		'simulationSpeed',
 		'roads',
 		'bezierCurve',
@@ -52,8 +54,16 @@ SUSSimulation >> addStartingPoint [
 ]
 
 {
+	#category : #accessing,
+	#'squeak_changestamp' : 'Len 6/20/2024 19:55'
+}
+SUSSimulation >> addTunnel: aTunnel [
+	tunnels addLast: aTunnel
+]
+
+{
 	#category : #'event handling',
-	#'squeak_changestamp' : 'PM 6/18/2024 15:46'
+	#'squeak_changestamp' : 'GoChriNo 6/22/2024 09:51'
 }
 SUSSimulation >> buildConnectingRoadTo: aConnectionPoint [ 
 	| builder valid |
@@ -71,11 +81,11 @@ SUSSimulation >> buildConnectingRoadTo: aConnectionPoint [
 ]
 
 {
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'MK 6/23/2024 01:22'
+	#category : #accessing,
+	#'squeak_changestamp' : 'Len 6/20/2024 20:27'
 }
 SUSSimulation >> cars [
-	^cars
+	^ cars
 ]
 
 {
@@ -121,14 +131,16 @@ SUSSimulation >> handlesMouseDown: anEvent [
 
 {
 	#category : #initialization,
-	#'squeak_changestamp' : 'PM 6/18/2024 13:37'
+	#'squeak_changestamp' : 'Len 6/20/2024 20:31'
 }
 SUSSimulation >> initialize [
 	super initialize.
 	
 	roadToConnect := nil.
 	cars := OrderedCollection new.
+	killedCars := OrderedCollection new.
 	roads := OrderedCollection new.
+	tunnels := OrderedCollection new.
 	simulationSpeed := 1.
 	running := true. 
 	timePaused := 0.
@@ -188,6 +200,15 @@ SUSSimulation >> playSimulation [
 
 {
 	#category : #accessing,
+	#'squeak_changestamp' : 'Len 6/20/2024 20:31'
+}
+SUSSimulation >> removeCar: aCar [
+	cars remove: aCar.
+	killedCars add: aCar.
+]
+
+{
+	#category : #accessing,
 	#'squeak_changestamp' : 'Len 6/1/2024 20:38'
 }
 SUSSimulation >> roads [
@@ -220,11 +241,15 @@ SUSSimulation >> startingPointPosition [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'GoChriNo 6/17/2024 12:08'
+	#'squeak_changestamp' : 'Len 6/23/2024 11:32'
 }
 SUSSimulation >> step [
 	cars
-		do: [:car | car applyBehavior]
+		do: [:car | car applyBehavior].
+	killedCars
+		do: [:car | car owner abandon].
+	tunnels
+		do: [:tunnel | tunnel applyBehavior]
 ]
 
 {

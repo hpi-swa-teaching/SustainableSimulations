@@ -6,7 +6,8 @@ Class {
 		'nextLanes',
 		'path',
 		'length',
-		'blockedT'
+		'blockedT',
+		'killRoad'
 	],
 	#category : #'SustainableSimulations-Roads'
 }
@@ -24,11 +25,12 @@ SUSLane class >> newLaneWithPath: aLineMorph [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'MK 5/28/2024 19:11'
+	#'squeak_changestamp' : 'Len 6/20/2024 20:23'
 }
 SUSLane >> addCar: aCar [
-
-	cars add: aCar
+	killRoad
+		ifTrue: [aCar kill]
+		ifFalse: [cars add: aCar]
 ]
 
 {
@@ -249,13 +251,22 @@ SUSLane >> getRotationWithTValue: aNumber [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'Len 6/10/2024 01:12'
+	#'squeak_changestamp' : 'Len 6/20/2024 20:25'
 }
 SUSLane >> initialize [
 
 	cars := OrderedCollection new.
 	nextLanes := OrderedCollection new.
-	blockedT := 1
+	blockedT := 1.
+	killRoad := false.
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'Len 6/20/2024 20:25'
+}
+SUSLane >> killRoad: aBoolean [
+	killRoad := aBoolean
 ]
 
 {
