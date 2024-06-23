@@ -1,5 +1,5 @@
 Class {
-	#name : #SUSStraightRoad,
+	#name : #SUSCurvyRoad,
 	#superclass : #SUSAbstractRoad,
 	#instVars : [
 		'speedLimit'
@@ -9,11 +9,11 @@ Class {
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/18/2024 14:56'
+	#'squeak_changestamp' : 'PM 6/18/2024 14:54'
 }
-SUSStraightRoad >> createDrawing [
+SUSCurvyRoad >> createDrawing [
 	| drawing |
-	drawing := SUSStraightRoadDrawing newFrom: from to: to position.
+	drawing := SUSCurvyRoadDrawing newFrom: from to: to.
 	
 	(drawing paths) do: [:each |
     		self createLaneWithPath: each].

@@ -1,7 +1,12 @@
 Class {
 	#name : #SUSDrawing,
 	#superclass : #Morph,
-	#category : #SustainableSimulations
+	#instVars : [
+		'paths',
+		'from',
+		'to'
+	],
+	#category : #'SustainableSimulations-UI'
 }
 
 {
@@ -10,6 +15,15 @@ Class {
 }
 SUSDrawing class >> colorMark [
 	^ Color white
+]
+
+{
+	#category : #'class variables',
+	#'squeak_changestamp' : 'PM 6/18/2024 19:06'
+}
+SUSDrawing class >> colorPath [
+	^ Color transparent
+	"^ Color red"
 ]
 
 {
@@ -38,68 +52,118 @@ SUSDrawing class >> midMarkLength [
 
 {
 	#category : #'instance creation',
-	#'squeak_changestamp' : 'Len 5/16/2024 11:35'
+	#'squeak_changestamp' : 'Len 6/11/2024 23:39'
 }
-SUSDrawing class >> newNormalRoadWithLength: aNumber [
-
+SUSDrawing class >> newCurveTo: aPoint withDirection: anotherPoint [
 	^ (SUSDrawing new
-		extent: aNumber@(SUSDrawing normalLaneWidth * 2);
-		color: SUSDrawing colorRoad)
-		generateMarks
+		extent: aPoint abs;
+		color: (Color r: 0 g: 0 b: 0 alpha: 0))
+		drawCurveRoadTo: aPoint withDirection: anotherPoint;
+		generateCurvePathsTo: aPoint withDirection: anotherPoint
 ]
 
 {
 	#category : #'class variables',
-	#'squeak_changestamp' : 'Len 5/16/2024 11:02'
+	#'squeak_changestamp' : 'MK 6/23/2024 02:44'
 }
-SUSDrawing class >> normalLaneWidth [
+SUSDrawing class >> normalLaneWidth [ 
 	^ 50
 ]
 
 {
-	#category : #drawing,
-	#'squeak_changestamp' : 'Len 5/16/2024 11:54'
+	#category : #'class variables',
+	#'squeak_changestamp' : 'Len 5/26/2024 22:54'
 }
-SUSDrawing >> addMidMark [
-	|amount|
-	amount := (self extent x) / (SUSDrawing midMarkLength * 2 + 2) floor.
-	0 to: amount do: [ :anIndex |
-		self addMorphInLayer: ((LineMorph 
-			from: 0@0
-			to: SUSDrawing midMarkLength@0
-			color: SUSDrawing colorMark 
-			width: SUSDrawing markWidth)
-			position: (SUSDrawing midMarkLength * 2 * anIndex)@(self center y))]
+SUSDrawing class >> verticesLineCurve [
 
-	 
-
+	^ {0@1. 0.7@1. 1@0.7. 1@0. 1@0.7. 0.7@1.}
 ]
 
 {
 	#category : #drawing,
-	#'squeak_changestamp' : 'Len 5/16/2024 11:34'
+	#'squeak_changestamp' : 'PM 6/12/2024 20:21'
 }
-SUSDrawing >> generateMarkWithLength: aNumber [
-
-	^ LineMorph 
-		from: 0@0
-		to: aNumber@0
-		color: SUSDrawing 
-		colorMark width: SUSDrawing markWidth
-
+SUSDrawing >> addDetailFrom: aDirectedPoint to: aPoint [
+	self subclassResponsibility
 ]
 
 {
 	#category : #drawing,
-	#'squeak_changestamp' : 'Len 5/16/2024 11:48'
+	#'squeak_changestamp' : 'PM 6/15/2024 13:19'
 }
-SUSDrawing >> generateMarks [
+SUSDrawing >> addMarkFrom: aPoint to: anotherPoint [ 
+	self addMorphInLayer: ((LineMorph
+			from: aPoint
+			to: anotherPoint
+			color: SUSDrawing colorMark
+			width: SUSDrawing markWidth) morphicLayerNumber: self detailLayer;
+			 yourself)
+]
 
-	self addMorphInLayer: (
-		(self generateMarkWithLength: self extent x - (SUSDrawing markWidth)) 
-		position: 0@SUSDrawing markWidth).
-	self addMorphInLayer: (
-		(self generateMarkWithLength: self extent x - (SUSDrawing markWidth)) 
-		position: 0@(self extent y - (SUSDrawing markWidth * 2))).
-	self addMidMark
+{
+	#category : #drawing,
+	#'squeak_changestamp' : 'PM 6/15/2024 15:03'
+}
+SUSDrawing >> addPathWithVertices: aCollection [
+	| path |
+	path := CurveMorph vertices: aCollection
+			color: Color transparent 
+			borderWidth: 2 
+			borderColor: SUSDrawing colorPath.
+	path morphicLayerNumber: self pathLayer.
+	self addMorphInLayer: path.
+	paths add: path
+]
+
+{
+	#category : #drawing,
+	#'squeak_changestamp' : 'PM 6/12/2024 20:21'
+}
+SUSDrawing >> addPathsFrom: aDirectedPoint to: aPoint [
+	"Create paths here"
+	self subclassResponsibility.
+]
+
+{
+	#category : #layer,
+	#'squeak_changestamp' : 'PM 6/12/2024 23:09'
+}
+SUSDrawing >> baseLayer [
+	^ 29
+]
+
+{
+	#category : #layer,
+	#'squeak_changestamp' : 'PM 6/12/2024 23:09'
+}
+SUSDrawing >> detailLayer [
+	^ 28
+]
+
+{
+	#category : #initialization,
+	#'squeak_changestamp' : 'PM 6/18/2024 11:32'
+}
+SUSDrawing >> initialize [
+	super initialize.
+	
+	paths := OrderedCollection new.
+	
+	self morphicLayerNumber: self baseLayer
+]
+
+{
+	#category : #layer,
+	#'squeak_changestamp' : 'PM 6/12/2024 23:09'
+}
+SUSDrawing >> pathLayer [
+	^ 27
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'Len 6/1/2024 20:13'
+}
+SUSDrawing >> paths [
+	^ paths
 ]
