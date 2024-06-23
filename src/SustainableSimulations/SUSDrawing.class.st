@@ -64,9 +64,9 @@ SUSDrawing class >> newCurveTo: aPoint withDirection: anotherPoint [
 
 {
 	#category : #'class variables',
-	#'squeak_changestamp' : 'Len 5/16/2024 11:02'
+	#'squeak_changestamp' : 'MK 6/23/2024 02:44'
 }
-SUSDrawing class >> normalLaneWidth [
+SUSDrawing class >> normalLaneWidth [ 
 	^ 50
 ]
 
