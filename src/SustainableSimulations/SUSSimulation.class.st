@@ -100,14 +100,6 @@ SUSSimulation >> createConnectionPointAt: aDirectedPoint [
 ]
 
 {
-	#category : #accessing,
-	#'squeak_changestamp' : 'PM 5/27/2024 23:43'
-}
-SUSSimulation >> defaultSpeedLimit [
-	^ 50
-]
-
-{
 	#category : #'event handling',
 	#'squeak_changestamp' : 'PM 6/18/2024 15:36'
 }

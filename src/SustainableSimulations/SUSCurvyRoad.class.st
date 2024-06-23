@@ -22,19 +22,3 @@ SUSCurvyRoad >> createDrawing [
 	self position: drawing position.
 	^ drawing
 ]
-
-{
-	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/11/2024 00:37'
-}
-SUSCurvyRoad >> speedLimit [
-	^ speedLimit
-]
-
-{
-	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/11/2024 00:37'
-}
-SUSCurvyRoad >> speedLimit: anObject [
-	speedLimit := anObject
-]

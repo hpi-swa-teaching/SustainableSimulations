@@ -116,26 +116,6 @@ SUSCar >> applyMovement [
 ]
 
 {
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/15/2024 21:52'
-}
-SUSCar >> calculateNewT [
-	| difTime t maxT |
-	difTime := (Time millisecondClock) - lastPoint second.
-	lastL := (difTime * (speed / 360)).
-	t := lane nextTprev: lastPoint first advanceByLength: lastL.
-	maxT := self calculateNewMaxT.
-	
-	t > maxT 
-		ifTrue: [t := maxT].
-	t > lane blockedT
-		ifTrue: [t := lane blockedT].
-	
-	self updateLaneConnectionsWithT: t.
-	^ {t. (Time millisecondClock)}
-]
-
-{
 	#category : #behavior,
 	#'squeak_changestamp' : 'GoChriNo 6/19/2024 22:16'
 }
@@ -171,44 +151,6 @@ SUSCar >> drawFrontMarkerOn: aCanvas [
 SUSCar >> drawOn: aCanvas [
     super drawOn: aCanvas.
     self drawFrontMarkerOn: aCanvas.
-]
-
-{
-	#category : #accessing,
-	#'squeak_changestamp' : 'ek 5/19/2024 16:45'
-}
-SUSCar >> driver [
-		
-	^ driver
-]
-
-{
-	#category : #accessing,
-	#'squeak_changestamp' : 'ek 5/19/2024 16:39'
-}
-SUSCar >> driver: aString [
-		
-	driver := aString.
-]
-
-{
-	#category : #accessing,
-	#'squeak_changestamp' : 'ek 5/19/2024 16:46'
-}
-SUSCar >> fuelLevel [
-	
-	^ fuelLevel
-	
-]
-
-{
-	#category : #accessing,
-	#'squeak_changestamp' : 'ek 5/19/2024 16:38'
-}
-SUSCar >> fuelLevel: aNumber [
-	
-	fuelLevel := aNumber.
-	
 ]
 
 {
@@ -251,14 +193,6 @@ SUSCar >> initialize [
 	self extent: 30@15;
 		color: Color red;
 		addFlexShellIfNecessary
-]
-
-{
-	#category : #behavior,
-	#'squeak_changestamp' : 'GoChriNo 6/16/2024 11:14'
-}
-SUSCar >> isOnOwnLane: aVehicle [ 
-	^ self lane == aVehicle lane
 ]
 
 {

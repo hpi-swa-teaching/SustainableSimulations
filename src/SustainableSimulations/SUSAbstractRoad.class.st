@@ -140,14 +140,6 @@ SUSAbstractRoad >> spawnCar [
 
 {
 	#category : #drawing,
-	#'squeak_changestamp' : 'PM 5/28/2024 01:03'
-}
-SUSAbstractRoad >> unselect [
-	lastClickedAtConnectionPoint ifNotNil: [lastClickedAtConnectionPoint unselect ]
-]
-
-{
-	#category : #drawing,
 	#'squeak_changestamp' : 'PM 6/18/2024 15:54'
 }
 SUSAbstractRoad >> updateLanes: aRoad [

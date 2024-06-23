@@ -22,19 +22,3 @@ SUSStraightRoad >> createDrawing [
 	self position: drawing position.
 	^ drawing
 ]
-
-{
-	#category : #accessing,
-	#'squeak_changestamp' : 'PM 5/27/2024 23:43'
-}
-SUSStraightRoad >> speedLimit [
-	^ speedLimit
-]
-
-{
-	#category : #accessing,
-	#'squeak_changestamp' : 'PM 5/27/2024 23:43'
-}
-SUSStraightRoad >> speedLimit: anObject [
-	speedLimit := anObject
-]

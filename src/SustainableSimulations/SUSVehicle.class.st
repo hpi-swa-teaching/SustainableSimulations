@@ -21,15 +21,6 @@ Class {
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'ek 5/19/2024 16:46'
-}
-SUSVehicle >> acceleration [
-
-	^ acceleration.
-]
-
-{
-	#category : #'as yet unclassified',
 	#'squeak_changestamp' : 'ek 5/19/2024 16:22'
 }
 SUSVehicle >> acceleration: aNumber [
@@ -43,14 +34,6 @@ SUSVehicle >> acceleration: aNumber [
 }
 SUSVehicle >> deacceleration [
 	^ deacceleration
-]
-
-{
-	#category : #accessing,
-	#'squeak_changestamp' : 'GoChriNo 6/15/2024 09:23'
-}
-SUSVehicle >> deacceleration: anObject [
-	deacceleration := anObject
 ]
 
 {
@@ -87,22 +70,6 @@ SUSVehicle >> initialize [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'GoChriNo 6/14/2024 15:56'
-}
-SUSVehicle >> isAccelerating [
-	^ isAccelerating
-]
-
-{
-	#category : #accessing,
-	#'squeak_changestamp' : 'GoChriNo 6/14/2024 15:56'
-}
-SUSVehicle >> isAccelerating: anObject [
-	isAccelerating := anObject
-]
-
-{
-	#category : #accessing,
 	#'squeak_changestamp' : 'GoChriNo 6/14/2024 15:08'
 }
 SUSVehicle >> lane [
@@ -134,15 +101,6 @@ SUSVehicle >> lastPoint: anObject [
 ]
 
 {
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'MK 6/10/2024 17:26'
-}
-SUSVehicle >> lastPointTime: aNumber [
-
-	lastPoint  := {(lastPoint first). (lastPoint second + aNumber)}
-]
-
-{
 	#category : #accessing,
 	#'squeak_changestamp' : 'GoChriNo 6/14/2024 14:36'
 }
@@ -156,24 +114,6 @@ SUSVehicle >> lastTime [
 }
 SUSVehicle >> lastTime: anObject [
 	lastTime := anObject
-]
-
-{
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 5/21/2024 11:16'
-}
-SUSVehicle >> lengh [
-	
-	^ length.
-]
-
-{
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 5/21/2024 11:16'
-}
-SUSVehicle >> lengh: aNumber [
-	
-	length := aNumber.
 ]
 
 {
@@ -192,14 +132,6 @@ SUSVehicle >> maxSpeed [
 SUSVehicle >> maxSpeed: aNumber [
 	
 	maxSpeed := aNumber.
-]
-
-{
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'MK 6/4/2024 00:58'
-}
-SUSVehicle >> progress: aNumber [
-	progress := aNumber.
 ]
 
 {
