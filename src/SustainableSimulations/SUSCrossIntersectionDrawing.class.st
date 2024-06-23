@@ -1,9 +1,6 @@
 Class {
 	#name : #SUSCrossIntersectionDrawing,
 	#superclass : #SUSDrawing,
-	#instVars : [
-		'curveA'
-	],
 	#category : #'SustainableSimulations-UI'
 }
 
@@ -39,19 +36,6 @@ SUSCrossIntersectionDrawing >> addBaseFrom: aDirectedPoint [
 			borderWidth: 4
 			borderColor: SUSDrawing colorRoad) morphicLayerNumber: self baseLayer;
 			 yourself)
-]
-
-{
-	#category : #drawing,
-	#'squeak_changestamp' : 'PM 6/15/2024 15:06'
-}
-SUSCrossIntersectionDrawing >> addCrossInterMarksFrom: aDirectedPoint [
-	self addMarkFrom: (aDirectedPoint absoluteOffset: 0@0) to: (aDirectedPoint absoluteOffset: 0@0.6 * SUSDrawing normalLaneWidth);
-		addMarkFrom: (aDirectedPoint absoluteOffset: 0@3.4 * SUSDrawing normalLaneWidth) to: (aDirectedPoint absoluteOffset: 0@4 * SUSDrawing normalLaneWidth);
-		addMarkFrom: (aDirectedPoint absoluteOffset: 2 negated@2 * SUSDrawing normalLaneWidth) to: (aDirectedPoint absoluteOffset: 1.4 negated@2 * SUSDrawing normalLaneWidth);
-		addMarkFrom: (aDirectedPoint absoluteOffset: 1.4@2 * SUSDrawing normalLaneWidth) to: (aDirectedPoint absoluteOffset: 2@2 * SUSDrawing normalLaneWidth);
-		addMidMarkFrom: (aDirectedPoint absoluteOffset: 1.4 negated@1 * SUSDrawing normalLaneWidth) to: (aDirectedPoint absoluteOffset: 1.4 negated@2 * SUSDrawing normalLaneWidth);
-		addMidMarkFrom: (aDirectedPoint absoluteOffset: 1.4@3 * SUSDrawing normalLaneWidth) to: (aDirectedPoint absoluteOffset: 1.4@2 * SUSDrawing normalLaneWidth).
 ]
 
 {
@@ -92,19 +76,6 @@ SUSCrossIntersectionDrawing >> addDetailFrom: aDirectedPoint to: aPoint [
 
 {
 	#category : #drawing,
-	#'squeak_changestamp' : 'PM 6/15/2024 14:27'
-}
-SUSCrossIntersectionDrawing >> addMidMarkFrom: aPoint to: anotherPoint [ 
-	self addMorphInLayer: ((LineMorph
-			from: aPoint
-			to: anotherPoint
-			color: SUSDrawing colorMark
-			width: SUSDrawing markWidth * 2) morphicLayerNumber: self detailLayer;
-			 yourself)
-]
-
-{
-	#category : #drawing,
 	#'squeak_changestamp' : 'PM 6/15/2024 15:08'
 }
 SUSCrossIntersectionDrawing >> addPathFrom: aDirectedPoint withVertices: aCollection [
@@ -113,11 +84,9 @@ SUSCrossIntersectionDrawing >> addPathFrom: aDirectedPoint withVertices: aCollec
 
 {
 	#category : #drawing,
-	#'squeak_changestamp' : 'PM 6/17/2024 10:23'
+	#'squeak_changestamp' : 'Len 6/22/2024 21:45'
 }
 SUSCrossIntersectionDrawing >> addPathsFrom: aDirectedPoint to: aPoint [
-	| factor |
-	factor := SUSDrawing normalLaneWidth.
 	"From left"
 	self addPathFrom: aDirectedPoint withVertices: { 0.5@0 . 0.5@2.5 . 2 negated@2.5 }; "Left"
 		addPathFrom: aDirectedPoint withVertices: { 0.5@0 . 0.5@2 . 0.5@4 }; "Straight"

@@ -9,11 +9,11 @@ Class {
 
 {
 	#category : #events,
-	#'squeak_changestamp' : 'PM 6/13/2024 10:23'
+	#'squeak_changestamp' : 'Len 6/20/2024 19:07'
 }
 SUSWindow >> addButtons [
 	| row |
-	row := AlignmentMorph newRow addAllMorphs: {self createStraightRoadButton. self createCurvyRoadButton. self createCrossIntersectionButton. self createPlaySimulationButton. self createPauseSimulationButton. self createStopSimulationButton. self createSpawnSimulationButton}.
+	row := AlignmentMorph newRow addAllMorphs: {self createStraightRoadButton. self createCurvyRoadButton. self createCrossIntersectionButton. self createTunnelButton. self createPlaySimulationButton. self createPauseSimulationButton. self createStopSimulationButton. self createSpawnSimulationButton}.
 	self addMorph: row.
 	row position: 15 @ 45
 ]
@@ -106,6 +106,19 @@ SUSWindow >> createStraightRoadButton [
 		getState: nil
 		action: #straightRoadMode
 		label: #labelStraightRoad) position: 20 @ 20;
+		 yourself
+]
+
+{
+	#category : #initialization,
+	#'squeak_changestamp' : 'Len 6/20/2024 19:08'
+}
+SUSWindow >> createTunnelButton [
+	^ (PluggableButtonMorph
+		on: self
+		getState: nil
+		action: #tunnelMode
+		label: #labelTunnel) position: 20 @ 20;
 		 yourself
 ]
 
@@ -221,6 +234,14 @@ SUSWindow >> labelStraightRoad [
 ]
 
 {
+	#category : #accessing,
+	#'squeak_changestamp' : 'Len 6/20/2024 19:07'
+}
+SUSWindow >> labelTunnel [
+	^ 'Magic Tunnel'
+]
+
+{
 	#category : #simulation,
 	#'squeak_changestamp' : 'MK 6/10/2024 17:16'
 }
@@ -260,4 +281,13 @@ SUSWindow >> stopSimulation [
 SUSWindow >> straightRoadMode [
 
 	simulation selectedSpawnType: #StraightRoad
+]
+
+{
+	#category : #events,
+	#'squeak_changestamp' : 'Len 6/20/2024 19:11'
+}
+SUSWindow >> tunnelMode [
+
+	simulation selectedSpawnType: #Tunnel
 ]

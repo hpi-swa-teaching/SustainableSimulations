@@ -26,12 +26,12 @@ SUSCar class >> newOnRoad: aRoad withSpeed: aNumber [
 
 {
 	#category : #behavior,
-	#'squeak_changestamp' : 'GoChriNo 6/19/2024 22:12'
+	#'squeak_changestamp' : 'GoChriNo 6/22/2024 09:26'
 }
-SUSCar >> addRouteEntryAt: anIndex FromPrevLane: aLane [
-
-	route size < anIndex ifTrue: [route
-						addLast: (Random new nextInt: aLane nextLanes size)]
+SUSCar >> addRouteEntryAt: anIndex FromPrevLane: aLane [ 
+	route size < anIndex
+		ifTrue: [route
+				addLast: (Random new nextInt: aLane nextLanes size)]
 ]
 
 {
@@ -46,22 +46,22 @@ SUSCar >> applyAcceleration [
 
 {
 	#category : #behavior,
-	#'squeak_changestamp' : 'PM 6/18/2024 10:33'
+	#'squeak_changestamp' : 'GoChriNo 6/22/2024 09:24'
 }
 SUSCar >> applyBehavior [
-	self deltaTime: Time millisecondClock - self lastTime;
-		lastTime: Time millisecondClock;
-		applyAcceleration;
+	deltaTime := Time millisecondClock - lastTime.
+	lastTime := Time millisecondClock.
+	self applyAcceleration; 
 		applyMovement
 ]
 
 {
 	#category : #behavior,
-	#'squeak_changestamp' : 'GoChriNo 6/20/2024 08:03'
+	#'squeak_changestamp' : 'GoChriNo 6/22/2024 09:36'
 }
 SUSCar >> applyCautiousness: t [ 
 	| dist nextCar maxDist i currentLane |
-	maxDist := self speed squared / (self deacceleration * 2) * 1000 / 360 + 100 + (0.5 * self speed).
+	maxDist := self calculateBrakingDistanceFromSpeedGoal: 0.
 	dist := 0.
 	i := 0.
 	nextCar := lane getPreviousCarOnLane: self.
@@ -93,26 +93,34 @@ SUSCar >> applyCautiousness: t [
 								ifTrue: [dist := dist + currentLane length]]
 						ifFalse: [dist := dist
 										+ (currentLane getLengthToT: nextCar lastPoint).
-							maxDist := (self speed - nextCar speed) squared / (self deacceleration * 2) * 1000 / 360 + 100 + (0.5 * self speed)]]]
+							maxDist := self calculateBrakingDistanceFromSpeedGoal: nextCar speed]]]
 ]
 
 {
 	#category : #behavior,
-	#'squeak_changestamp' : 'GoChriNo 6/19/2024 22:36'
+	#'squeak_changestamp' : 'GoChriNo 6/22/2024 09:45'
 }
 SUSCar >> applyMovement [
 	| t rotation |
-	t := lane nextTprev: lastPoint advanceByLength: (self deltaTime * (self speed / 360)).
+	t := lane nextTprev: lastPoint advanceByLength: deltaTime * (speed / 360).
 	t >= 1
 		ifTrue: [self changeLane.
 			t := lastPoint].
 	self applyCautiousness: t.
 	self owner
-		center: (self lane getPositionWithTValue: t).
+		center: (lane getPositionWithTValue: t).
 	rotation := lane getRotationWithTValue: t.
 	rotation first = 1
 		ifTrue: [self rotationDegrees: rotation second].
-	self lastPoint: t
+	lastPoint := t
+]
+
+{
+	#category : #behavior,
+	#'squeak_changestamp' : 'GoChriNo 6/22/2024 09:38'
+}
+SUSCar >> calculateBrakingDistanceFromSpeedGoal: aSpeed [ 
+	^ (speed - aSpeed) squared / (deacceleration * 2) * 1000 / 360 + 100 + (0.5 * speed)
 ]
 
 {
@@ -155,13 +163,13 @@ SUSCar >> drawOn: aCanvas [
 
 {
 	#category : #behavior,
-	#'squeak_changestamp' : 'GoChriNo 6/16/2024 11:14'
+	#'squeak_changestamp' : 'GoChriNo 6/22/2024 09:21'
 }
 SUSCar >> getNextCar [
 	| nextCar |
-	nextCar := self lane getPreviousCarOnLane: self.
-	nextCar = self
-		ifTrue: [self lane nextLanes
+	nextCar := lane getPreviousCarOnLane: self.
+	nextCar == self
+		ifTrue: [lane nextLanes
 				do: [:each | each cars isEmpty
 						ifFalse: [^ each cars last]].
 			^ self].
@@ -196,8 +204,16 @@ SUSCar >> initialize [
 ]
 
 {
+	#category : #behavior,
+	#'squeak_changestamp' : 'GoChriNo 6/22/2024 09:21'
+}
+SUSCar >> isOnOwnLane: aVehicle [ 
+	^ lane == aVehicle lane
+]
+
+{
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'MK 6/10/2024 23:31'
+	#'squeak_changestamp' : 'Len 6/20/2024 20:21'
 }
 SUSCar >> placeCarOnRoad: aRoad [
 

@@ -70,6 +70,14 @@ SUSVehicle >> initialize [
 
 {
 	#category : #accessing,
+	#'squeak_changestamp' : 'Len 6/20/2024 20:32'
+}
+SUSVehicle >> kill [
+	simulation removeCar: self
+]
+
+{
+	#category : #accessing,
 	#'squeak_changestamp' : 'GoChriNo 6/14/2024 15:08'
 }
 SUSVehicle >> lane [

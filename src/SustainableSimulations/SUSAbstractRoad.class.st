@@ -14,11 +14,12 @@ Class {
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/12/2024 23:43'
+	#'squeak_changestamp' : 'Len 6/20/2024 19:58'
 }
 SUSAbstractRoad class >> newOnSimulation: aSimulation from: aConnectionPoint to: aPoint [
 	^ self new simulation: aSimulation;
 		initializeFrom: aConnectionPoint to: aPoint;
+		postInitialize;
 		yourself
 ]
 
@@ -113,6 +114,14 @@ SUSAbstractRoad >> mouseDown: anEvent [
 
 {
 	#category : #accessing,
+	#'squeak_changestamp' : 'Len 6/20/2024 19:58'
+}
+SUSAbstractRoad >> postInitialize [
+	self subclassResponsibility
+]
+
+{
+	#category : #accessing,
 	#'squeak_changestamp' : 'PM 5/27/2024 23:15'
 }
 SUSAbstractRoad >> simulation [
@@ -140,16 +149,16 @@ SUSAbstractRoad >> spawnCar [
 
 {
 	#category : #drawing,
-	#'squeak_changestamp' : 'PM 6/18/2024 15:54'
+	#'squeak_changestamp' : 'Len 6/22/2024 22:07'
 }
-SUSAbstractRoad >> updateLanes: aRoad [
-	lanes do: [:each | 
-		|pos1|
-		pos1 := each getPositionWithTValue: 1.
-		aRoad lanes do: [:anotherEach |
-			((pos1 dist: (anotherEach getPositionWithTValue: 0))<20)
-				ifTrue: [each addNextLane: anotherEach]]]
-		
-		
-	
+SUSAbstractRoad >> updateLanes: aRoad [ 
+	lanes
+		do: [:each | 
+			| pos1 |
+			pos1 := each getPositionWithTValue: 1.
+			aRoad lanes
+				do: [:anotherEach | (pos1
+							dist: (anotherEach getPositionWithTValue: 0))
+							< 20
+						ifTrue: [each addNextLane: anotherEach]]]
 ]
