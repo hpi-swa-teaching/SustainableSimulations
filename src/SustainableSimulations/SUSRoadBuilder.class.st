@@ -61,7 +61,7 @@ SUSRoadBuilder >> addUserDirectionToTo [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/18/2024 19:15'
+	#'squeak_changestamp' : 'MK 6/23/2024 02:17'
 }
 SUSRoadBuilder >> askForDegrees [
 	| degrees |

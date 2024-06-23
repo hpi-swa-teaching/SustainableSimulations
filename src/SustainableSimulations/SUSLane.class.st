@@ -126,14 +126,12 @@ SUSLane >> getLengthToT3: t [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'GoChriNo 6/19/2024 13:34'
+	#'squeak_changestamp' : 'MK 6/23/2024 01:57'
 }
 SUSLane >> getLengthToT: t [
 
 	((path vertices size) == 3) ifTrue: [^ self getLengthToT3: t].
 	^ t * length
-
-	
 ]
 
 {
@@ -186,7 +184,7 @@ SUSLane >> getPositionWithTValue: aNumber [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'Len 6/10/2024 00:08'
+	#'squeak_changestamp' : 'MK 6/23/2024 01:58'
 }
 SUSLane >> getPreviousCarOnLane: aCar [
 	| previous |
@@ -273,7 +271,7 @@ SUSLane >> killRoad: aBoolean [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'Len 6/1/2024 20:55'
+	#'squeak_changestamp' : 'MK 6/23/2024 01:58'
 }
 SUSLane >> length [
 	^ length

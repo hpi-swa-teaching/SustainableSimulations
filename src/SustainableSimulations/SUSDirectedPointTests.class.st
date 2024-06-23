@@ -28,6 +28,28 @@ SUSDirectedPointTests >> testCalculateIntersectionPoint [
 
 {
 	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'MK 6/20/2024 16:44'
+}
+SUSDirectedPointTests >> testIsAbove [
+
+	| directedPoint pointOnLine pointAbove pointBelow |
+
+	directedPoint := SUSDirectedPoint new.
+	directedPoint position: 0@0.
+	directedPoint direction: 1@0.
+
+	pointOnLine := 1@0.
+	self assert: (directedPoint isAbove: pointOnLine) = 0.
+
+	pointAbove := 1@1.
+	self assert: (directedPoint isAbove: pointAbove) > 0.
+
+	pointBelow := 1@(-1).
+	self assert: (directedPoint isAbove: pointBelow) < 0.
+]
+
+{
+	#category : #'as yet unclassified',
 	#'squeak_changestamp' : 'MK 6/15/2024 14:03'
 }
 SUSDirectedPointTests >> testLinearDistance [
