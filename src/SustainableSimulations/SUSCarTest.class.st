@@ -24,7 +24,7 @@ SUSCarTest >> testApplyAccelaration [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'MK 6/23/2024 01:55'
+	#'squeak_changestamp' : 'MK 6/23/2024 02:04'
 }
 SUSCarTest >> testGetNextCar [
 	|car1 car2 lane|
@@ -36,6 +36,9 @@ SUSCarTest >> testGetNextCar [
 	lane addCar: car1.
 	lane addCar: car2.
 	
-	self assert: (car1 getNextCar) = car2.
+	car1 lane: lane.
+	car2 lane: lane.
+	
+	self assert: (car2 getNextCar) = car1.
 	
 ]
