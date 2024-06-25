@@ -21,7 +21,7 @@ SUSCrossIntersection >> connectionPointPositions [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'Len 6/22/2024 22:10'
+	#'squeak_changestamp' : 'Len 6/25/2024 10:40'
 }
 SUSCrossIntersection >> createDrawing [
 	| drawing |
