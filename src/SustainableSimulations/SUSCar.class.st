@@ -57,7 +57,7 @@ SUSCar >> applyBehavior [
 
 {
 	#category : #behavior,
-	#'squeak_changestamp' : 'GoChriNo 6/25/2024 10:42'
+	#'squeak_changestamp' : 'GoChriNo 6/25/2024 11:15'
 }
 SUSCar >> applyCautiousness: t [ 
 	| dist nextCar maxDist i currentLane |
@@ -72,6 +72,7 @@ SUSCar >> applyCautiousness: t [
 						- (lane getLengthToT: t)]
 		ifFalse: [dist := (nextCar lane getLengthToT: nextCar lastPoint)
 						- (lane getLengthToT: t)].
+	self checkForSpeedLimit: dist.
 	[dist <= maxDist]
 		whileTrue: [i := i + 1.
 			nextCar ~= self
@@ -84,9 +85,6 @@ SUSCar >> applyCautiousness: t [
 			self addRouteEntryAt: i FromPrevLane: currentLane.
 			currentLane := currentLane nextLanes
 						at: (route at: i).
-			dist
-					<= (self calculateBrakingDistanceFromSpeedLimit: currentLane road speedLimit)
-				ifTrue: [speedGoal := currentLane road speedLimit].
 			currentLane cars isEmpty
 				ifTrue: [dist := dist + currentLane length]
 				ifFalse: [nextCar := currentLane cars last.
@@ -129,10 +127,10 @@ SUSCar >> calculateBrakingDistanceFromSpeedGoal: aSpeed [
 
 {
 	#category : #behavior,
-	#'squeak_changestamp' : 'GoChriNo 6/25/2024 10:40'
+	#'squeak_changestamp' : 'GoChriNo 6/25/2024 11:17'
 }
 SUSCar >> calculateBrakingDistanceFromSpeedLimit: aSpeed [ 
-	^ (speed - aSpeed) squared / (deacceleration * 2) * 1000 / 360 + (0.5 * speed)
+	^ (speed - aSpeed) squared / (deacceleration * 2) * 1000 / 360 + 50 + (0.5 * speed)
 ]
 
 {
@@ -151,6 +149,23 @@ SUSCar >> changeLane [
 			route removeFirst.
 			lastPoint := 0.]
 		ifTrue: [lastPoint := 1.]
+]
+
+{
+	#category : #behavior,
+	#'squeak_changestamp' : 'GoChriNo 6/25/2024 11:08'
+}
+SUSCar >> checkForSpeedLimit: aDistance [
+	| nextLane |
+	lane nextLanes isEmpty ifFalse: [
+		self addRouteEntryAt: 1 FromPrevLane: lane.
+			nextLane := lane nextLanes
+						at: (route at: 1).
+			aDistance
+					<= (self calculateBrakingDistanceFromSpeedLimit: nextLane road speedLimit)
+				ifTrue: [speedGoal := (nextLane road speedLimit min: lane road speedLimit) min: maxSpeed]]
+
+	
 ]
 
 {
@@ -190,7 +205,7 @@ SUSCar >> getNextCar [
 
 {
 	#category : #initialization,
-	#'squeak_changestamp' : 'GoChriNo 6/19/2024 13:15'
+	#'squeak_changestamp' : 'GoChriNo 6/25/2024 11:00'
 }
 SUSCar >> initialize [
 	super initialize.
