@@ -13,10 +13,21 @@ Class {
 		'clickedConnectionPoint',
 		'running',
 		'timePaused',
-		'selectedSpawnType'
+		'selectedSpawnType',
+		'window'
 	],
 	#category : #'SustainableSimulations-Core'
 }
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'MK 6/25/2024 08:58'
+}
+SUSSimulation class >> newWithWindow: aWindow [
+	^ self new 
+		window: aWindow;
+		yourself
+]
 
 {
 	#category : #accessing,
@@ -241,7 +252,7 @@ SUSSimulation >> startingPointPosition [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'Len 6/23/2024 11:32'
+	#'squeak_changestamp' : 'MK 6/25/2024 09:00'
 }
 SUSSimulation >> step [
 	cars
@@ -249,7 +260,8 @@ SUSSimulation >> step [
 	killedCars
 		do: [:car | car owner abandon].
 	tunnels
-		do: [:tunnel | tunnel applyBehavior]
+		do: [:tunnel | tunnel applyBehavior].
+	window adjustPlayPausePosition.
 ]
 
 {
@@ -289,4 +301,20 @@ SUSSimulation >> tryToBuildRoadTo: aPoint [
 				ifTrue: [clickedConnectionPoint direction: clickedConnectionPoint center - aPoint]
 				ifFalse: [clickedConnectionPoint direction: 0 @ 0]].
 	^ valid
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'MK 6/25/2024 08:59'
+}
+SUSSimulation >> window [
+	^window
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'MK 6/25/2024 08:59'
+}
+SUSSimulation >> window: aWindow [ 
+	window := aWindow.
 ]
