@@ -7,7 +7,8 @@ Class {
 		'path',
 		'length',
 		'blockedT',
-		'killRoad'
+		'killRoad',
+		'road'
 	],
 	#category : #'SustainableSimulations-Roads'
 }
@@ -19,6 +20,18 @@ Class {
 SUSLane class >> newLaneWithPath: aLineMorph [
 
 	^SUSLane new path: aLineMorph;
+		calculateLength;
+		yourself
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'GoChriNo 6/25/2024 10:23'
+}
+SUSLane class >> newLaneWithPath: aLineMorph OnRoad: aRoad [
+
+	^SUSLane new path: aLineMorph;
+		road: aRoad;
 		calculateLength;
 		yourself
 ]
@@ -325,6 +338,22 @@ SUSLane >> path: aLineMorph [
 SUSLane >> removeCar: aCar [
 
 	cars remove: aCar
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 6/25/2024 10:23'
+}
+SUSLane >> road [
+	^ road
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 6/25/2024 10:23'
+}
+SUSLane >> road: anObject [
+	road := anObject
 ]
 
 {

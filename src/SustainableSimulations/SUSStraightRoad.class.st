@@ -1,9 +1,6 @@
 Class {
 	#name : #SUSStraightRoad,
 	#superclass : #SUSAbstractRoad,
-	#instVars : [
-		'speedLimit'
-	],
 	#category : #'SustainableSimulations-Roads'
 }
 

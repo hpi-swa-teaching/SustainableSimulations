@@ -1,9 +1,6 @@
 Class {
 	#name : #SUSCurvyRoad,
 	#superclass : #SUSAbstractRoad,
-	#instVars : [
-		'speedLimit'
-	],
 	#category : #'SustainableSimulations-Roads'
 }
 

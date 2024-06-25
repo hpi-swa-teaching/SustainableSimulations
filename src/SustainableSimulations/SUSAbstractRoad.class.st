@@ -7,7 +7,8 @@ Class {
 		'lanes',
 		'connectionPoints',
 		'from',
-		'to'
+		'to',
+		'speedLimit'
 	],
 	#category : #'SustainableSimulations-Roads'
 }
@@ -52,11 +53,11 @@ SUSAbstractRoad >> createDrawing [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'Len 6/1/2024 21:37'
+	#'squeak_changestamp' : 'GoChriNo 6/25/2024 10:24'
 }
 SUSAbstractRoad >> createLaneWithPath: aLineMorph [
 	
-	lanes add: (SUSLane newLaneWithPath: aLineMorph)
+	lanes add: (SUSLane newLaneWithPath: aLineMorph OnRoad: self)
 ]
 
 {
@@ -69,12 +70,13 @@ SUSAbstractRoad >> handlesMouseDown: anEvent [
 
 {
 	#category : #initialization,
-	#'squeak_changestamp' : 'PM 6/18/2024 18:49'
+	#'squeak_changestamp' : 'GoChriNo 6/25/2024 10:26'
 }
 SUSAbstractRoad >> initialize [
 	super initialize.
 	
 	lanes := OrderedCollection new.
+	speedLimit := 50.
 	
 	self color: Color transparent;
 		sticky: true
@@ -145,6 +147,22 @@ SUSAbstractRoad >> spawnCar [
 		addMorphInLayer: (SUSCar newOnRoad: self withSpeed: (UIManager default request: 'Please enter car speed' initialAnswer: 50) asNumber)]
 		on: NumberParserError
 		do: []
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 6/25/2024 10:26'
+}
+SUSAbstractRoad >> speedLimit [
+	^ speedLimit
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 6/25/2024 10:26'
+}
+SUSAbstractRoad >> speedLimit: anObject [
+	speedLimit := anObject
 ]
 
 {
