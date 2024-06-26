@@ -7,7 +7,8 @@ Class {
 		'timeRoadStart',
 		'blockedOldLane',
 		'oldLane',
-		'lastL'
+		'lastL',
+		'rightOfWayTime'
 	],
 	#category : #'SustainableSimulations-Core'
 }
@@ -46,18 +47,19 @@ SUSCar >> applyAcceleration [
 
 {
 	#category : #behavior,
-	#'squeak_changestamp' : 'GoChriNo 6/22/2024 09:24'
+	#'squeak_changestamp' : 'GoChriNo 6/26/2024 11:39'
 }
 SUSCar >> applyBehavior [
 	deltaTime := Time millisecondClock - lastTime.
 	lastTime := Time millisecondClock.
+	rightOfWayTime := (rightOfWayTime - deltaTime) max: 0.
 	self applyAcceleration; 
 		applyMovement
 ]
 
 {
 	#category : #behavior,
-	#'squeak_changestamp' : 'GoChriNo 6/26/2024 09:32'
+	#'squeak_changestamp' : 'GoChriNo 6/26/2024 10:06'
 }
 SUSCar >> applyCautiousness: t [ 
 	| dist nextCar maxDist i currentLane |
@@ -85,7 +87,7 @@ SUSCar >> applyCautiousness: t [
 			self addRouteEntryAt: i FromPrevLane: currentLane.
 			currentLane := currentLane nextLanes
 						at: (route at: i).	
-			(self checkForIntersection: currentLane FromDist: dist) ifTrue: [^ self].
+			(self checkForIntersection: currentLane FromDist: dist FromIndex: i) ifTrue: [^ self].
 			currentLane cars isEmpty
 				ifTrue: [dist := dist + currentLane length]
 				ifFalse: [nextCar := currentLane cars last.
@@ -146,37 +148,38 @@ SUSCar >> changeLane [
 
 {
 	#category : #behavior,
-	#'squeak_changestamp' : 'GoChriNo 6/26/2024 09:20'
+	#'squeak_changestamp' : 'GoChriNo 6/26/2024 11:39'
 }
-SUSCar >> checkForIntersection: aLane [ 
-	| rightLane |
-	rightLane := aLane road getRightTurnLaneFrom: aLane.
-	rightLane
+SUSCar >> checkForIntersection: aLane FromDist: aDistance FromIndex: anIndex [ 
+	| rightLanes oppositeLanes return |
+	return := false.
+	rightLanes := aLane road getRightTurnLanesFrom: aLane.
+	oppositeLanes := aLane road getOppositeLanesFrom: aLane.
+	rightLanes
 		ifNil: [^ false].
-	rightLane previousLanes isEmpty
-		ifTrue: [^ false].
-	(rightLane cars isEmpty and: (rightLane previousLanes at: 1) cars isEmpty)
-		ifTrue: [^ false]
-		ifFalse: [speedGoal := 0.
-			^ true]
-]
-
-{
-	#category : #behavior,
-	#'squeak_changestamp' : 'GoChriNo 6/26/2024 09:33'
-}
-SUSCar >> checkForIntersection: aLane FromDist: aDistance [ 
-	| rightLane |
-	rightLane := aLane road getRightTurnLaneFrom: aLane.
-	rightLane
+	oppositeLanes
 		ifNil: [^ false].
-	rightLane previousLanes isEmpty
+	(rightLanes at: 1) road driving: self.
+	rightOfWayTime > 0 ifTrue: [^ false].
+	(rightLanes at: 1) previousLanes isEmpty
 		ifTrue: [^ false].
-	(rightLane cars isEmpty and: (rightLane previousLanes at: 1) cars isEmpty)
-		ifTrue: [^ false]
-		ifFalse: [(aDistance <= (self calculateBrakingDistanceFromSpeedGoal: 0))
-				ifTrue: [speedGoal := 0].
-			^ true]
+	(route at: anIndex)
+			= 3
+		ifTrue: [^ false].
+	(self shouldYieldToTrafficFromLanes: rightLanes)
+		ifTrue: [aDistance <= ((self calculateBrakingDistanceFromSpeedGoal: 0)
+						+ 10)
+				ifTrue: [speedGoal := 0.
+					return := true]].
+	(route at: anIndex)
+			= 1
+		ifTrue: [(self shouldYieldToTrafficFromLanes: oppositeLanes)
+				ifTrue: [aDistance <= ((self calculateBrakingDistanceFromSpeedGoal: 0)
+								+ 10)
+						ifTrue: [speedGoal := 0.
+							return := true]]].
+	return ifTrue: [(speed = 0) ifTrue: [(rightLanes at: 1) road standing: self]].
+	^ return
 ]
 
 {
@@ -233,7 +236,7 @@ SUSCar >> getNextCar [
 
 {
 	#category : #initialization,
-	#'squeak_changestamp' : 'GoChriNo 6/25/2024 11:00'
+	#'squeak_changestamp' : 'GoChriNo 6/26/2024 11:38'
 }
 SUSCar >> initialize [
 	super initialize.
@@ -252,6 +255,7 @@ SUSCar >> initialize [
 	lastPoint := 0.
 	blockedOldLane := false.
 	route := OrderedCollection new.
+	rightOfWayTime := 0.
 	
 	self extent: 30@15;
 		color: Color red;
@@ -290,4 +294,59 @@ SUSCar >> postInitialization [
 	lane addCar: self.
 	
 	self center: (lane getPositionWithTValue: 0)
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 6/26/2024 11:40'
+}
+SUSCar >> rightOfWayTime [
+	^ rightOfWayTime
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 6/26/2024 11:40'
+}
+SUSCar >> rightOfWayTime: anObject [
+	rightOfWayTime := anObject
+]
+
+{
+	#category : #behavior,
+	#'squeak_changestamp' : 'GoChriNo 6/26/2024 10:46'
+}
+SUSCar >> searchForCarBackwardsFromLane: aLane WithMaxDist: maxDist [ 
+	| dist car currentLane |
+	dist := 0.
+	currentLane := aLane.
+	car := nil.
+	[dist <= maxDist]
+		whileTrue: [car
+				ifNotNil: [^ true].
+			currentLane previousLanes isEmpty ifTrue: [^ false].
+			currentLane := currentLane previousLanes at: 1.
+			currentLane cars isEmpty
+				ifTrue: [dist := dist + currentLane length]
+				ifFalse: [car := currentLane cars first.
+					dist := dist + currentLane length
+								- (currentLane getLengthToT: car lastPoint)]].
+	^ false
+]
+
+{
+	#category : #behavior,
+	#'squeak_changestamp' : 'GoChriNo 6/26/2024 11:54'
+}
+SUSCar >> shouldYieldToTrafficFromLanes: aLaneCollection [
+	aLaneCollection
+				do: [:oppositeLane | oppositeLane cars isEmpty
+						ifFalse: [oppositeLane cars last lastPoint < 0.5
+								ifTrue: [
+									^ true]]].
+			(self
+					searchForCarBackwardsFromLane: (aLaneCollection at: 1)
+					WithMaxDist: 200)
+				ifTrue: [^ true].
+	^ false
 ]

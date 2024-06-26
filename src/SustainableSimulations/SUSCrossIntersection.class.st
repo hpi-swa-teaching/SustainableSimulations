@@ -1,6 +1,10 @@
 Class {
 	#name : #SUSCrossIntersection,
 	#superclass : #SUSAbstractRoad,
+	#instVars : [
+		'standingCars',
+		'lastRightOfWayTime'
+	],
 	#category : #'SustainableSimulations-Roads'
 }
 
@@ -37,10 +41,43 @@ SUSCrossIntersection >> createDrawing [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'GoChriNo 6/26/2024 09:19'
+	#'squeak_changestamp' : 'GoChriNo 6/26/2024 11:42'
 }
-SUSCrossIntersection >> getRightTurnLaneFrom: aLane [ 
-	^ lanes at: ((lanes indexOf: aLane) - 1 / 3) floor * 3 + 4 \\ 12
+SUSCrossIntersection >> driving: aCar [
+
+	(standingCars includes: aCar) ifTrue: [
+		standingCars remove: aCar]
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 6/26/2024 10:20'
+}
+SUSCrossIntersection >> getOppositeLanesFrom: aLane [
+	| tmp |
+	tmp := ((lanes indexOf: aLane) - 1 / 3) floor * 3 + 7 \\ 12.
+	^ lanes copyFrom: tmp to: (tmp + 2).
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 6/26/2024 10:22'
+}
+SUSCrossIntersection >> getRightTurnLanesFrom: aLane [ 
+	| tmp |
+	tmp := ((lanes indexOf: aLane) - 1 / 3) floor * 3 + 4 \\ 12.
+	^ lanes copyFrom: tmp to: (tmp + 2)
+]
+
+{
+	#category : #initialization,
+	#'squeak_changestamp' : 'GoChriNo 6/26/2024 11:47'
+}
+SUSCrossIntersection >> initialize [
+
+	standingCars := Set new.
+	lastRightOfWayTime := 0.
+	super initialize.
 ]
 
 {
@@ -48,4 +85,16 @@ SUSCrossIntersection >> getRightTurnLaneFrom: aLane [
 	#'squeak_changestamp' : 'Len 6/20/2024 19:59'
 }
 SUSCrossIntersection >> postInitialize [
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 6/26/2024 11:46'
+}
+SUSCrossIntersection >> standing: aCar [ 
+	standingCars add: aCar.
+	(standingCars size >= 3 and: Time millisecondClock - lastRightOfWayTime > 2000)
+		ifTrue: [standingCars asOrderedCollection atRandom rightOfWayTime: 2000.
+			standingCars removeAll.
+			lastRightOfWayTime := Time millisecondClock]
 ]
