@@ -143,6 +143,22 @@ SUSVehicle >> maxSpeed: aNumber [
 ]
 
 {
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 6/26/2024 15:58'
+}
+SUSVehicle >> route [
+	^ route
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 6/26/2024 15:58'
+}
+SUSVehicle >> route: anObject [
+	route := anObject
+]
+
+{
 	#category : #'as yet unclassified',
 	#'squeak_changestamp' : 'Len 6/1/2024 20:32'
 }

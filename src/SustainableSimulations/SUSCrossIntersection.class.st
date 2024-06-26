@@ -70,6 +70,17 @@ SUSCrossIntersection >> getRightTurnLanesFrom: aLane [
 ]
 
 {
+	#category : #utility,
+	#'squeak_changestamp' : 'GoChriNo 6/26/2024 16:04'
+}
+SUSCrossIntersection >> giveRightOfWay [
+	Time millisecondClock - lastRightOfWayTime > 1000
+		ifTrue: [standingCars asOrderedCollection atRandom rightOfWayTime: 2000.
+				 standingCars removeAll.
+			lastRightOfWayTime := Time millisecondClock]
+]
+
+{
 	#category : #initialization,
 	#'squeak_changestamp' : 'GoChriNo 6/26/2024 11:47'
 }
@@ -89,12 +100,21 @@ SUSCrossIntersection >> postInitialize [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'GoChriNo 6/26/2024 11:46'
+	#'squeak_changestamp' : 'GoChriNo 6/26/2024 16:03'
 }
 SUSCrossIntersection >> standing: aCar [ 
 	standingCars add: aCar.
-	(standingCars size >= 3 and: Time millisecondClock - lastRightOfWayTime > 2000)
-		ifTrue: [standingCars asOrderedCollection atRandom rightOfWayTime: 2000.
-			standingCars removeAll.
-			lastRightOfWayTime := Time millisecondClock]
+	"check for two left turners"
+	standingCars size = 2
+		ifTrue: [| car1 car2 |
+			car1 := standingCars asOrderedCollection at: 1.
+			car2 := standingCars asOrderedCollection at: 2.
+			(car1 route first = 1
+					and: car2 route first = 1
+					and: ((self getOppositeLanesFrom: car1 lane nextLanes first)
+							includes: car2 lane nextLanes first))
+				ifTrue: [self giveRightOfWay]].
+	"check for remaining edgecases"
+	standingCars size >= 3
+		ifTrue: [self giveRightOfWay]
 ]
