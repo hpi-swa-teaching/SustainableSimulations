@@ -57,11 +57,11 @@ SUSCar >> applyBehavior [
 
 {
 	#category : #behavior,
-	#'squeak_changestamp' : 'GoChriNo 6/25/2024 11:15'
+	#'squeak_changestamp' : 'GoChriNo 6/26/2024 09:32'
 }
 SUSCar >> applyCautiousness: t [ 
 	| dist nextCar maxDist i currentLane |
-	maxDist := self calculateBrakingDistanceFromSpeedGoal: 0.
+	maxDist := (self calculateBrakingDistanceFromSpeedGoal: 0) + 100.
 	dist := 0.
 	i := 0.
 	nextCar := lane getPreviousCarOnLane: self.
@@ -84,7 +84,8 @@ SUSCar >> applyCautiousness: t [
 					^ self].
 			self addRouteEntryAt: i FromPrevLane: currentLane.
 			currentLane := currentLane nextLanes
-						at: (route at: i).
+						at: (route at: i).	
+			(self checkForIntersection: currentLane FromDist: dist) ifTrue: [^ self].
 			currentLane cars isEmpty
 				ifTrue: [dist := dist + currentLane length]
 				ifFalse: [nextCar := currentLane cars last.
@@ -95,7 +96,7 @@ SUSCar >> applyCautiousness: t [
 								ifTrue: [dist := dist + currentLane length]]
 						ifFalse: [dist := dist
 										+ (currentLane getLengthToT: nextCar lastPoint).
-							maxDist := self calculateBrakingDistanceFromSpeedGoal: nextCar speed]]]
+							maxDist := (self calculateBrakingDistanceFromSpeedGoal: nextCar speed) + 100]]]
 ]
 
 {
@@ -119,18 +120,10 @@ SUSCar >> applyMovement [
 
 {
 	#category : #behavior,
-	#'squeak_changestamp' : 'GoChriNo 6/22/2024 09:38'
+	#'squeak_changestamp' : 'GoChriNo 6/26/2024 09:28'
 }
 SUSCar >> calculateBrakingDistanceFromSpeedGoal: aSpeed [ 
-	^ (speed - aSpeed) squared / (deacceleration * 2) * 1000 / 360 + 100 + (0.5 * speed)
-]
-
-{
-	#category : #behavior,
-	#'squeak_changestamp' : 'GoChriNo 6/25/2024 11:17'
-}
-SUSCar >> calculateBrakingDistanceFromSpeedLimit: aSpeed [ 
-	^ (speed - aSpeed) squared / (deacceleration * 2) * 1000 / 360 + 50 + (0.5 * speed)
+	^ (speed - aSpeed) squared / (deacceleration * 2) * 1000 / 360 + (0.5 * speed)
 ]
 
 {
@@ -153,7 +146,42 @@ SUSCar >> changeLane [
 
 {
 	#category : #behavior,
-	#'squeak_changestamp' : 'GoChriNo 6/25/2024 11:08'
+	#'squeak_changestamp' : 'GoChriNo 6/26/2024 09:20'
+}
+SUSCar >> checkForIntersection: aLane [ 
+	| rightLane |
+	rightLane := aLane road getRightTurnLaneFrom: aLane.
+	rightLane
+		ifNil: [^ false].
+	rightLane previousLanes isEmpty
+		ifTrue: [^ false].
+	(rightLane cars isEmpty and: (rightLane previousLanes at: 1) cars isEmpty)
+		ifTrue: [^ false]
+		ifFalse: [speedGoal := 0.
+			^ true]
+]
+
+{
+	#category : #behavior,
+	#'squeak_changestamp' : 'GoChriNo 6/26/2024 09:33'
+}
+SUSCar >> checkForIntersection: aLane FromDist: aDistance [ 
+	| rightLane |
+	rightLane := aLane road getRightTurnLaneFrom: aLane.
+	rightLane
+		ifNil: [^ false].
+	rightLane previousLanes isEmpty
+		ifTrue: [^ false].
+	(rightLane cars isEmpty and: (rightLane previousLanes at: 1) cars isEmpty)
+		ifTrue: [^ false]
+		ifFalse: [(aDistance <= (self calculateBrakingDistanceFromSpeedGoal: 0))
+				ifTrue: [speedGoal := 0].
+			^ true]
+]
+
+{
+	#category : #behavior,
+	#'squeak_changestamp' : 'GoChriNo 6/26/2024 09:32'
 }
 SUSCar >> checkForSpeedLimit: aDistance [
 	| nextLane |
@@ -162,7 +190,7 @@ SUSCar >> checkForSpeedLimit: aDistance [
 			nextLane := lane nextLanes
 						at: (route at: 1).
 			aDistance
-					<= (self calculateBrakingDistanceFromSpeedLimit: nextLane road speedLimit)
+					<= ((self calculateBrakingDistanceFromSpeedGoal: nextLane road speedLimit) + 50)
 				ifTrue: [speedGoal := (nextLane road speedLimit min: lane road speedLimit) min: maxSpeed]]
 
 	

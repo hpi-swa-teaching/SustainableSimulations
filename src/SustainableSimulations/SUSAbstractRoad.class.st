@@ -61,6 +61,15 @@ SUSAbstractRoad >> createLaneWithPath: aLineMorph [
 ]
 
 {
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 6/26/2024 08:25'
+}
+SUSAbstractRoad >> getRightTurnLaneFrom: aLane [
+
+	^ nil.
+]
+
+{
 	#category : #'event handling',
 	#'squeak_changestamp' : 'MK 6/10/2024 22:32'
 }
@@ -167,7 +176,7 @@ SUSAbstractRoad >> speedLimit: anObject [
 
 {
 	#category : #drawing,
-	#'squeak_changestamp' : 'Len 6/22/2024 22:07'
+	#'squeak_changestamp' : 'GoChriNo 6/26/2024 08:22'
 }
 SUSAbstractRoad >> updateLanes: aRoad [ 
 	lanes
@@ -178,5 +187,6 @@ SUSAbstractRoad >> updateLanes: aRoad [
 				do: [:anotherEach | (pos1
 							dist: (anotherEach getPositionWithTValue: 0))
 							< 20
-						ifTrue: [each addNextLane: anotherEach]]]
+						ifTrue: [each addNextLane: anotherEach.
+							anotherEach addPreviousLane: each]]]
 ]

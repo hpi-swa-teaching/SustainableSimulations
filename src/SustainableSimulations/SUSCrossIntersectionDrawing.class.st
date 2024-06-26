@@ -84,7 +84,7 @@ SUSCrossIntersectionDrawing >> addPathFrom: aDirectedPoint withVertices: aCollec
 
 {
 	#category : #drawing,
-	#'squeak_changestamp' : 'Len 6/22/2024 21:45'
+	#'squeak_changestamp' : 'GoChriNo 6/26/2024 09:00'
 }
 SUSCrossIntersectionDrawing >> addPathsFrom: aDirectedPoint to: aPoint [
 	"From left"
@@ -93,9 +93,9 @@ SUSCrossIntersectionDrawing >> addPathsFrom: aDirectedPoint to: aPoint [
 		addPathFrom: aDirectedPoint withVertices: { 0.5@0 . 0.5@1.5 . 2@1.5 }. "Right"
 	
 	"From bottom"
-	self addPathFrom: aDirectedPoint withVertices: { 2@2.5 . 0.5@2.5 . 0.5@4 }; "Left"
+	self addPathFrom: aDirectedPoint withVertices: { 2@2.5 . 0.5 negated@2.5 . 0.5 negated@0 }; "Left"
 		addPathFrom: aDirectedPoint withVertices: { 2@2.5 . 0@2.5 . 2 negated@2.5 }; "Straight"
-		addPathFrom: aDirectedPoint withVertices: { 2@2.5 . 0.5 negated@2.5 . 0.5 negated@0 }. "Right"
+		addPathFrom: aDirectedPoint withVertices: { 2@2.5 . 0.5@2.5 . 0.5@4 }. "Right"
 	
 	"From right"
 	self addPathFrom: aDirectedPoint withVertices: { 0.5 negated@4 . 0.5 negated@1.5 . 2@1.5 }; "Left"

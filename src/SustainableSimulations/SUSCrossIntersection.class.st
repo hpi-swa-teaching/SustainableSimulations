@@ -37,6 +37,14 @@ SUSCrossIntersection >> createDrawing [
 
 {
 	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 6/26/2024 09:19'
+}
+SUSCrossIntersection >> getRightTurnLaneFrom: aLane [ 
+	^ lanes at: ((lanes indexOf: aLane) - 1 / 3) floor * 3 + 4 \\ 12
+]
+
+{
+	#category : #accessing,
 	#'squeak_changestamp' : 'Len 6/20/2024 19:59'
 }
 SUSCrossIntersection >> postInitialize [

@@ -4,6 +4,7 @@ Class {
 	#instVars : [
 		'cars',
 		'nextLanes',
+		'previousLanes',
 		'path',
 		'length',
 		'blockedT',
@@ -53,6 +54,15 @@ SUSLane >> addCar: aCar [
 SUSLane >> addNextLane: aNextLane [
 
 	nextLanes addLast: aNextLane
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'GoChriNo 6/26/2024 08:22'
+}
+SUSLane >> addPreviousLane: aPreviousLane [
+
+	previousLanes addLast: aPreviousLane
 ]
 
 {
@@ -264,12 +274,13 @@ SUSLane >> getRotationWithTValue: aNumber [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'Len 6/20/2024 20:25'
+	#'squeak_changestamp' : 'GoChriNo 6/26/2024 08:26'
 }
 SUSLane >> initialize [
 
 	cars := OrderedCollection new.
 	nextLanes := OrderedCollection new.
+	previousLanes := OrderedCollection new.
 	blockedT := 1.
 	killRoad := false.
 ]
@@ -323,12 +334,29 @@ SUSLane >> nextTprev: t advanceByLength: L [
 ]
 
 {
+	#category : #accessing,
+	#'squeak_changestamp' : 'GoChriNo 6/26/2024 08:54'
+}
+SUSLane >> path [ 
+
+	^ path.
+]
+
+{
 	#category : #'as yet unclassified',
 	#'squeak_changestamp' : 'MK 5/28/2024 19:27'
 }
 SUSLane >> path: aLineMorph [
 	
 	path := aLineMorph
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'GoChriNo 6/26/2024 08:50'
+}
+SUSLane >> previousLanes [
+	^ previousLanes
 ]
 
 {
