@@ -1,6 +1,6 @@
 Class {
 	#name : #SUSTIntersection,
-	#superclass : #SUSAbstractRoad,
+	#superclass : #SUSIntersection,
 	#category : #'SustainableSimulations-Roads'
 }
 
@@ -33,4 +33,22 @@ SUSTIntersection >> createDrawing [
 	self extent: drawing extent; 
 		position: drawing position.
 	^ drawing
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'PM 6/27/2024 10:47'
+}
+SUSTIntersection >> getOppositeLanesFrom: aLane [
+	self flag: #Todo. "Anpassen auf T-Section"
+	^ {}.
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'PM 6/27/2024 10:47'
+}
+SUSTIntersection >> getRightTurnLanesFrom: aLane [ 
+	self flag: #Todo. "Anpassen auf T-Section"
+	^ {}
 ]

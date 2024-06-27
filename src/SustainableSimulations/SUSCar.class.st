@@ -148,7 +148,7 @@ SUSCar >> changeLane [
 
 {
 	#category : #behavior,
-	#'squeak_changestamp' : 'GoChriNo 6/26/2024 11:39'
+	#'squeak_changestamp' : 'PM 6/27/2024 10:47'
 }
 SUSCar >> checkForIntersection: aLane FromDist: aDistance FromIndex: anIndex [ 
 	| rightLanes oppositeLanes return |
@@ -156,9 +156,9 @@ SUSCar >> checkForIntersection: aLane FromDist: aDistance FromIndex: anIndex [
 	rightLanes := aLane road getRightTurnLanesFrom: aLane.
 	oppositeLanes := aLane road getOppositeLanesFrom: aLane.
 	rightLanes
-		ifNil: [^ false].
+		ifEmpty: [^ false].
 	oppositeLanes
-		ifNil: [^ false].
+		ifEmpty:  [^ false].
 	(rightLanes at: 1) road driving: self.
 	rightOfWayTime > 0 ifTrue: [^ false].
 	(rightLanes at: 1) previousLanes isEmpty

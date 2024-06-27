@@ -62,20 +62,18 @@ SUSAbstractRoad >> createLaneWithPath: aLineMorph [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'GoChriNo 6/26/2024 10:21'
+	#'squeak_changestamp' : 'PM 6/27/2024 10:47'
 }
 SUSAbstractRoad >> getOppositeLanesFrom: aLane [
-
-	^ nil.
+	^ {}
 ]
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'GoChriNo 6/26/2024 10:21'
+	#'squeak_changestamp' : 'PM 6/27/2024 10:47'
 }
 SUSAbstractRoad >> getRightTurnLanesFrom: aLane [
-
-	^ nil.
+	^ {}
 ]
 
 {
