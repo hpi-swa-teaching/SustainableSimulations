@@ -61,19 +61,12 @@ SUSAbstractRoad >> createLaneWithPath: aLineMorph [
 ]
 
 {
-	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/27/2024 10:47'
+	#category : #utility,
+	#'squeak_changestamp' : 'GoChriNo 6/27/2024 12:39'
 }
-SUSAbstractRoad >> getOppositeLanesFrom: aLane [
-	^ {}
-]
+SUSAbstractRoad >> driving: aCar [
 
-{
-	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/27/2024 10:47'
-}
-SUSAbstractRoad >> getRightTurnLanesFrom: aLane [
-	^ {}
+	
 ]
 
 {
@@ -114,6 +107,25 @@ SUSAbstractRoad >> initializeFrom: aConnectionPoint to: aPoint [
 ]
 
 {
+	#category : #utility,
+	#'squeak_changestamp' : 'GoChriNo 6/27/2024 11:25'
+}
+SUSAbstractRoad >> isBlockedFrom: aLane [
+
+	^ false.
+]
+
+{
+	#category : #utility,
+	#'squeak_changestamp' : 'GoChriNo 6/27/2024 12:45'
+}
+SUSAbstractRoad >> isEmpty [
+
+	self lanes do: [:each | each cars ifNotEmpty: [^ false]].
+	^ true.
+]
+
+{
 	#category : #accessing,
 	#'squeak_changestamp' : 'Len 6/1/2024 20:34'
 }
@@ -136,6 +148,28 @@ SUSAbstractRoad >> mouseDown: anEvent [
 }
 SUSAbstractRoad >> postInitialize [
 	"Do nothing"
+]
+
+{
+	#category : #utility,
+	#'squeak_changestamp' : 'GoChriNo 6/27/2024 11:44'
+}
+SUSAbstractRoad >> searchForCarBackwardsFromLane: aLane WithMaxDist: maxDist [ 
+	| dist car currentLane |
+	dist := 0.
+	currentLane := aLane.
+	car := nil.
+	[dist <= maxDist]
+		whileTrue: [car
+				ifNotNil: [^ true].
+			currentLane previousLanes isEmpty ifTrue: [^ false].
+			currentLane := currentLane previousLanes at: 1.
+			currentLane cars isEmpty
+				ifTrue: [dist := dist + currentLane length]
+				ifFalse: [car := currentLane cars first.
+					dist := dist + currentLane length
+								- (currentLane getLengthToT: car lastPoint)]].
+	^ false
 ]
 
 {

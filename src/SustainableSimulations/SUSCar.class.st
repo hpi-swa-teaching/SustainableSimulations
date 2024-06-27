@@ -59,7 +59,7 @@ SUSCar >> applyBehavior [
 
 {
 	#category : #behavior,
-	#'squeak_changestamp' : 'GoChriNo 6/26/2024 10:06'
+	#'squeak_changestamp' : 'GoChriNo 6/27/2024 12:58'
 }
 SUSCar >> applyCautiousness: t [ 
 	| dist nextCar maxDist i currentLane |
@@ -121,7 +121,7 @@ SUSCar >> applyMovement [
 ]
 
 {
-	#category : #behavior,
+	#category : #utility,
 	#'squeak_changestamp' : 'GoChriNo 6/26/2024 09:28'
 }
 SUSCar >> calculateBrakingDistanceFromSpeedGoal: aSpeed [ 
@@ -148,38 +148,23 @@ SUSCar >> changeLane [
 
 {
 	#category : #behavior,
-	#'squeak_changestamp' : 'PM 6/27/2024 10:47'
+	#'squeak_changestamp' : 'GoChriNo 6/27/2024 14:12'
 }
 SUSCar >> checkForIntersection: aLane FromDist: aDistance FromIndex: anIndex [ 
-	| rightLanes oppositeLanes return |
-	return := false.
-	rightLanes := aLane road getRightTurnLanesFrom: aLane.
-	oppositeLanes := aLane road getOppositeLanesFrom: aLane.
-	rightLanes
-		ifEmpty: [^ false].
-	oppositeLanes
-		ifEmpty:  [^ false].
-	(rightLanes at: 1) road driving: self.
-	rightOfWayTime > 0 ifTrue: [^ false].
-	(rightLanes at: 1) previousLanes isEmpty
-		ifTrue: [^ false].
-	(route at: anIndex)
-			= 3
-		ifTrue: [^ false].
-	(self shouldYieldToTrafficFromLanes: rightLanes)
-		ifTrue: [aDistance <= ((self calculateBrakingDistanceFromSpeedGoal: 0)
-						+ 10)
-				ifTrue: [speedGoal := 0.
-					return := true]].
-	(route at: anIndex)
-			= 1
-		ifTrue: [(self shouldYieldToTrafficFromLanes: oppositeLanes)
-				ifTrue: [aDistance <= ((self calculateBrakingDistanceFromSpeedGoal: 0)
-								+ 10)
-						ifTrue: [speedGoal := 0.
-							return := true]]].
-	return ifTrue: [(speed = 0) ifTrue: [(rightLanes at: 1) road standing: self]].
-	^ return
+	(aLane road isBlockedFrom: aLane)
+		ifFalse: [aLane road driving: self.
+			^ false].
+	rightOfWayTime > 0
+		ifTrue: [aLane road driving: self.
+			^ false].
+	aDistance <= ((self calculateBrakingDistanceFromSpeedGoal: 0)
+				+ 10)
+		ifFalse: [aLane road driving: self.
+			^ false].
+	speedGoal := 0.
+	speed = 0
+		ifTrue: [aLane road standing: self].
+	^ true
 ]
 
 {
@@ -220,7 +205,7 @@ SUSCar >> drawOn: aCanvas [
 ]
 
 {
-	#category : #behavior,
+	#category : #utility,
 	#'squeak_changestamp' : 'GoChriNo 6/22/2024 09:21'
 }
 SUSCar >> getNextCar [
@@ -263,7 +248,7 @@ SUSCar >> initialize [
 ]
 
 {
-	#category : #behavior,
+	#category : #utility,
 	#'squeak_changestamp' : 'GoChriNo 6/22/2024 09:21'
 }
 SUSCar >> isOnOwnLane: aVehicle [ 
@@ -271,7 +256,7 @@ SUSCar >> isOnOwnLane: aVehicle [
 ]
 
 {
-	#category : #'as yet unclassified',
+	#category : #utility,
 	#'squeak_changestamp' : 'Len 6/20/2024 20:21'
 }
 SUSCar >> placeCarOnRoad: aRoad [
@@ -310,43 +295,4 @@ SUSCar >> rightOfWayTime [
 }
 SUSCar >> rightOfWayTime: anObject [
 	rightOfWayTime := anObject
-]
-
-{
-	#category : #behavior,
-	#'squeak_changestamp' : 'GoChriNo 6/26/2024 10:46'
-}
-SUSCar >> searchForCarBackwardsFromLane: aLane WithMaxDist: maxDist [ 
-	| dist car currentLane |
-	dist := 0.
-	currentLane := aLane.
-	car := nil.
-	[dist <= maxDist]
-		whileTrue: [car
-				ifNotNil: [^ true].
-			currentLane previousLanes isEmpty ifTrue: [^ false].
-			currentLane := currentLane previousLanes at: 1.
-			currentLane cars isEmpty
-				ifTrue: [dist := dist + currentLane length]
-				ifFalse: [car := currentLane cars first.
-					dist := dist + currentLane length
-								- (currentLane getLengthToT: car lastPoint)]].
-	^ false
-]
-
-{
-	#category : #behavior,
-	#'squeak_changestamp' : 'GoChriNo 6/26/2024 11:54'
-}
-SUSCar >> shouldYieldToTrafficFromLanes: aLaneCollection [
-	aLaneCollection
-				do: [:oppositeLane | oppositeLane cars isEmpty
-						ifFalse: [oppositeLane cars last lastPoint < 0.5
-								ifTrue: [
-									^ true]]].
-			(self
-					searchForCarBackwardsFromLane: (aLaneCollection at: 1)
-					WithMaxDist: 200)
-				ifTrue: [^ true].
-	^ false
 ]

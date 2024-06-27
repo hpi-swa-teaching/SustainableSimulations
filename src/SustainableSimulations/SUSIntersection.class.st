@@ -3,6 +3,7 @@ Class {
 	#superclass : #SUSAbstractRoad,
 	#instVars : [
 		'standingCars',
+		'longStandingCars',
 		'lastRightOfWayTime'
 	],
 	#category : #'SustainableSimulations-Roads'
@@ -10,53 +11,81 @@ Class {
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/27/2024 10:28'
+	#'squeak_changestamp' : 'GoChriNo 6/27/2024 12:50'
 }
 SUSIntersection >> driving: aCar [
 
 	(standingCars includes: aCar) ifTrue: [
-		standingCars remove: aCar]
+		standingCars remove: aCar].
+	(longStandingCars includes: aCar) ifTrue: [
+		longStandingCars remove: aCar].
+]
+
+{
+	#category : #utility,
+	#'squeak_changestamp' : 'GoChriNo 6/27/2024 14:04'
+}
+SUSIntersection >> getBlockedLanesFrom: aLane [ 
+	self subclassResponsibility
+]
+
+{
+	#category : #utility,
+	#'squeak_changestamp' : 'GoChriNo 6/27/2024 13:02'
+}
+SUSIntersection >> getOppositeLaneFrom: aLane [
+	self subclassResponsibility
 ]
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/27/2024 10:29'
+	#'squeak_changestamp' : 'GoChriNo 6/27/2024 12:52'
 }
 SUSIntersection >> giveRightOfWay [
 	Time millisecondClock - lastRightOfWayTime > 1000
-		ifTrue: [standingCars asOrderedCollection atRandom rightOfWayTime: 2000.
-				 standingCars removeAll.
+		ifTrue: [longStandingCars asOrderedCollection atRandom rightOfWayTime: 2000.
+			longStandingCars removeAll.
+			standingCars removeAll.
 			lastRightOfWayTime := Time millisecondClock]
 ]
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/27/2024 10:29'
+	#'squeak_changestamp' : 'GoChriNo 6/27/2024 12:50'
 }
 SUSIntersection >> initialize [
 	super initialize.
 
 	standingCars := Set new.
+	longStandingCars := Set new.
 	lastRightOfWayTime := 0
 ]
 
 {
+	#category : #utility,
+	#'squeak_changestamp' : 'GoChriNo 6/27/2024 13:05'
+}
+SUSIntersection >> isBlockedFrom: aLane [
+	self subclassResponsibility
+]
+
+{
+	#category : #utility,
+	#'squeak_changestamp' : 'GoChriNo 6/27/2024 13:39'
+}
+SUSIntersection >> shouldGiveRightOfWay [
+	self subclassResponsibility
+]
+
+{
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/27/2024 10:29'
+	#'squeak_changestamp' : 'GoChriNo 6/27/2024 14:11'
 }
 SUSIntersection >> standing: aCar [ 
+	(standingCars includes: aCar)
+		ifTrue: [longStandingCars add: aCar].
 	standingCars add: aCar.
-	"check for two left turners"
-	standingCars size = 2
-		ifTrue: [| car1 car2 |
-			car1 := standingCars asOrderedCollection at: 1.
-			car2 := standingCars asOrderedCollection at: 2.
-			(car1 route first = 1
-					and: car2 route first = 1
-					and: ((self getOppositeLanesFrom: car1 lane nextLanes first)
-							includes: car2 lane nextLanes first))
-				ifTrue: [self giveRightOfWay]].
-	"check for remaining edgecases"
-	standingCars size >= 3
-		ifTrue: [self giveRightOfWay]
+	self isEmpty
+		ifFalse: [^ self].
+	(self shouldGiveRightOfWay) ifTrue: [self giveRightOfWay].
 ]
