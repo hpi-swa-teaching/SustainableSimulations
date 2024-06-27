@@ -10,11 +10,11 @@ Class {
 
 {
 	#category : #events,
-	#'squeak_changestamp' : 'MK 6/25/2024 08:48'
+	#'squeak_changestamp' : 'PM 6/27/2024 10:00'
 }
 SUSWindow >> addButtons [
 	| row|
-	row := AlignmentMorph newRow addAllMorphs: {self createStraightRoadButton. self createCurvyRoadButton. self createCrossIntersectionButton. self createTunnelButton. self createStopSimulationButton. self createSpawnSimulationButton}.
+	row := AlignmentMorph newRow addAllMorphs: {self createStraightRoadButton. self createCurvyRoadButton. self createCrossIntersectionButton. self createTIntersectionButton. self createTunnelButton. self createStopSimulationButton. self createSpawnSimulationButton}.
 	self addMorph: row.
 	row position: 15 @ 45.
 	
@@ -129,6 +129,19 @@ SUSWindow >> createStraightRoadButton [
 
 {
 	#category : #initialization,
+	#'squeak_changestamp' : 'PM 6/27/2024 10:00'
+}
+SUSWindow >> createTIntersectionButton [
+	^ (PluggableButtonMorph
+		on: self
+		getState: nil
+		action: #tIntersectionMode
+		label: #labelTIntersection) position: 20 @ 20;
+		 yourself
+]
+
+{
+	#category : #initialization,
 	#'squeak_changestamp' : 'Len 6/20/2024 19:08'
 }
 SUSWindow >> createTunnelButton [
@@ -184,10 +197,10 @@ SUSWindow >> labelCurvyRoad [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'GoChriNo 6/10/2024 17:08'
+	#'squeak_changestamp' : 'PM 6/27/2024 10:00'
 }
 SUSWindow >> labelIntersection [
-	^ 'Intersection'
+	^ 'x-Intersection'
 ]
 
 {
@@ -253,6 +266,14 @@ SUSWindow >> labelStraightRoad [
 
 {
 	#category : #accessing,
+	#'squeak_changestamp' : 'PM 6/27/2024 10:00'
+}
+SUSWindow >> labelTIntersection [
+	^ 'T-Intersection'
+]
+
+{
+	#category : #accessing,
 	#'squeak_changestamp' : 'Len 6/20/2024 19:07'
 }
 SUSWindow >> labelTunnel [
@@ -299,6 +320,14 @@ SUSWindow >> stopSimulation [
 SUSWindow >> straightRoadMode [
 
 	simulation selectedSpawnType: #StraightRoad
+]
+
+{
+	#category : #events,
+	#'squeak_changestamp' : 'PM 6/27/2024 10:01'
+}
+SUSWindow >> tIntersectionMode [
+	simulation selectedSpawnType: #TIntersection
 ]
 
 {

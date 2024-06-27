@@ -116,10 +116,10 @@ SUSAbstractRoad >> mouseDown: anEvent [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'Len 6/20/2024 19:58'
+	#'squeak_changestamp' : 'PM 6/27/2024 10:08'
 }
 SUSAbstractRoad >> postInitialize [
-	self subclassResponsibility
+	"Do nothing"
 ]
 
 {
