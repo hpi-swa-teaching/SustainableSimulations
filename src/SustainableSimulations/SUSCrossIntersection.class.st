@@ -93,13 +93,6 @@ SUSCrossIntersection >> initialize [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'Len 6/20/2024 19:59'
-}
-SUSCrossIntersection >> postInitialize [
-]
-
-{
-	#category : #accessing,
 	#'squeak_changestamp' : 'GoChriNo 6/26/2024 16:03'
 }
 SUSCrossIntersection >> standing: aCar [ 

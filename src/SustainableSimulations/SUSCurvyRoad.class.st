@@ -17,10 +17,3 @@ SUSCurvyRoad >> createDrawing [
 		 position: drawing position.
 	^ drawing
 ]
-
-{
-	#category : #accessing,
-	#'squeak_changestamp' : 'Len 6/20/2024 19:59'
-}
-SUSCurvyRoad >> postInitialize [
-]

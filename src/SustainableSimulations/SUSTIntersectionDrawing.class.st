@@ -24,11 +24,11 @@ SUSTIntersectionDrawing class >> newFrom: aDirectedPoint to: aPoint [
 
 {
 	#category : #drawing,
-	#'squeak_changestamp' : 'Len 6/25/2024 10:24'
+	#'squeak_changestamp' : 'PM 6/27/2024 09:57'
 }
 SUSTIntersectionDrawing >> addBaseFrom: aDirectedPoint [ 
 	| vertices |
-	vertices := {2 negated @ 1. 2 negated @ 3. 1 negated @ 3. 1 negated @ 4. 1 @ 4. 1 @ 0. 1 negated @ 0. 1 negated @ 1.} * SUSDrawing normalLaneWidth.
+	vertices := {2 negated @ 1. 2 negated @ 3. 1 negated @ 3. 1 @ 3. 2 @ 3. 2 @ 1. 1 @ 1. 1 @ 0. 1 negated @ 0. 1 negated @ 1.} * SUSDrawing normalLaneWidth.
 	self addMorphInLayer: ((PolygonMorph
 			vertices: (vertices
 					collect: [:aPoint | aDirectedPoint absoluteOffset: aPoint])
@@ -55,22 +55,22 @@ SUSTIntersectionDrawing >> addCurveFrom: aDirectedPoint withVertices: vertices [
 
 {
 	#category : #drawing,
-	#'squeak_changestamp' : 'Len 6/25/2024 10:29'
+	#'squeak_changestamp' : 'PM 6/27/2024 09:59'
 }
 SUSTIntersectionDrawing >> addCurvesFrom: aDirectedPoint [
 	self addCurveFrom: aDirectedPoint withVertices: {1 negated@0. 1 negated@0.7. 1.3 negated@1. 2 negated@1. 1.3 negated@1. 1 negated@0.7};
-		addCurveFrom: aDirectedPoint withVertices: {2 negated@3 . 1.3 negated@3 . 1 negated @ 3.3 . 1 negated @ 4 . 1 negated @ 3.3 . 1.3 negated@3}
+		addCurveFrom: aDirectedPoint withVertices: {1@0. 1@0.7. 1.3@1. 2@1. 1.3@1. 1@0.7}
 ]
 
 {
 	#category : #drawing,
-	#'squeak_changestamp' : 'Len 6/25/2024 10:36'
+	#'squeak_changestamp' : 'PM 6/27/2024 09:58'
 }
 SUSTIntersectionDrawing >> addDetailFrom: aDirectedPoint to: aPoint [
 	self color: Color transparent;
 		addBaseFrom: aDirectedPoint;
 		addCurvesFrom: aDirectedPoint;
-		addMarkFrom: (aDirectedPoint absoluteOffset: 1@4 * SUSDrawing normalLaneWidth) to: (aDirectedPoint absoluteOffset: 1@0 * SUSDrawing normalLaneWidth)
+		addMarkFrom: (aDirectedPoint absoluteOffset: 2 negated@3 * SUSDrawing normalLaneWidth) to: (aDirectedPoint absoluteOffset: 2@3 * SUSDrawing normalLaneWidth)
 ]
 
 {
@@ -83,19 +83,18 @@ SUSTIntersectionDrawing >> addPathFrom: aDirectedPoint withVertices: aCollection
 
 {
 	#category : #drawing,
-	#'squeak_changestamp' : 'Len 6/25/2024 10:39'
+	#'squeak_changestamp' : 'PM 6/27/2024 09:54'
 }
 SUSTIntersectionDrawing >> addPathsFrom: aDirectedPoint to: aPoint [
 	"From left"
 	self addPathFrom: aDirectedPoint withVertices: { 0.5@0 . 0.5@2.5 . 2 negated@2.5 }; "Left"
-		addPathFrom: aDirectedPoint withVertices: { 0.5@0 . 0.5@2 . 0.5@4 }. "Straight"
+		addPathFrom: aDirectedPoint withVertices: { 0.5@0 . 0.5@1.5 . 2@1.5 }. "Right"
 	
-	"From right"
-	self addPathFrom: aDirectedPoint withVertices: { 0.5 negated@4 . 0.5 negated@2 . 0.5 negated@0 }; "Straight"
-		addPathFrom: aDirectedPoint withVertices: { 0.5 negated@4 . 0.5 negated@2.5 . 2 negated@2.5 }. "Right"
+	"From bottom"
+	self addPathFrom: aDirectedPoint withVertices: { 2@2.5 . 0.5 negated@2.5 . 0.5 negated@0 };"Left"
+		addPathFrom: aDirectedPoint withVertices: { 2@2.5 . 0@2.5 . 2 negated@2.5 }. "Straight"
 	
 	"From top"
-	self addPathFrom: aDirectedPoint withVertices: { 2 negated@1.5 . 0.5@1.5 . 0.5@4 }; "Left"
+	self addPathFrom: aDirectedPoint withVertices: { 2 negated@1.5 . 0@1.5 . 2@1.5 }; "Straight"
 		addPathFrom: aDirectedPoint withVertices: { 2 negated@1.5 . 0.5 negated@1.5 . 0.5 negated@0 } "Right"
-	
 ]
