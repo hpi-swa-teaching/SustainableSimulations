@@ -18,7 +18,7 @@ SUSCrossIntersectionRightOfWayStrategy >> initialize [
 
 {
 	#category : #strategy,
-	#'squeak_changestamp' : 'GoChriNo 7/2/2024 13:36'
+	#'squeak_changestamp' : 'GoChriNo 7/2/2024 18:15'
 }
 SUSCrossIntersectionRightOfWayStrategy >> isBlockedFrom: aLane [ 
 	| blockedLanes index |
@@ -28,22 +28,26 @@ SUSCrossIntersectionRightOfWayStrategy >> isBlockedFrom: aLane [
 		do: [:each | each cars
 				ifNotEmpty: [^ true]].
 	index \\ 3 = 1
-		ifTrue: [
-			| car |
-			car := (road
-					searchForCarBackwardsFromLane: (road lanes at: index + 5 \\ 12 + 1)
-					WithMaxDist: 400).
-				car ifNotNil: [
-					(car turnsLeftAt: road) ifFalse: [^ true]]].
-	(index - 1 / 3) floor \\ 2 == 0
-		ifTrue: [^ false].
+		ifTrue: [| car |
+			car := road
+						searchForCarBackwardsFromLane: (road lanes at: index + 5 \\ 12 + 1)
+						WithMaxDist: 400.
+			car
+				ifNotNil: [(car turnsLeftAt: road)
+						ifFalse: [^ true]]].
+	rightOfWayType = 1
+		ifTrue: [(index - 1 / 3) floor \\ 2 == 0
+				ifTrue: [^ false]].
+	rightOfWayType = 2
+		ifTrue: [(index - 1 / 3) floor \\ 2 == 1
+				ifTrue: [^ false]].
 	(road
-			searchForCarBackwardsFromLane: (road lanes at: index + 2 \\ 12 + 1)
-			WithMaxDist: 400)
+		searchForCarBackwardsFromLane: (road lanes at: index + 2 \\ 12 + 1)
+		WithMaxDist: 400)
 		ifNotNil: [^ true].
 	(road
-			searchForCarBackwardsFromLane: (road lanes at: index + 8 \\ 12 + 1)
-			WithMaxDist: 400)
+		searchForCarBackwardsFromLane: (road lanes at: index + 8 \\ 12 + 1)
+		WithMaxDist: 400)
 		ifNotNil: [^ true].
 	^ false
 ]
