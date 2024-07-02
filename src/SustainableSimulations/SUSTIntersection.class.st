@@ -1,17 +1,32 @@
 Class {
 	#name : #SUSTIntersection,
 	#superclass : #SUSIntersection,
+	#instVars : [
+		'noExitAt'
+	],
 	#category : #'SustainableSimulations-Roads'
 }
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/27/2024 10:05'
+	#'squeak_changestamp' : 'PM 7/3/2024 00:07'
+}
+SUSTIntersection class >> newOnSimulation: aSimulation from: aConnectionPoint to: aPoint noExitAt: aDirection [
+	^ self new simulation: aSimulation;
+		noExitAt: aDirection;
+		initializeFrom: aConnectionPoint to: aPoint;
+		postInitialize;
+		yourself
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'PM 7/3/2024 00:07'
 }
 SUSTIntersection >> connectionPointPositions [
 	| positions directions |
-	positions := {2 negated @ 2. 2 @ 2} * SUSDrawing normalLaneWidth.
-	directions := {90. 270}
+	positions := (self positions at: noExitAt) * SUSDrawing normalLaneWidth.
+	directions := (self directions at: noExitAt)
 				collect: [:each | from direction rotateBy: each degreesToRadians about: 0 @ 0].
 	^ {from}, ((1 to: 2)
 		collect: [:index | SUSDirectedPoint
@@ -21,18 +36,46 @@ SUSTIntersection >> connectionPointPositions [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/27/2024 10:05'
+	#'squeak_changestamp' : 'PM 7/3/2024 00:23'
 }
 SUSTIntersection >> createDrawing [
-	| drawing |
-	drawing := SUSTIntersectionDrawing newFrom: from to: to position.
-	
-	(drawing paths) do: [:each |
-    		self createLaneWithPath: each].
-	
-	self extent: drawing extent; 
-		position: drawing position.
-	^ drawing
+	^ SUSTIntersectionDrawing newFrom: self drawingPoint to: to position
+]
+
+{
+	#category : #utility,
+	#'squeak_changestamp' : 'PM 7/3/2024 00:20'
+}
+SUSTIntersection >> directions [
+	^ {#Left -> {90. 0}. #Top -> {90. 270}. #Right -> {0. 270}} asDictionary
+]
+
+{
+	#category : #utility,
+	#'squeak_changestamp' : 'PM 7/3/2024 00:21'
+}
+SUSTIntersection >> drawingPoint [
+	| drawingPoint |
+	drawingPoint := self connectionPointPositions at: self drawingPointIndex copy.
+	noExitAt ~= #Top
+		ifTrue: [drawingPoint direction: drawingPoint direction negated].
+	^ drawingPoint
+]
+
+{
+	#category : #utility,
+	#'squeak_changestamp' : 'PM 7/3/2024 00:20'
+}
+SUSTIntersection >> drawingPointIndex [
+	^ self drawingPointIndices at: noExitAt
+]
+
+{
+	#category : #utility,
+	#'squeak_changestamp' : 'PM 7/3/2024 00:20'
+}
+SUSTIntersection >> drawingPointIndices [
+	^ {#Left -> 2. #Top -> 1. #Right -> 3} asDictionary
 ]
 
 {
@@ -104,6 +147,22 @@ SUSTIntersection >> isBlockedFrom: aLane [
 					WithMaxDist: 200)
 				ifTrue: [^ true]].
 	^ false
+]
+
+{
+	#category : #utility,
+	#'squeak_changestamp' : 'PM 7/3/2024 00:08'
+}
+SUSTIntersection >> noExitAt: aDirection [
+	noExitAt := aDirection
+]
+
+{
+	#category : #utility,
+	#'squeak_changestamp' : 'PM 7/3/2024 00:20'
+}
+SUSTIntersection >> positions [
+	^ {#Left -> {2 negated @ 2. 0 @ 4}. #Top -> {2 negated @ 2. 2 @ 2}. #Right -> {0 @ 4. 2 @ 2}} asDictionary
 ]
 
 {

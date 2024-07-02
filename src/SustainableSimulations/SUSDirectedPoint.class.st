@@ -76,6 +76,24 @@ SUSDirectedPoint >> direction: anObject [
 
 {
 	#category : #accessing,
+	#'squeak_changestamp' : 'PM 7/3/2024 00:05'
+}
+SUSDirectedPoint >> directionOf: aPoint [
+	| lineA lineB |
+	lineA := SUSDirectedPoint newWithPosition: position inDirection: (direction rotateBy: 45 degreesToRadians about: 0@0).
+	lineB := SUSDirectedPoint newWithPosition: position inDirection: (direction rotateBy: 315 degreesToRadians about: 0@0).
+	((lineA isAbove: aPoint) >= 0)
+		ifTrue: [((lineB isAbove: aPoint) >= 0) 
+			ifTrue: [^ #Right ]
+			ifFalse: [ ^ #Top]]
+		ifFalse: [((lineB isAbove: aPoint) >= 0)
+			ifTrue: [^ #Bottom]
+			ifFalse: [^ #Left]]
+
+]
+
+{
+	#category : #accessing,
 	#'squeak_changestamp' : 'PM 6/12/2024 23:40'
 }
 SUSDirectedPoint >> initialize [

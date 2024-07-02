@@ -133,7 +133,7 @@ SUSRoadBuilder >> buildStraightRoad [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/27/2024 10:07'
+	#'squeak_changestamp' : 'PM 7/3/2024 00:08'
 }
 SUSRoadBuilder >> buildTIntersection [
 	self canBuildTIntersection
@@ -142,6 +142,7 @@ SUSRoadBuilder >> buildTIntersection [
 		newOnSimulation: simulation
 		from: from
 		to: to
+		noExitAt: (from asDirectedPoint directionOf: self toPoint)
 ]
 
 {
@@ -192,10 +193,11 @@ SUSRoadBuilder >> canBuildStraightRoad [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/27/2024 10:06'
+	#'squeak_changestamp' : 'PM 7/2/2024 23:44'
 }
 SUSRoadBuilder >> canBuildTIntersection [
-	^ invalid not
+	^ (from asDirectedPoint directionOf: self toPoint)
+		~= #Bottom and: invalid not
 ]
 
 {

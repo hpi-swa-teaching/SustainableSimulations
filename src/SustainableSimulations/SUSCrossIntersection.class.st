@@ -21,18 +21,10 @@ SUSCrossIntersection >> connectionPointPositions [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'Len 6/25/2024 10:40'
+	#'squeak_changestamp' : 'PM 7/3/2024 00:23'
 }
 SUSCrossIntersection >> createDrawing [
-	| drawing |
-	drawing := SUSCrossIntersectionDrawing newFrom: from to: to position.
-	
-	(drawing paths) do: [:each |
-    		self createLaneWithPath: each].
-	
-	self extent: drawing extent; 
-		position: drawing position.
-	^ drawing
+	^ SUSCrossIntersectionDrawing newFrom: from to: to position
 ]
 
 {

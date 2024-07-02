@@ -31,16 +31,10 @@ SUSTunnel >> connectionPointPositions [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'Len 6/22/2024 22:09'
+	#'squeak_changestamp' : 'PM 7/3/2024 00:24'
 }
 SUSTunnel >> createDrawing [
-	| drawing |
-	drawing := SUSTunnelDrawing newFrom: from to: to position.
-	drawing paths
-		do: [:each | self createLaneWithPath: each].
-	self extent: drawing extent;
-	 	position: drawing position.
-	^ drawing
+	^ SUSTunnelDrawing newFrom: from to: to position
 ]
 
 {

@@ -37,6 +37,20 @@ SUSAbstractRoad >> addConnectionPoints [
 
 {
 	#category : #accessing,
+	#'squeak_changestamp' : 'PM 7/3/2024 00:23'
+}
+SUSAbstractRoad >> addDrawing [
+	| drawing |
+	drawing := self createDrawing.
+	drawing paths
+		do: [:each | self createLaneWithPath: each].
+	self extent: drawing extent;
+		 position: drawing position;
+		addMorph: drawing
+]
+
+{
+	#category : #accessing,
 	#'squeak_changestamp' : 'PM 6/18/2024 15:29'
 }
 SUSAbstractRoad >> connectionPointPositions [
@@ -93,14 +107,14 @@ SUSAbstractRoad >> initialize [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/18/2024 15:32'
+	#'squeak_changestamp' : 'PM 7/3/2024 00:23'
 }
 SUSAbstractRoad >> initializeFrom: aConnectionPoint to: aPoint [ 
 	from := aConnectionPoint asDirectedPoint.
 	aPoint basicType == #SUSConnectionPoint
 		ifTrue: [to := aPoint asDirectedPoint]
 		ifFalse: [to := aPoint].
-	self addMorph: self createDrawing;
+	self addDrawing;
 		addConnectionPoints.
 	adjacentRoads := Array new: connectionPoints size.
 	simulation addRoad: self

@@ -101,7 +101,7 @@ SUSSimulation >> cars [
 
 {
 	#category : #simulation,
-	#'squeak_changestamp' : 'PM 6/18/2024 14:32'
+	#'squeak_changestamp' : 'PM 7/2/2024 23:39'
 }
 SUSSimulation >> clickedWorld: anEvent [
 	clickedConnectionPoint

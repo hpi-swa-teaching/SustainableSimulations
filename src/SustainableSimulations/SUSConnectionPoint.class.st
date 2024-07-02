@@ -24,7 +24,7 @@ SUSConnectionPoint class >> newForSimulation: aSimulation at: aDirectedPoint [
 
 {
 	#category : #'instance creation',
-	#'squeak_changestamp' : 'PM 6/15/2024 20:18'
+	#'squeak_changestamp' : 'PM 7/2/2024 23:39'
 }
 SUSConnectionPoint class >> newStartingPointForSimulation: aSimulation at: aPoint [
 	^ self new simulation: aSimulation;
