@@ -8,6 +8,14 @@ Class {
 }
 
 {
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'GoChriNo 7/2/2024 10:46'
+}
+SUSRoadStrategy class >> newFromRoad: aRoad [ 
+	^ self new road: aRoad
+]
+
+{
 	#category : #strategy,
 	#'squeak_changestamp' : 'GoChriNo 7/2/2024 10:32'
 }

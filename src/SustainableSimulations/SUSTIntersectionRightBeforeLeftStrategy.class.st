@@ -1,0 +1,76 @@
+Class {
+	#name : #SUSTIntersectionRightBeforeLeftStrategy,
+	#superclass : #SUSRoadStrategy,
+	#category : #'SustainableSimulations-RoadStrategy'
+}
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'GoChriNo 7/2/2024 10:43'
+}
+SUSTIntersectionRightBeforeLeftStrategy >> getBlockedLanesFrom: aLane [ 
+
+	| index | 
+	index := road lanes indexOf: aLane.
+	(index \\ 2 = 1) ifTrue: [
+		^ self getBlockedLanesWithFirstTurnFrom: aLane] 
+	ifFalse: [
+		^ self getBlockedLanesWithSecondTurnFrom: aLane].
+	
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'GoChriNo 7/2/2024 10:43'
+}
+SUSTIntersectionRightBeforeLeftStrategy >> getBlockedLanesWithFirstTurnFrom: aLane [ 
+
+	| index blockedLanes | 
+	index := road lanes indexOf: aLane.
+	blockedLanes := OrderedCollection new.
+	index := index + 1 \\ 6 + 1.
+	blockedLanes add: (road lanes at: index).
+	blockedLanes add: (road lanes at: (index \\ 6 + 1)).
+	blockedLanes add: (road lanes at: (index + 1 \\ 6 +1)).
+	^ blockedLanes
+	
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'GoChriNo 7/2/2024 10:44'
+}
+SUSTIntersectionRightBeforeLeftStrategy >> getBlockedLanesWithSecondTurnFrom: aLane [ 
+
+	| index blockedLanes | 
+	index := road lanes indexOf: aLane.
+	blockedLanes := OrderedCollection new.
+	blockedLanes add: (road lanes at: (index + 2 \\ 6 + 1)).
+	^ blockedLanes
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'GoChriNo 7/2/2024 10:44'
+}
+SUSTIntersectionRightBeforeLeftStrategy >> isBlockedFrom: aLane [ 
+	| blockedLanes index |
+	index := road lanes indexOf: aLane.
+	blockedLanes := self getBlockedLanesFrom: aLane.
+	blockedLanes
+		do: [:each | each cars
+				ifNotEmpty: [^ true]].
+	index \\ 2 = 0
+		ifTrue: [^ false].
+	index = 3
+		ifTrue: [(road
+					searchForCarBackwardsFromLane: (road lanes at: 5)
+					WithMaxDist: 200)
+				ifTrue: [^ true]].
+	index \\ 4 = 1
+		ifTrue: [(road
+					searchForCarBackwardsFromLane: (road lanes at: index + 1 \\ 6 + 1)
+					WithMaxDist: 200)
+				ifTrue: [^ true]].
+	^ false
+]

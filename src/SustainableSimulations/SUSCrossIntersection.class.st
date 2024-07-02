@@ -36,6 +36,15 @@ SUSCrossIntersection >> createDrawing [
 ]
 
 {
+	#category : #initialization,
+	#'squeak_changestamp' : 'GoChriNo 7/2/2024 10:54'
+}
+SUSCrossIntersection >> createStrategy [
+
+	^ (SUSCrossIntersectionRightBeforeLeftStrategy newFromRoad: self)
+]
+
+{
 	#category : #utility,
 	#'squeak_changestamp' : 'GoChriNo 6/27/2024 11:41'
 }
@@ -141,27 +150,10 @@ SUSCrossIntersection >> getOppositeLanesFrom: aLane [
 
 {
 	#category : #utility,
-	#'squeak_changestamp' : 'GoChriNo 6/27/2024 12:42'
+	#'squeak_changestamp' : 'GoChriNo 7/2/2024 10:51'
 }
 SUSCrossIntersection >> isBlockedFrom: aLane [ 
-	| blockedLanes index |
-	index := lanes indexOf: aLane.
-	blockedLanes := self getBlockedLanesFrom: aLane.
-	blockedLanes
-		do: [:each | each cars
-				ifNotEmpty: [^ true]].
-	index \\ 3 = 0
-		ifTrue: [^ false].
-	(self
-			searchForCarBackwardsFromLane: (lanes at: index + 2 \\ 12 + 1)
-			WithMaxDist: 200)
-		ifTrue: [^ true].
-	index \\ 3 = 1
-		ifTrue: [(self
-					searchForCarBackwardsFromLane: (lanes at: index + 5 \\ 12 + 1)
-					WithMaxDist: 200)
-				ifTrue: [^ true]].
-	^ false
+	^ (strategy isBlockedFrom: aLane)
 ]
 
 {

@@ -36,6 +36,14 @@ SUSTIntersection >> createDrawing [
 ]
 
 {
+	#category : #initialization,
+	#'squeak_changestamp' : 'GoChriNo 7/2/2024 10:55'
+}
+SUSTIntersection >> createStrategy [
+	^ (SUSTIntersectionRightBeforeLeftStrategy newFromRoad: self)
+]
+
+{
 	#category : #utility,
 	#'squeak_changestamp' : 'GoChriNo 6/27/2024 13:26'
 }

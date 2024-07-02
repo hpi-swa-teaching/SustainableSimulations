@@ -4,10 +4,19 @@ Class {
 	#instVars : [
 		'standingCars',
 		'longStandingCars',
-		'lastRightOfWayTime'
+		'lastRightOfWayTime',
+		'strategy'
 	],
 	#category : #'SustainableSimulations-Roads'
 }
+
+{
+	#category : #initialization,
+	#'squeak_changestamp' : 'GoChriNo 7/2/2024 10:48'
+}
+SUSIntersection >> createStrategy [
+	self subclassResponsibility
+]
 
 {
 	#category : #'as yet unclassified',
@@ -50,14 +59,15 @@ SUSIntersection >> giveRightOfWay [
 ]
 
 {
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'GoChriNo 6/27/2024 12:50'
+	#category : #initialization,
+	#'squeak_changestamp' : 'GoChriNo 7/2/2024 10:54'
 }
 SUSIntersection >> initialize [
 	super initialize.
 
 	standingCars := Set new.
 	longStandingCars := Set new.
+	strategy := self createStrategy.
 	lastRightOfWayTime := 0
 ]
 
