@@ -37,81 +37,18 @@ SUSTIntersection >> createDrawing [
 
 {
 	#category : #initialization,
-	#'squeak_changestamp' : 'GoChriNo 7/2/2024 10:55'
+	#'squeak_changestamp' : 'GoChriNo 7/2/2024 14:38'
 }
 SUSTIntersection >> createStrategy [
-	^ (SUSTIntersectionRightBeforeLeftStrategy newFromRoad: self)
+	^ (SUSTIntersectionRightOfWayStrategy newFromRoad: self)
 ]
 
 {
 	#category : #utility,
-	#'squeak_changestamp' : 'GoChriNo 6/27/2024 13:26'
-}
-SUSTIntersection >> getBlockedLanesFrom: aLane [ 
-
-	| index | 
-	index := lanes indexOf: aLane.
-	(index \\ 2 = 1) ifTrue: [
-		^ self getBlockedLanesWithFirstTurnFrom: aLane] 
-	ifFalse: [
-		^ self getBlockedLanesWithSecondTurnFrom: aLane].
-	
-]
-
-{
-	#category : #utility,
-	#'squeak_changestamp' : 'GoChriNo 6/27/2024 13:44'
-}
-SUSTIntersection >> getBlockedLanesWithFirstTurnFrom: aLane [ 
-
-	| index blockedLanes | 
-	index := lanes indexOf: aLane.
-	blockedLanes := OrderedCollection new.
-	index := index + 1 \\ 6 + 1.
-	blockedLanes add: (lanes at: index).
-	blockedLanes add: (lanes at: (index \\ 6 + 1)).
-	blockedLanes add: (lanes at: (index + 1 \\ 6 +1)).
-	^ blockedLanes
-	
-]
-
-{
-	#category : #utility,
-	#'squeak_changestamp' : 'GoChriNo 6/27/2024 13:42'
-}
-SUSTIntersection >> getBlockedLanesWithSecondTurnFrom: aLane [ 
-
-	| index blockedLanes | 
-	index := lanes indexOf: aLane.
-	blockedLanes := OrderedCollection new.
-	blockedLanes add: (lanes at: (index + 2 \\ 6 + 1)).
-	^ blockedLanes
-]
-
-{
-	#category : #utility,
-	#'squeak_changestamp' : 'GoChriNo 6/27/2024 13:37'
+	#'squeak_changestamp' : 'GoChriNo 7/2/2024 14:40'
 }
 SUSTIntersection >> isBlockedFrom: aLane [ 
-	| blockedLanes index |
-	index := lanes indexOf: aLane.
-	blockedLanes := self getBlockedLanesFrom: aLane.
-	blockedLanes
-		do: [:each | each cars
-				ifNotEmpty: [^ true]].
-	index \\ 2 = 0
-		ifTrue: [^ false].
-	index = 3
-		ifTrue: [(self
-					searchForCarBackwardsFromLane: (lanes at: 5)
-					WithMaxDist: 200)
-				ifTrue: [^ true]].
-	index \\ 4 = 1
-		ifTrue: [(self
-					searchForCarBackwardsFromLane: (lanes at: index + 1 \\ 6 + 1)
-					WithMaxDist: 200)
-				ifTrue: [^ true]].
-	^ false
+	^ (strategy isBlockedFrom: aLane)
 ]
 
 {

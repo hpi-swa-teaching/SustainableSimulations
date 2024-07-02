@@ -316,3 +316,23 @@ SUSCar >> turnsLeftAt: aRoad [
 					index := index + 1]].
 	^ false
 ]
+
+{
+	#category : #utility,
+	#'squeak_changestamp' : 'GoChriNo 7/2/2024 14:50'
+}
+SUSCar >> turnsRightAt: aRoad [ 
+	| index currentLane |
+	index := 1.
+	currentLane := lane.
+	self lane road == aRoad
+		ifFalse: [[index <= route size]
+				whileTrue: [currentLane := currentLane nextLanes
+								at: (route at: index).
+					currentLane road == aRoad
+						ifTrue: [(route at: index)
+									= (currentLane previousLanes at: 1) nextLanes size
+								ifTrue: [^ true]].
+					index := index + 1]].
+	^ false
+]

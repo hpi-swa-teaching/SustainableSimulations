@@ -46,85 +46,6 @@ SUSCrossIntersection >> createStrategy [
 
 {
 	#category : #utility,
-	#'squeak_changestamp' : 'GoChriNo 6/27/2024 11:41'
-}
-SUSCrossIntersection >> getBlockedLanesFrom: aLane [ 
-	| index |
-	index := lanes indexOf: aLane.
-	index := index - 1 \\ 3 + 1.
-	index = 1
-		ifTrue: [^ self getBlockedLanesWithLeftTurnFrom: aLane].
-	index = 2
-		ifTrue: [^ self getBlockedLanesWithNoTurnFrom: aLane].
-	index = 3
-		ifTrue: [^ self getBlockedLanesWithRightTurnFrom: aLane]
-]
-
-{
-	#category : #utility,
-	#'squeak_changestamp' : 'GoChriNo 6/27/2024 11:41'
-}
-SUSCrossIntersection >> getBlockedLanesWithLeftTurnFrom: aLane [ 
-	| index blockedLanes |
-	index := lanes indexOf: aLane.
-	blockedLanes := OrderedCollection new.
-	blockedLanes
-		add: (lanes at: index + 2 \\ 12 + 1).
-	blockedLanes
-		add: (lanes at: index + 3 \\ 12 + 1).
-	blockedLanes
-		add: (lanes at: index + 5 \\ 12 + 1).
-	blockedLanes
-		add: (lanes at: index + 6 \\ 12 + 1).
-	blockedLanes
-		add: (lanes at: index + 7 \\ 12 + 1).
-	blockedLanes
-		add: (lanes at: index + 8 \\ 12 + 1).
-	blockedLanes
-		add: (lanes at: index + 9 \\ 12 + 1).
-	^ blockedLanes
-]
-
-{
-	#category : #utility,
-	#'squeak_changestamp' : 'GoChriNo 6/27/2024 11:41'
-}
-SUSCrossIntersection >> getBlockedLanesWithNoTurnFrom: aLane [ 
-	| index blockedLanes |
-	index := lanes indexOf: aLane.
-	blockedLanes := OrderedCollection new.
-	blockedLanes
-		add: (lanes at: index + 1 \\ 12 + 1).
-	blockedLanes
-		add: (lanes at: index + 2 \\ 12 + 1).
-	blockedLanes
-		add: (lanes at: index + 3 \\ 12 + 1).
-	blockedLanes
-		add: (lanes at: index + 4 \\ 12 + 1).
-	blockedLanes
-		add: (lanes at: index + 7 \\ 12 + 1).
-	blockedLanes
-		add: (lanes at: index + 8 \\ 12 + 1).
-	^ blockedLanes
-]
-
-{
-	#category : #utility,
-	#'squeak_changestamp' : 'GoChriNo 6/27/2024 11:41'
-}
-SUSCrossIntersection >> getBlockedLanesWithRightTurnFrom: aLane [ 
-	| index blockedLanes |
-	index := lanes indexOf: aLane.
-	blockedLanes := OrderedCollection new.
-	blockedLanes
-		add: (lanes at: index + 3 \\ 12 + 1).
-	blockedLanes
-		add: (lanes at: index + 7 \\ 12 + 1).
-	^ blockedLanes
-]
-
-{
-	#category : #utility,
 	#'squeak_changestamp' : 'GoChriNo 6/27/2024 13:02'
 }
 SUSCrossIntersection >> getOppositeLaneFrom: aLane [
@@ -154,25 +75,4 @@ SUSCrossIntersection >> getOppositeLanesFrom: aLane [
 }
 SUSCrossIntersection >> isBlockedFrom: aLane [ 
 	^ (strategy isBlockedFrom: aLane)
-]
-
-{
-	#category : #utility,
-	#'squeak_changestamp' : 'GoChriNo 6/27/2024 14:00'
-}
-SUSCrossIntersection >> shouldGiveRightOfWay [
-	"check for two left turners"
-	longStandingCars size = 2
-		ifTrue: [| car1 car2 |
-			car1 := longStandingCars asOrderedCollection at: 1.
-			car2 := longStandingCars asOrderedCollection at: 2.
-			(car1 route first = 1
-					and: car2 route first = 1
-					and: ((self getOppositeLanesFrom: car1 lane nextLanes first)
-							includes: car2 lane nextLanes first))
-				ifTrue: [^ true]].
-	"check for remaining edgecases"
-	longStandingCars size >= 3
-		ifTrue: [^ true].
-	^ false.
 ]
