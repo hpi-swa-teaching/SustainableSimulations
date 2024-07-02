@@ -148,7 +148,7 @@ SUSCar >> changeLane [
 
 {
 	#category : #behavior,
-	#'squeak_changestamp' : 'GoChriNo 6/27/2024 14:12'
+	#'squeak_changestamp' : 'GoChriNo 7/2/2024 11:28'
 }
 SUSCar >> checkForIntersection: aLane FromDist: aDistance FromIndex: anIndex [ 
 	(aLane road isBlockedFrom: aLane)
@@ -158,7 +158,7 @@ SUSCar >> checkForIntersection: aLane FromDist: aDistance FromIndex: anIndex [
 		ifTrue: [aLane road driving: self.
 			^ false].
 	aDistance <= ((self calculateBrakingDistanceFromSpeedGoal: 0)
-				+ 10)
+				+ 40)
 		ifFalse: [aLane road driving: self.
 			^ false].
 	speedGoal := 0.
@@ -295,4 +295,24 @@ SUSCar >> rightOfWayTime [
 }
 SUSCar >> rightOfWayTime: anObject [
 	rightOfWayTime := anObject
+]
+
+{
+	#category : #utility,
+	#'squeak_changestamp' : 'GoChriNo 7/2/2024 13:33'
+}
+SUSCar >> turnsLeftAt: aRoad [ 
+	| index currentLane |
+	index := 1.
+	currentLane := lane.
+	self lane road == aRoad
+		ifFalse: [[index <= route size]
+				whileTrue: [currentLane := currentLane nextLanes
+								at: (route at: index).
+					currentLane road == aRoad
+						ifTrue: [(route at: index)
+									= 1
+								ifTrue: [^ true]].
+					index := index + 1]].
+	^ false
 ]

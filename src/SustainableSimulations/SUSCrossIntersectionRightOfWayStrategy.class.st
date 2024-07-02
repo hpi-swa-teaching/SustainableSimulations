@@ -1,14 +1,17 @@
 Class {
-	#name : #SUSCrossIntersectionRightBeforeLeftStrategy,
+	#name : #SUSCrossIntersectionRightOfWayStrategy,
 	#superclass : #SUSRoadStrategy,
+	#instVars : [
+		'rightOfWayType'
+	],
 	#category : #'SustainableSimulations-RoadStrategy'
 }
 
 {
 	#category : #strategy,
-	#'squeak_changestamp' : 'GoChriNo 7/2/2024 10:38'
+	#'squeak_changestamp' : 'GoChriNo 7/2/2024 11:18'
 }
-SUSCrossIntersectionRightBeforeLeftStrategy >> getBlockedLanesFrom: aLane [ 
+SUSCrossIntersectionRightOfWayStrategy >> getBlockedLanesFrom: aLane [ 
 	| index |
 	index := road lanes indexOf: aLane.
 	index := index - 1 \\ 3 + 1.
@@ -22,9 +25,9 @@ SUSCrossIntersectionRightBeforeLeftStrategy >> getBlockedLanesFrom: aLane [
 
 {
 	#category : #strategy,
-	#'squeak_changestamp' : 'GoChriNo 7/2/2024 11:50'
+	#'squeak_changestamp' : 'GoChriNo 7/2/2024 11:51'
 }
-SUSCrossIntersectionRightBeforeLeftStrategy >> getBlockedLanesWithLeftTurnFrom: aLane [ 
+SUSCrossIntersectionRightOfWayStrategy >> getBlockedLanesWithLeftTurnFrom: aLane [ 
 	| index blockedLanes |
 	index := road lanes indexOf: aLane.
 	blockedLanes := OrderedCollection new.
@@ -32,8 +35,8 @@ SUSCrossIntersectionRightBeforeLeftStrategy >> getBlockedLanesWithLeftTurnFrom: 
 		add: (road lanes at: index + 2 \\ 12 + 1).
 	blockedLanes
 		add: (road lanes at: index + 3 \\ 12 + 1).
-	blockedLanes
-		add: (road lanes at: index + 5 \\ 12 + 1).
+	"blockedLanes
+		add: (road lanes at: index + 5 \\ 12 + 1)."
 	blockedLanes
 		add: (road lanes at: index + 6 \\ 12 + 1).
 	blockedLanes
@@ -47,9 +50,9 @@ SUSCrossIntersectionRightBeforeLeftStrategy >> getBlockedLanesWithLeftTurnFrom: 
 
 {
 	#category : #strategy,
-	#'squeak_changestamp' : 'GoChriNo 7/2/2024 10:40'
+	#'squeak_changestamp' : 'GoChriNo 7/2/2024 11:18'
 }
-SUSCrossIntersectionRightBeforeLeftStrategy >> getBlockedLanesWithNoTurnFrom: aLane [ 
+SUSCrossIntersectionRightOfWayStrategy >> getBlockedLanesWithNoTurnFrom: aLane [ 
 	| index blockedLanes |
 	index := road lanes indexOf: aLane.
 	blockedLanes := OrderedCollection new.
@@ -70,9 +73,9 @@ SUSCrossIntersectionRightBeforeLeftStrategy >> getBlockedLanesWithNoTurnFrom: aL
 
 {
 	#category : #strategy,
-	#'squeak_changestamp' : 'GoChriNo 7/2/2024 10:41'
+	#'squeak_changestamp' : 'GoChriNo 7/2/2024 11:18'
 }
-SUSCrossIntersectionRightBeforeLeftStrategy >> getBlockedLanesWithRightTurnFrom: aLane [ 
+SUSCrossIntersectionRightOfWayStrategy >> getBlockedLanesWithRightTurnFrom: aLane [ 
 	| index blockedLanes |
 	index := road lanes indexOf: aLane.
 	blockedLanes := OrderedCollection new.
@@ -84,47 +87,50 @@ SUSCrossIntersectionRightBeforeLeftStrategy >> getBlockedLanesWithRightTurnFrom:
 ]
 
 {
-	#category : #strategy,
-	#'squeak_changestamp' : 'GoChriNo 7/2/2024 12:52'
+	#category : #initialization,
+	#'squeak_changestamp' : 'GoChriNo 7/2/2024 11:16'
 }
-SUSCrossIntersectionRightBeforeLeftStrategy >> isBlockedFrom: aLane [ 
+SUSCrossIntersectionRightOfWayStrategy >> initialize [
+	super initialize.
+	rightOfWayType := 1.
+]
+
+{
+	#category : #strategy,
+	#'squeak_changestamp' : 'GoChriNo 7/2/2024 13:36'
+}
+SUSCrossIntersectionRightOfWayStrategy >> isBlockedFrom: aLane [ 
 	| blockedLanes index |
 	index := road lanes indexOf: aLane.
 	blockedLanes := self getBlockedLanesFrom: aLane.
 	blockedLanes
 		do: [:each | each cars
 				ifNotEmpty: [^ true]].
-	index \\ 3 = 0
+	index \\ 3 = 1
+		ifTrue: [
+			| car |
+			car := (road
+					searchForCarBackwardsFromLane: (road lanes at: index + 5 \\ 12 + 1)
+					WithMaxDist: 400).
+				car ifNotNil: [
+					(car turnsLeftAt: road) ifFalse: [^ true]]].
+	(index - 1 / 3) floor \\ 2 == 0
 		ifTrue: [^ false].
 	(road
 			searchForCarBackwardsFromLane: (road lanes at: index + 2 \\ 12 + 1)
-			WithMaxDist: 200)
+			WithMaxDist: 400)
 		ifNotNil: [^ true].
-	index \\ 3 = 1
-		ifTrue: [(road
-					searchForCarBackwardsFromLane: (road lanes at: index + 5 \\ 12 + 1)
-					WithMaxDist: 200)
-				ifNotNil: [^ true]].
+	(road
+			searchForCarBackwardsFromLane: (road lanes at: index + 8 \\ 12 + 1)
+			WithMaxDist: 400)
+		ifNotNil: [^ true].
 	^ false
 ]
 
 {
 	#category : #strategy,
-	#'squeak_changestamp' : 'GoChriNo 7/2/2024 11:37'
+	#'squeak_changestamp' : 'GoChriNo 7/2/2024 13:36'
 }
-SUSCrossIntersectionRightBeforeLeftStrategy >> shouldGiveRightOfWay: aCarCollection [
-"check for two left turners"
-	aCarCollection size = 2
-		ifTrue: [| car1 car2 |
-			car1 := aCarCollection asOrderedCollection at: 1.
-			car2 := aCarCollection asOrderedCollection at: 2.
-			(car1 route first = 1
-					and: car2 route first = 1
-					and: ((self getOppositeLanesFrom: car1 lane nextLanes first)
-							includes: car2 lane nextLanes first))
-				ifTrue: [^ true]].
-	"check for remaining edgecases"
-	aCarCollection size >= 3
-		ifTrue: [^ true].
-	^ false.
+SUSCrossIntersectionRightOfWayStrategy >> shouldGiveRightOfWay: aCarCollection [
+	^ false
 ]

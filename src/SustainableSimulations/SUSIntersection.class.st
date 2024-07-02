@@ -89,7 +89,7 @@ SUSIntersection >> shouldGiveRightOfWay [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'GoChriNo 6/27/2024 14:11'
+	#'squeak_changestamp' : 'GoChriNo 7/2/2024 13:38'
 }
 SUSIntersection >> standing: aCar [ 
 	(standingCars includes: aCar)
@@ -97,5 +97,5 @@ SUSIntersection >> standing: aCar [
 	standingCars add: aCar.
 	self isEmpty
 		ifFalse: [^ self].
-	(self shouldGiveRightOfWay) ifTrue: [self giveRightOfWay].
+	(strategy shouldGiveRightOfWay: longStandingCars) ifTrue: [self giveRightOfWay].
 ]

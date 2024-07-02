@@ -38,3 +38,11 @@ SUSRoadStrategy >> road [
 SUSRoadStrategy >> road: anObject [
 	road := anObject
 ]
+
+{
+	#category : #strategy,
+	#'squeak_changestamp' : 'GoChriNo 7/2/2024 11:35'
+}
+SUSRoadStrategy >> shouldGiveRightOfWay: aCarCollection [
+	self subclassResponsibility
+]

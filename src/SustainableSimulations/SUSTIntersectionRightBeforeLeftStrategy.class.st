@@ -51,7 +51,7 @@ SUSTIntersectionRightBeforeLeftStrategy >> getBlockedLanesWithSecondTurnFrom: aL
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'GoChriNo 7/2/2024 10:44'
+	#'squeak_changestamp' : 'GoChriNo 7/2/2024 12:52'
 }
 SUSTIntersectionRightBeforeLeftStrategy >> isBlockedFrom: aLane [ 
 	| blockedLanes index |
@@ -66,11 +66,21 @@ SUSTIntersectionRightBeforeLeftStrategy >> isBlockedFrom: aLane [
 		ifTrue: [(road
 					searchForCarBackwardsFromLane: (road lanes at: 5)
 					WithMaxDist: 200)
-				ifTrue: [^ true]].
+				ifNotNil: [^ true]].
 	index \\ 4 = 1
 		ifTrue: [(road
 					searchForCarBackwardsFromLane: (road lanes at: index + 1 \\ 6 + 1)
 					WithMaxDist: 200)
-				ifTrue: [^ true]].
+				ifNotNil: [^ true]].
 	^ false
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'GoChriNo 7/2/2024 11:37'
+}
+SUSTIntersectionRightBeforeLeftStrategy >> shouldGiveRightOfWay: aCarCollection [
+	aCarCollection size >= 3
+		ifTrue: [^ true].
+	^ false.
 ]
