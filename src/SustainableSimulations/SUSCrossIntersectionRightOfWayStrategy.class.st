@@ -59,3 +59,13 @@ SUSCrossIntersectionRightOfWayStrategy >> isBlockedFrom: aLane [
 SUSCrossIntersectionRightOfWayStrategy >> shouldGiveRightOfWay: aCarCollection [
 	^ false
 ]
+
+{
+	#category : #utility,
+	#'squeak_changestamp' : 'GoChriNo 7/3/2024 08:24'
+}
+SUSCrossIntersectionRightOfWayStrategy >> swapRightOfWayDirection [
+	rightOfWayType = 1
+		ifTrue: [rightOfWayType := 2]
+		ifFalse: [rightOfWayType := 1]
+]

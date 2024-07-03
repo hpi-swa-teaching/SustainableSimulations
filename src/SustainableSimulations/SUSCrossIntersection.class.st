@@ -37,11 +37,11 @@ SUSCrossIntersection >> createDrawing [
 
 {
 	#category : #initialization,
-	#'squeak_changestamp' : 'GoChriNo 7/2/2024 11:22'
+	#'squeak_changestamp' : 'GoChriNo 7/3/2024 08:30'
 }
 SUSCrossIntersection >> createStrategy [
 
-	^ (SUSCrossIntersectionRightOfWayStrategy newFromRoad: self)
+	^ (SUSCrossIntersectionRightBeforeLeftStrategy newFromRoad: self)
 ]
 
 {

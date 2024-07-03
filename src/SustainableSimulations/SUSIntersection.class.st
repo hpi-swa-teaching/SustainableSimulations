@@ -32,14 +32,6 @@ SUSIntersection >> driving: aCar [
 
 {
 	#category : #utility,
-	#'squeak_changestamp' : 'GoChriNo 6/27/2024 14:04'
-}
-SUSIntersection >> getBlockedLanesFrom: aLane [ 
-	self subclassResponsibility
-]
-
-{
-	#category : #utility,
 	#'squeak_changestamp' : 'GoChriNo 6/27/2024 13:02'
 }
 SUSIntersection >> getOppositeLaneFrom: aLane [

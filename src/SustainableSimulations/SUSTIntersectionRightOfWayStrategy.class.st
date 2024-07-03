@@ -39,8 +39,8 @@ SUSTIntersectionRightOfWayStrategy >> isBlockedFrom: aLane [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'GoChriNo 7/2/2024 14:43'
+	#'squeak_changestamp' : 'GoChriNo 7/3/2024 08:34'
 }
 SUSTIntersectionRightOfWayStrategy >> shouldGiveRightOfWay: aCarCollection [
-	^ false.
+	^ false
 ]
