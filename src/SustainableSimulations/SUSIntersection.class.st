@@ -4,10 +4,19 @@ Class {
 	#instVars : [
 		'standingCars',
 		'longStandingCars',
-		'lastRightOfWayTime'
+		'lastRightOfWayTime',
+		'strategy'
 	],
 	#category : #'SustainableSimulations-Roads'
 }
+
+{
+	#category : #initialization,
+	#'squeak_changestamp' : 'GoChriNo 7/2/2024 10:48'
+}
+SUSIntersection >> createStrategy [
+	self subclassResponsibility
+]
 
 {
 	#category : #'as yet unclassified',
@@ -19,14 +28,6 @@ SUSIntersection >> driving: aCar [
 		standingCars remove: aCar].
 	(longStandingCars includes: aCar) ifTrue: [
 		longStandingCars remove: aCar].
-]
-
-{
-	#category : #utility,
-	#'squeak_changestamp' : 'GoChriNo 6/27/2024 14:04'
-}
-SUSIntersection >> getBlockedLanesFrom: aLane [ 
-	self subclassResponsibility
 ]
 
 {
@@ -50,14 +51,15 @@ SUSIntersection >> giveRightOfWay [
 ]
 
 {
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'GoChriNo 6/27/2024 12:50'
+	#category : #initialization,
+	#'squeak_changestamp' : 'GoChriNo 7/2/2024 10:54'
 }
 SUSIntersection >> initialize [
 	super initialize.
 
 	standingCars := Set new.
 	longStandingCars := Set new.
+	strategy := self createStrategy.
 	lastRightOfWayTime := 0
 ]
 
@@ -79,7 +81,7 @@ SUSIntersection >> shouldGiveRightOfWay [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'GoChriNo 6/27/2024 14:11'
+	#'squeak_changestamp' : 'GoChriNo 7/2/2024 13:38'
 }
 SUSIntersection >> standing: aCar [ 
 	(standingCars includes: aCar)
@@ -87,5 +89,5 @@ SUSIntersection >> standing: aCar [
 	standingCars add: aCar.
 	self isEmpty
 		ifFalse: [^ self].
-	(self shouldGiveRightOfWay) ifTrue: [self giveRightOfWay].
+	(strategy shouldGiveRightOfWay: longStandingCars) ifTrue: [self giveRightOfWay].
 ]

@@ -166,7 +166,7 @@ SUSAbstractRoad >> postInitialize [
 
 {
 	#category : #utility,
-	#'squeak_changestamp' : 'GoChriNo 6/27/2024 11:44'
+	#'squeak_changestamp' : 'GoChriNo 7/2/2024 12:51'
 }
 SUSAbstractRoad >> searchForCarBackwardsFromLane: aLane WithMaxDist: maxDist [ 
 	| dist car currentLane |
@@ -175,15 +175,15 @@ SUSAbstractRoad >> searchForCarBackwardsFromLane: aLane WithMaxDist: maxDist [
 	car := nil.
 	[dist <= maxDist]
 		whileTrue: [car
-				ifNotNil: [^ true].
-			currentLane previousLanes isEmpty ifTrue: [^ false].
+				ifNotNil: [^ car].
+			currentLane previousLanes isEmpty ifTrue: [^ nil].
 			currentLane := currentLane previousLanes at: 1.
 			currentLane cars isEmpty
 				ifTrue: [dist := dist + currentLane length]
 				ifFalse: [car := currentLane cars first.
 					dist := dist + currentLane length
 								- (currentLane getLengthToT: car lastPoint)]].
-	^ false
+	^ nil
 ]
 
 {
