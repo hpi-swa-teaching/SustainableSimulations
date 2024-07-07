@@ -14,7 +14,8 @@ Class {
 		'running',
 		'timePaused',
 		'selectedSpawnType',
-		'window'
+		'window',
+		'userMessages'
 	],
 	#category : #'SustainableSimulations-Core'
 }
@@ -142,7 +143,7 @@ SUSSimulation >> handlesMouseDown: anEvent [
 
 {
 	#category : #initialization,
-	#'squeak_changestamp' : 'Len 6/20/2024 20:31'
+	#'squeak_changestamp' : 'Len 7/5/2024 15:00'
 }
 SUSSimulation >> initialize [
 	super initialize.
@@ -155,6 +156,7 @@ SUSSimulation >> initialize [
 	simulationSpeed := 1.
 	running := true. 
 	timePaused := 0.
+	userMessages := SUSUserMessages newUserMessagesManager.
 	
 	self color: Color gray;
 		addStartingPoint
@@ -282,7 +284,7 @@ SUSSimulation >> stopSimulation [
 
 {
 	#category : #'event handling',
-	#'squeak_changestamp' : 'PM 6/18/2024 14:30'
+	#'squeak_changestamp' : 'Len 7/7/2024 18:59'
 }
 SUSSimulation >> tryToBuildRoadTo: aPoint [ 
 	| builder wasStartingPoint valid |
@@ -295,12 +297,21 @@ SUSSimulation >> tryToBuildRoadTo: aPoint [
 				to: aPoint
 				as: selectedSpawnType.
 	valid := builder isValid.
-	valid ifTrue: [self addMorph: builder buildRoad].
+	valid ifTrue: [self addMorph: builder buildRoad]
+		ifFalse: [userMessages showErrorRoadBuild].
 	wasStartingPoint
 		ifTrue: [valid
 				ifTrue: [clickedConnectionPoint direction: clickedConnectionPoint center - aPoint]
 				ifFalse: [clickedConnectionPoint direction: 0 @ 0]].
 	^ valid
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'Len 7/5/2024 15:12'
+}
+SUSSimulation >> userMessages [
+	^ userMessages
 ]
 
 {

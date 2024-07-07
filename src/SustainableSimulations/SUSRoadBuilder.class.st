@@ -88,7 +88,7 @@ SUSRoadBuilder >> buildCrossIntersection [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/18/2024 14:41'
+	#'squeak_changestamp' : 'Len 7/7/2024 19:06'
 }
 SUSRoadBuilder >> buildCurvyRoad [
 	self canBuildCurvyRoad
