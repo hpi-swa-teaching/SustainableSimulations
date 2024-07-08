@@ -10,14 +10,13 @@ Class {
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'Len 6/20/2024 20:03'
+	#'squeak_changestamp' : 'MK 7/8/2024 23:11'
 }
 SUSTunnel >> applyBehavior [
 	| deltaTime |
-	deltaTime := Time millisecondClock  - lastTime.
+	deltaTime := Time millisecondClock - lastTime.
 	deltaTime >= (frequency * 1000)
-		ifTrue: [
-			self spawnCarFromTunnel.
+		ifTrue: [self spawnCarFromTunnel.
 			lastTime := Time millisecondClock]
 ]
 
@@ -58,9 +57,11 @@ SUSTunnel >> postInitialize [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'Len 6/22/2024 22:08'
+	#'squeak_changestamp' : 'MK 7/8/2024 23:10'
 }
 SUSTunnel >> spawnCarFromTunnel [
-	simulation
-		addMorphInLayer: (SUSCar newOnRoad: self withSpeed: 50 asNumber)
+	| car |
+	car := SUSCar newOnRoad: self withSpeed: 50 asNumber.
+	car spawnRoad: 0.
+	simulation addMorphInLayer: car
 ]

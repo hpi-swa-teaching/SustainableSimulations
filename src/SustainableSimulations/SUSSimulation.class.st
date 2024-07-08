@@ -14,7 +14,8 @@ Class {
 		'running',
 		'timePaused',
 		'selectedSpawnType',
-		'window'
+		'window',
+		'stopped'
 	],
 	#category : #'SustainableSimulations-Core'
 }
@@ -142,7 +143,7 @@ SUSSimulation >> handlesMouseDown: anEvent [
 
 {
 	#category : #initialization,
-	#'squeak_changestamp' : 'Len 6/20/2024 20:31'
+	#'squeak_changestamp' : 'MK 7/9/2024 01:04'
 }
 SUSSimulation >> initialize [
 	super initialize.
@@ -154,6 +155,7 @@ SUSSimulation >> initialize [
 	tunnels := OrderedCollection new.
 	simulationSpeed := 1.
 	running := true. 
+	stopped := false.
 	timePaused := 0.
 	
 	self color: Color gray;
@@ -197,7 +199,7 @@ SUSSimulation >> pauseSimulation [
 
 {
 	#category : #simulation,
-	#'squeak_changestamp' : 'GoChriNo 6/15/2024 19:24'
+	#'squeak_changestamp' : 'MK 7/9/2024 01:03'
 }
 SUSSimulation >> playSimulation [
 	running ifFalse: [
@@ -206,7 +208,8 @@ SUSSimulation >> playSimulation [
 				car lastTime: Time millisecondClock]].
 		super startStepping.
 		timePaused := 0.
-		running := true]
+		running := true.
+		stopped := false]
 ]
 
 {
@@ -252,7 +255,7 @@ SUSSimulation >> startingPointPosition [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'MK 6/25/2024 09:00'
+	#'squeak_changestamp' : 'MK 7/9/2024 01:10'
 }
 SUSSimulation >> step [
 	cars
@@ -262,6 +265,9 @@ SUSSimulation >> step [
 	tunnels
 		do: [:tunnel | tunnel applyBehavior].
 	window adjustPlayPausePosition.
+	
+	stopped
+		ifTrue: [self pauseSimulation]
 ]
 
 {
@@ -274,10 +280,17 @@ SUSSimulation >> stepTime [
 
 {
 	#category : #simulation,
-	#'squeak_changestamp' : 'PM 5/28/2024 02:08'
+	#'squeak_changestamp' : 'MK 7/9/2024 01:14'
 }
 SUSSimulation >> stopSimulation [
-	Transcript show: 'Stop Simulation'
+	stopped
+		ifFalse: [cars copy
+				do: [:each | each spawnRoad = 0
+						ifTrue: [each kill]
+						ifFalse: [self
+								addMorphInLayer: (SUSCar newOnRoad: each spawnRoad withSpeed: each maxSpeed).
+							each kill]]].
+	stopped := true
 ]
 
 {
