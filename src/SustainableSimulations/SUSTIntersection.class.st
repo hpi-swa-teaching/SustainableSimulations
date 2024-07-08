@@ -44,10 +44,10 @@ SUSTIntersection >> createDrawing [
 
 {
 	#category : #initialization,
-	#'squeak_changestamp' : 'GoChriNo 7/2/2024 14:38'
+	#'squeak_changestamp' : 'PM 7/4/2024 10:22'
 }
 SUSTIntersection >> createStrategy [
-	^ (SUSTIntersectionRightOfWayStrategy newFromRoad: self)
+	^ SUSTIntersectionRightOfWayStrategy newFromRoad: self
 ]
 
 {

@@ -36,10 +36,10 @@ SUSDirectedPoint >> basicType [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/11/2024 14:41'
+	#'squeak_changestamp' : 'PM 7/7/2024 17:02'
 }
 SUSDirectedPoint >> calculateIntersectionPoint: aLine [
-	| x1 y1 x2 y2 dx1 dy1 dx2 dy2 denominator t1 t2 |
+	| x1 y1 x2 y2 dx1 dy1 dx2 dy2 denominator t1 |
         
         "Get coordinates and direction vectors"
         x1 := self position x.
@@ -54,7 +54,6 @@ SUSDirectedPoint >> calculateIntersectionPoint: aLine [
  	denominator := (dx1 * dy2) - (dy1 * dx2).
 	denominator == 0 ifTrue: [ self error: 'Lines are parallel to each other' ].
 	t1 := (((x2 - x1) * dy2) - ((y2 - y1) * dx2)) / denominator.
-	t2 := (((x2 - x1) * dy1) - ((y2 - y1) * dx1)) / denominator.
    	^ (x1 + (t1 * dx1))@(y1 + (t1 * dy1))
 ]
 
