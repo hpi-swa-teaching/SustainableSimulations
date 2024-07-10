@@ -1,3 +1,6 @@
+"
+A SUSWindow is the main Window for the simulation and handles all buttons.
+"
 Class {
 	#name : #SUSWindow,
 	#superclass : #SystemWindow,
@@ -5,17 +8,18 @@ Class {
 		'simulation',
 		'playPauseRow'
 	],
-	#category : #'SustainableSimulations-UI'
+	#category : #'SustainableSimulations-UI',
+	#'squeak_changestamp' : 'Len 7/10/2024 21:34'
 }
 
 {
 	#category : #events,
-	#'squeak_changestamp' : 'PM 7/10/2024 14:10'
+	#'squeak_changestamp' : 'Len 7/10/2024 21:31'
 }
 SUSWindow >> addButtons [
 	| row |
 	row := AlignmentMorph newRow addAllMorphs: {self createStraightRoadButton. self createCurvyRoadButton. self createCrossIntersectionButton. self createTIntersectionButton. self createTunnelButton. self createSpawnSimulationButton}.
-	row position: 15@45.
+	row position: 15 @ 45.
 	playPauseRow := AlignmentMorph newRow addAllMorphs: {self createPauseSimulationButton. self createPlaySimulationButton. self createStopSimulationButton}.
 	self addMorph: row;
 		 addMorph: playPauseRow
@@ -23,7 +27,7 @@ SUSWindow >> addButtons [
 
 {
 	#category : #initialization,
-	#'squeak_changestamp' : 'GoChriNo 6/10/2024 17:13'
+	#'squeak_changestamp' : 'Len 7/10/2024 21:32'
 }
 SUSWindow >> createCrossIntersectionButton [
 	^ (PluggableButtonMorph
@@ -36,7 +40,7 @@ SUSWindow >> createCrossIntersectionButton [
 
 {
 	#category : #initialization,
-	#'squeak_changestamp' : 'PM 6/11/2024 00:58'
+	#'squeak_changestamp' : 'Len 7/10/2024 21:32'
 }
 SUSWindow >> createCurvyRoadButton [
 	^ (PluggableButtonMorph
@@ -49,7 +53,7 @@ SUSWindow >> createCurvyRoadButton [
 
 {
 	#category : #initialization,
-	#'squeak_changestamp' : 'PM 5/28/2024 09:15'
+	#'squeak_changestamp' : 'Len 7/10/2024 21:32'
 }
 SUSWindow >> createPauseSimulationButton [
 	^ (PluggableButtonMorph
@@ -62,7 +66,7 @@ SUSWindow >> createPauseSimulationButton [
 
 {
 	#category : #initialization,
-	#'squeak_changestamp' : 'PM 5/28/2024 09:15'
+	#'squeak_changestamp' : 'Len 7/10/2024 21:32'
 }
 SUSWindow >> createPlaySimulationButton [
 	^ (PluggableButtonMorph
@@ -75,7 +79,7 @@ SUSWindow >> createPlaySimulationButton [
 
 {
 	#category : #initialization,
-	#'squeak_changestamp' : 'MK 6/10/2024 23:34'
+	#'squeak_changestamp' : 'Len 7/10/2024 21:32'
 }
 SUSWindow >> createSpawnSimulationButton [
 	^ (PluggableButtonMorph
@@ -88,7 +92,7 @@ SUSWindow >> createSpawnSimulationButton [
 
 {
 	#category : #initialization,
-	#'squeak_changestamp' : 'PM 5/28/2024 09:15'
+	#'squeak_changestamp' : 'Len 7/10/2024 21:32'
 }
 SUSWindow >> createStopSimulationButton [
 	^ (PluggableButtonMorph
@@ -101,7 +105,7 @@ SUSWindow >> createStopSimulationButton [
 
 {
 	#category : #initialization,
-	#'squeak_changestamp' : 'GoChriNo 6/10/2024 17:13'
+	#'squeak_changestamp' : 'Len 7/10/2024 21:32'
 }
 SUSWindow >> createStraightRoadButton [
 	^ (PluggableButtonMorph
@@ -114,7 +118,7 @@ SUSWindow >> createStraightRoadButton [
 
 {
 	#category : #initialization,
-	#'squeak_changestamp' : 'PM 6/27/2024 10:00'
+	#'squeak_changestamp' : 'Len 7/10/2024 21:33'
 }
 SUSWindow >> createTIntersectionButton [
 	^ (PluggableButtonMorph
@@ -127,7 +131,7 @@ SUSWindow >> createTIntersectionButton [
 
 {
 	#category : #initialization,
-	#'squeak_changestamp' : 'Len 6/20/2024 19:08'
+	#'squeak_changestamp' : 'Len 7/10/2024 21:33'
 }
 SUSWindow >> createTunnelButton [
 	^ (PluggableButtonMorph
@@ -140,45 +144,40 @@ SUSWindow >> createTunnelButton [
 
 {
 	#category : #events,
-	#'squeak_changestamp' : 'PM 6/12/2024 19:57'
+	#'squeak_changestamp' : 'Len 7/10/2024 21:32'
 }
 SUSWindow >> crossIntersectionMode [
-
 	simulation selectedSpawnType: #CrossIntersection
 ]
 
 {
 	#category : #events,
-	#'squeak_changestamp' : 'PM 6/12/2024 19:57'
+	#'squeak_changestamp' : 'Len 7/10/2024 21:32'
 }
 SUSWindow >> curvyRoadMode [
-
 	simulation selectedSpawnType: #CurvyRoad
 ]
 
 {
 	#category : #simulation,
-	#'squeak_changestamp' : 'PM 7/10/2024 14:12'
+	#'squeak_changestamp' : 'Len 7/10/2024 21:33'
 }
-SUSWindow >> extent: anExtent [
+SUSWindow >> extent: anExtent [ 
 	super extent: anExtent.
-	playPauseRow center: (self position + anExtent * (0.5@1) - (0@50)).
+	playPauseRow center: self position + anExtent * (0.5 @ 1) - (0 @ 50)
 ]
 
 {
 	#category : #initialization,
-	#'squeak_changestamp' : 'PM 7/10/2024 14:05'
+	#'squeak_changestamp' : 'Len 7/10/2024 21:33'
 }
 SUSWindow >> initialize [
 	super initialize.
-	
 	simulation := SUSSimulation new.
-	
 	self setLabel: 'Sustainable Simulations';
-		addMorph: simulation frame: (0@0 corner: 1@1);
-		addButtons.
-	
-
+		addMorph: simulation
+		frame: (0 @ 0 corner: 1 @ 1);
+		 addButtons
 ]
 
 {
@@ -199,33 +198,39 @@ SUSWindow >> labelIntersection [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'MK 6/4/2024 16:48'
+	#'squeak_changestamp' : 'Len 7/10/2024 21:31'
 }
 SUSWindow >> labelPauseSimulation [
-	|pauseSymbolMorph|
+	| pauseSymbolMorph |
 	pauseSymbolMorph := Morph new.
-	pauseSymbolMorph bounds: (0@0 extent: 20@20);
-		color: Color transparent;
-		addMorph: (Morph new bounds: (3@3 extent: 5@14); color: Color gray darker darker);
-		addMorph: (Morph new bounds: (12@3 extent: 5@14); color: Color gray darker darker).
-
-	^pauseSymbolMorph
+	pauseSymbolMorph
+		bounds: (0 @ 0 extent: 20 @ 20);
+		 color: Color transparent;
+		 addMorph: (Morph new
+			bounds: (3 @ 3 extent: 5 @ 14);
+			 color: Color gray darker darker);
+		 addMorph: (Morph new
+			bounds: (12 @ 3 extent: 5 @ 14);
+			 color: Color gray darker darker).
+	^ pauseSymbolMorph
 ]
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'MK 6/4/2024 17:01'
+	#'squeak_changestamp' : 'Len 7/10/2024 21:31'
 }
 SUSWindow >> labelPlaySimulation [
-	|playSymbolMorph|
-	playSymbolMorph := PolygonMorph new. 
+	| playSymbolMorph |
+	playSymbolMorph := PolygonMorph new.
 	playSymbolMorph color: Color transparent;
-		setVertices: (Array with: 0@0 with: 10@5 with: 0@10);
-		color: Color gray darker darker;
-		borderWidth: 3;
-		borderColor: Color gray darker darker.
-		
-	^playSymbolMorph
+		setVertices: (Array
+				with: 0 @ 0
+				with: 10 @ 5
+				with: 0 @ 10);
+		 color: Color gray darker darker;
+		 borderWidth: 3;
+		 borderColor: Color gray darker darker.
+	^ playSymbolMorph
 ]
 
 {
@@ -238,16 +243,18 @@ SUSWindow >> labelSpawnCar [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'MK 6/4/2024 16:40'
+	#'squeak_changestamp' : 'Len 7/10/2024 21:31'
 }
 SUSWindow >> labelStopSimulation [
-	|stopSymbolMorph|
+	| stopSymbolMorph |
 	stopSymbolMorph := Morph new.
-	stopSymbolMorph bounds: (0@0 extent: 20@20);
-		color: Color transparent;
-		addMorph: (Morph new bounds: (3@3 extent: 14@14); color: Color gray darker darker).
-		
-	^stopSymbolMorph
+	stopSymbolMorph
+		bounds: (0 @ 0 extent: 20 @ 20);
+		 color: Color transparent;
+		 addMorph: (Morph new
+			bounds: (3 @ 3 extent: 14 @ 14);
+			 color: Color gray darker darker).
+	^ stopSymbolMorph
 ]
 
 {
@@ -292,10 +299,9 @@ SUSWindow >> playSimulation [
 
 {
 	#category : #events,
-	#'squeak_changestamp' : 'PM 6/12/2024 19:57'
+	#'squeak_changestamp' : 'Len 7/10/2024 21:32'
 }
 SUSWindow >> spawnCarMode [
-
 	simulation selectedSpawnType: #SpawnCar
 ]
 
@@ -309,10 +315,9 @@ SUSWindow >> stopSimulation [
 
 {
 	#category : #events,
-	#'squeak_changestamp' : 'PM 6/12/2024 19:57'
+	#'squeak_changestamp' : 'Len 7/10/2024 21:32'
 }
 SUSWindow >> straightRoadMode [
-
 	simulation selectedSpawnType: #StraightRoad
 ]
 
@@ -326,9 +331,8 @@ SUSWindow >> tIntersectionMode [
 
 {
 	#category : #events,
-	#'squeak_changestamp' : 'Len 6/20/2024 19:11'
+	#'squeak_changestamp' : 'Len 7/10/2024 21:32'
 }
 SUSWindow >> tunnelMode [
-
 	simulation selectedSpawnType: #Tunnel
 ]
