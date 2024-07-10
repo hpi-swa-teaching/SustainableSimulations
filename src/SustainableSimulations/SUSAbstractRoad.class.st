@@ -149,12 +149,12 @@ SUSAbstractRoad >> lanes [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'Len 7/7/2024 19:07'
+	#'squeak_changestamp' : 'PM 7/10/2024 12:59'
 }
-SUSAbstractRoad >> mouseDown: anEvent [
-	(simulation selectedSpawnType = #SpawnCar) 
-		ifTrue: [ self spawnCar ]
-		ifFalse: [ simulation userMessages showErrorRoadClick]
+SUSAbstractRoad >> mouseDown: anEvent [ 
+	simulation selectedSpawnType = #SpawnCar
+		ifTrue: [self spawnCar]
+		ifFalse: [simulation userMessages showError: 'You cannot build a road directly on top of another road']
 ]
 
 {

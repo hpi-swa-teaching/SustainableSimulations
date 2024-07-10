@@ -269,19 +269,6 @@ SUSCar >> placeCarOnRoad: aRoad [
 ]
 
 {
-	#category : #initialization,
-	#'squeak_changestamp' : 'Len 6/9/2024 23:58'
-}
-SUSCar >> postInitialization [
-	"TMP Method to spawn a simple car"
-	simulation addCar: self.
-	lane := simulation roads first lanes first.
-	lane addCar: self.
-	
-	self center: (lane getPositionWithTValue: 0)
-]
-
-{
 	#category : #accessing,
 	#'squeak_changestamp' : 'GoChriNo 6/26/2024 11:40'
 }

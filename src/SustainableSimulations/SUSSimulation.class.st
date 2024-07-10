@@ -284,7 +284,7 @@ SUSSimulation >> stopSimulation [
 
 {
 	#category : #'event handling',
-	#'squeak_changestamp' : 'Len 7/7/2024 18:59'
+	#'squeak_changestamp' : 'PM 7/10/2024 12:57'
 }
 SUSSimulation >> tryToBuildRoadTo: aPoint [ 
 	| builder wasStartingPoint valid |
@@ -298,7 +298,7 @@ SUSSimulation >> tryToBuildRoadTo: aPoint [
 				as: selectedSpawnType.
 	valid := builder isValid.
 	valid ifTrue: [self addMorph: builder buildRoad]
-		ifFalse: [userMessages showErrorRoadBuild].
+		ifFalse: [userMessages showError: builder errorMessage].
 	wasStartingPoint
 		ifTrue: [valid
 				ifTrue: [clickedConnectionPoint direction: clickedConnectionPoint center - aPoint]
