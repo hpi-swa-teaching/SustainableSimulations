@@ -1,41 +1,42 @@
+"
+Class for the right before left rule / strategy for cross intersections
+"
 Class {
 	#name : #SUSCrossIntersectionRightBeforeLeftStrategy,
 	#superclass : #SUSCrossIntersectionStrategy,
-	#category : #'SustainableSimulations-RoadStrategy'
+	#category : #'SustainableSimulations-RoadStrategy',
+	#'squeak_changestamp' : 'GoChriNo 7/10/2024 13:50'
 }
 
 {
 	#category : #strategy,
-	#'squeak_changestamp' : 'GoChriNo 7/3/2024 08:29'
+	#'squeak_changestamp' : 'GoChriNo 7/10/2024 14:07'
 }
-SUSCrossIntersectionRightBeforeLeftStrategy >> isBlockedFrom: aLane [ 
-	| blockedLanes index car |
+SUSCrossIntersectionRightBeforeLeftStrategy >> isBlockedByOtherLanesFrom: aLane [ 
+	| index car |
 	index := road lanes indexOf: aLane.
-	blockedLanes := self getBlockedLanesFrom: aLane.
-	blockedLanes
-		do: [:each | each cars
-				ifNotEmpty: [^ true]].
 	index \\ 3 = 0
 		ifTrue: [^ false].
 	(road
-			searchForCarBackwardsFromLane: (road lanes at: index + 2 \\ 12 + 1)
-			WithMaxDist: 200)
+		searchForCarBackwardsFromLane: (road lanes at: index + 2 \\ 12 + 1)
+		WithMaxDist: 200)
 		ifNotNil: [^ true].
 	index \\ 3 = 1
-		ifTrue: [car := (road
-					searchForCarBackwardsFromLane: (road lanes at: index + 5 \\ 12 + 1)
-					WithMaxDist: 200).
-				car 
-				ifNotNil: [(car turnsLeftAt: road) ifFalse: [^ true]]].
+		ifTrue: [car := road
+						searchForCarBackwardsFromLane: (road lanes at: index + 5 \\ 12 + 1)
+						WithMaxDist: 200.
+			car
+				ifNotNil: [(car turnsLeftAt: road)
+						ifFalse: [^ true]]].
 	^ false
 ]
 
 {
 	#category : #strategy,
-	#'squeak_changestamp' : 'GoChriNo 7/3/2024 08:34'
+	#'squeak_changestamp' : 'GoChriNo 7/10/2024 14:07'
 }
-SUSCrossIntersectionRightBeforeLeftStrategy >> shouldGiveRightOfWay: aCarCollection [
+SUSCrossIntersectionRightBeforeLeftStrategy >> shouldGiveRightOfWayTime: aCarCollection [ 
 	aCarCollection size >= 3
 		ifTrue: [^ true].
-	^ false.
+	^ false
 ]

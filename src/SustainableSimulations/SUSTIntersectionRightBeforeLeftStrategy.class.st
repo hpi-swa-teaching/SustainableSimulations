@@ -1,41 +1,41 @@
+"
+Class for the right before left rule / strategy for t intersections
+"
 Class {
 	#name : #SUSTIntersectionRightBeforeLeftStrategy,
 	#superclass : #SUSTIntersectionStrategy,
-	#category : #'SustainableSimulations-RoadStrategy'
+	#category : #'SustainableSimulations-RoadStrategy',
+	#'squeak_changestamp' : 'GoChriNo 7/10/2024 13:51'
 }
 
 {
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'GoChriNo 7/2/2024 12:52'
+	#category : #strategy,
+	#'squeak_changestamp' : 'GoChriNo 7/10/2024 14:08'
 }
-SUSTIntersectionRightBeforeLeftStrategy >> isBlockedFrom: aLane [ 
-	| blockedLanes index |
+SUSTIntersectionRightBeforeLeftStrategy >> isBlockedByOtherLanesFrom: aLane [ 
+	| index |
 	index := road lanes indexOf: aLane.
-	blockedLanes := self getBlockedLanesFrom: aLane.
-	blockedLanes
-		do: [:each | each cars
-				ifNotEmpty: [^ true]].
 	index \\ 2 = 0
 		ifTrue: [^ false].
 	index = 3
 		ifTrue: [(road
-					searchForCarBackwardsFromLane: (road lanes at: 5)
-					WithMaxDist: 200)
+				searchForCarBackwardsFromLane: (road lanes at: 5)
+				WithMaxDist: 200)
 				ifNotNil: [^ true]].
 	index \\ 4 = 1
 		ifTrue: [(road
-					searchForCarBackwardsFromLane: (road lanes at: index + 1 \\ 6 + 1)
-					WithMaxDist: 200)
+				searchForCarBackwardsFromLane: (road lanes at: index + 1 \\ 6 + 1)
+				WithMaxDist: 200)
 				ifNotNil: [^ true]].
 	^ false
 ]
 
 {
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'GoChriNo 7/2/2024 11:37'
+	#category : #strategy,
+	#'squeak_changestamp' : 'GoChriNo 7/10/2024 14:08'
 }
-SUSTIntersectionRightBeforeLeftStrategy >> shouldGiveRightOfWay: aCarCollection [
+SUSTIntersectionRightBeforeLeftStrategy >> shouldGiveRightOfWayTime: aCarCollection [ 
 	aCarCollection size >= 3
 		ifTrue: [^ true].
-	^ false.
+	^ false
 ]

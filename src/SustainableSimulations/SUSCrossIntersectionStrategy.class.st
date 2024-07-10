@@ -1,12 +1,16 @@
+"
+Abstract Class for different right of way rules / strategys for cross intersections
+"
 Class {
 	#name : #SUSCrossIntersectionStrategy,
 	#superclass : #SUSRoadStrategy,
-	#category : #'SustainableSimulations-RoadStrategy'
+	#category : #'SustainableSimulations-RoadStrategy',
+	#'squeak_changestamp' : 'GoChriNo 7/10/2024 13:49'
 }
 
 {
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'GoChriNo 7/2/2024 14:24'
+	#category : #strategy,
+	#'squeak_changestamp' : 'GoChriNo 7/10/2024 13:53'
 }
 SUSCrossIntersectionStrategy >> getBlockedLanesFrom: aLane [ 
 	| index |
@@ -21,8 +25,8 @@ SUSCrossIntersectionStrategy >> getBlockedLanesFrom: aLane [
 ]
 
 {
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'GoChriNo 7/2/2024 14:24'
+	#category : #strategy,
+	#'squeak_changestamp' : 'GoChriNo 7/10/2024 13:53'
 }
 SUSCrossIntersectionStrategy >> getBlockedLanesWithLeftTurnFrom: aLane [ 
 	| index blockedLanes |
@@ -44,8 +48,8 @@ SUSCrossIntersectionStrategy >> getBlockedLanesWithLeftTurnFrom: aLane [
 ]
 
 {
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'GoChriNo 7/2/2024 14:24'
+	#category : #strategy,
+	#'squeak_changestamp' : 'GoChriNo 7/10/2024 13:53'
 }
 SUSCrossIntersectionStrategy >> getBlockedLanesWithNoTurnFrom: aLane [ 
 	| index blockedLanes |
@@ -67,8 +71,8 @@ SUSCrossIntersectionStrategy >> getBlockedLanesWithNoTurnFrom: aLane [
 ]
 
 {
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'GoChriNo 7/2/2024 14:24'
+	#category : #strategy,
+	#'squeak_changestamp' : 'GoChriNo 7/10/2024 13:53'
 }
 SUSCrossIntersectionStrategy >> getBlockedLanesWithRightTurnFrom: aLane [ 
 	| index blockedLanes |

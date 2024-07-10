@@ -1,32 +1,32 @@
+"
+Class for the right of way street rule / strategy for cross intersections
+"
 Class {
 	#name : #SUSCrossIntersectionRightOfWayStrategy,
 	#superclass : #SUSCrossIntersectionStrategy,
 	#instVars : [
 		'rightOfWayType'
 	],
-	#category : #'SustainableSimulations-RoadStrategy'
+	#category : #'SustainableSimulations-RoadStrategy',
+	#'squeak_changestamp' : 'GoChriNo 7/10/2024 13:51'
 }
 
 {
 	#category : #initialization,
-	#'squeak_changestamp' : 'GoChriNo 7/2/2024 11:16'
+	#'squeak_changestamp' : 'GoChriNo 7/10/2024 14:07'
 }
 SUSCrossIntersectionRightOfWayStrategy >> initialize [
 	super initialize.
-	rightOfWayType := 1.
+	rightOfWayType := 1
 ]
 
 {
 	#category : #strategy,
-	#'squeak_changestamp' : 'GoChriNo 7/2/2024 18:15'
+	#'squeak_changestamp' : 'GoChriNo 7/10/2024 14:07'
 }
-SUSCrossIntersectionRightOfWayStrategy >> isBlockedFrom: aLane [ 
-	| blockedLanes index |
+SUSCrossIntersectionRightOfWayStrategy >> isBlockedByOtherLanesFrom: aLane [ 
+	| index |
 	index := road lanes indexOf: aLane.
-	blockedLanes := self getBlockedLanesFrom: aLane.
-	blockedLanes
-		do: [:each | each cars
-				ifNotEmpty: [^ true]].
 	index \\ 3 = 1
 		ifTrue: [| car |
 			car := road
@@ -54,15 +54,15 @@ SUSCrossIntersectionRightOfWayStrategy >> isBlockedFrom: aLane [
 
 {
 	#category : #strategy,
-	#'squeak_changestamp' : 'GoChriNo 7/2/2024 13:36'
+	#'squeak_changestamp' : 'GoChriNo 7/10/2024 14:07'
 }
-SUSCrossIntersectionRightOfWayStrategy >> shouldGiveRightOfWay: aCarCollection [
+SUSCrossIntersectionRightOfWayStrategy >> shouldGiveRightOfWayTime: aCarCollection [ 
 	^ false
 ]
 
 {
 	#category : #utility,
-	#'squeak_changestamp' : 'GoChriNo 7/3/2024 08:24'
+	#'squeak_changestamp' : 'GoChriNo 7/10/2024 14:07'
 }
 SUSCrossIntersectionRightOfWayStrategy >> swapRightOfWayDirection [
 	rightOfWayType = 1
