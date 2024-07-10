@@ -1,3 +1,6 @@
+"
+A SUSDrawing is an abstract class for all Road-Drawing-Objects of the simulation.
+"
 Class {
 	#name : #SUSDrawing,
 	#superclass : #Morph,
@@ -6,7 +9,8 @@ Class {
 		'from',
 		'to'
 	],
-	#category : #'SustainableSimulations-UI'
+	#category : #'SustainableSimulations-UI',
+	#'squeak_changestamp' : 'Len 7/10/2024 21:12'
 }
 
 {
@@ -19,11 +23,10 @@ SUSDrawing class >> colorMark [
 
 {
 	#category : #'class variables',
-	#'squeak_changestamp' : 'Len 6/25/2024 10:39'
+	#'squeak_changestamp' : 'Len 7/10/2024 21:11'
 }
 SUSDrawing class >> colorPath [
 	^ Color transparent
-	"^ Color red"
 ]
 
 {
@@ -68,7 +71,7 @@ SUSDrawing >> addDetailFrom: aDirectedPoint to: aPoint [
 
 {
 	#category : #drawing,
-	#'squeak_changestamp' : 'PM 6/15/2024 13:19'
+	#'squeak_changestamp' : 'Len 7/10/2024 21:10'
 }
 SUSDrawing >> addMarkFrom: aPoint to: anotherPoint [ 
 	self addMorphInLayer: ((LineMorph
@@ -81,14 +84,24 @@ SUSDrawing >> addMarkFrom: aPoint to: anotherPoint [
 
 {
 	#category : #drawing,
-	#'squeak_changestamp' : 'PM 6/15/2024 15:03'
+	#'squeak_changestamp' : 'Len 7/10/2024 21:28'
 }
-SUSDrawing >> addPathWithVertices: aCollection [
+SUSDrawing >> addPathFrom: aDirectedPoint withVertices: aCollection [ 
+	self addPathWithVertices: (aCollection * SUSDrawing normalLaneWidth
+				collect: [:aPoint | aDirectedPoint absoluteOffset: aPoint])
+]
+
+{
+	#category : #drawing,
+	#'squeak_changestamp' : 'Len 7/10/2024 21:10'
+}
+SUSDrawing >> addPathWithVertices: aCollection [ 
 	| path |
-	path := CurveMorph vertices: aCollection
-			color: Color transparent 
-			borderWidth: 2 
-			borderColor: SUSDrawing colorPath.
+	path := CurveMorph
+				vertices: aCollection
+				color: Color transparent
+				borderWidth: 2
+				borderColor: SUSDrawing colorPath.
 	path morphicLayerNumber: self pathLayer.
 	self addMorphInLayer: path.
 	paths add: path
@@ -121,7 +134,7 @@ SUSDrawing >> detailLayer [
 
 {
 	#category : #initialization,
-	#'squeak_changestamp' : 'Len 6/22/2024 21:57'
+	#'squeak_changestamp' : 'Len 7/10/2024 21:09'
 }
 SUSDrawing >> initialize [
 	super initialize.

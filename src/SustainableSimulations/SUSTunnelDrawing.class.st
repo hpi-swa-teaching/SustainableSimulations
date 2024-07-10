@@ -1,30 +1,36 @@
+"
+A SUSTunnelDrawing is drawing object of a Magic Tunnel.
+
+"
 Class {
 	#name : #SUSTunnelDrawing,
 	#superclass : #SUSDrawing,
-	#category : #'SustainableSimulations-UI'
+	#category : #'SustainableSimulations-UI',
+	#'squeak_changestamp' : 'Len 7/10/2024 21:30'
 }
 
 {
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'Len 6/22/2024 21:58'
+	#category : #'instance creation',
+	#'squeak_changestamp' : 'Len 7/10/2024 21:26'
 }
-SUSTunnelDrawing class >> newFrom: aDirectedPoint to: aPoint [
+SUSTunnelDrawing class >> newFrom: aDirectedPoint to: aPoint [ 
 	| corners min max from to |
-	corners := ({1 negated @ 2. 1 @ 2. 1 @ 0. 1 negated @ 0} * SUSDrawing normalLaneWidth) collect: [:each | aDirectedPoint absoluteOffset: each].
+	corners := {1 negated @ 2. 1 @ 2. 1 @ 0. 1 negated @ 0} * SUSDrawing normalLaneWidth
+				collect: [:each | aDirectedPoint absoluteOffset: each].
 	min := corners min.
 	max := corners max.
-	from := SUSDirectedPoint newWithPosition: (aDirectedPoint position - min) inDirection: aDirectedPoint direction.
+	from := SUSDirectedPoint newWithPosition: aDirectedPoint position - min inDirection: aDirectedPoint direction.
 	to := aPoint - min.
 	^ self new addDetailFrom: from to: to;
-		addPathsFrom: from to: to;
-		extent: max - min;
-		position: min;
-		yourself
+		 addPathsFrom: from to: to;
+		 extent: max - min;
+		 position: min;
+		 yourself
 ]
 
 {
 	#category : #drawing,
-	#'squeak_changestamp' : 'Len 6/22/2024 21:51'
+	#'squeak_changestamp' : 'Len 7/10/2024 21:26'
 }
 SUSTunnelDrawing >> addBaseFrom: aDirectedPoint [ 
 	| vertices |
@@ -40,7 +46,7 @@ SUSTunnelDrawing >> addBaseFrom: aDirectedPoint [
 
 {
 	#category : #drawing,
-	#'squeak_changestamp' : 'Len 6/22/2024 21:51'
+	#'squeak_changestamp' : 'Len 7/10/2024 21:26'
 }
 SUSTunnelDrawing >> addDetailFrom: aDirectedPoint to: aPoint [ 
 	self color: Color transparent;
@@ -49,17 +55,7 @@ SUSTunnelDrawing >> addDetailFrom: aDirectedPoint to: aPoint [
 
 {
 	#category : #drawing,
-	#'squeak_changestamp' : 'Len 6/22/2024 21:51'
-}
-SUSTunnelDrawing >> addPathFrom: aDirectedPoint withVertices: aCollection [ 
-	self
-		addPathWithVertices: (aCollection * SUSDrawing normalLaneWidth
-				collect: [:aPoint | aDirectedPoint absoluteOffset: aPoint])
-]
-
-{
-	#category : #drawing,
-	#'squeak_changestamp' : 'Len 6/23/2024 10:29'
+	#'squeak_changestamp' : 'Len 7/10/2024 21:27'
 }
 SUSTunnelDrawing >> addPathsFrom: aDirectedPoint to: aPoint [ 
 	self addPathFrom: aDirectedPoint withVertices: {-0.5 @ 1. -0.5 @ 0};

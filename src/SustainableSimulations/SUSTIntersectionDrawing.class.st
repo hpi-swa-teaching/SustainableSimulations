@@ -1,34 +1,39 @@
+"
+A SUSTIntersectionDrawing is drawing object from the T-Intersection.
+"
 Class {
 	#name : #SUSTIntersectionDrawing,
 	#superclass : #SUSDrawing,
-	#category : #'SustainableSimulations-UI'
+	#category : #'SustainableSimulations-UI',
+	#'squeak_changestamp' : 'Len 7/10/2024 21:26'
 }
 
 {
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/15/2024 15:38'
+	#category : #'instance creation',
+	#'squeak_changestamp' : 'Len 7/10/2024 21:23'
 }
-SUSTIntersectionDrawing class >> newFrom: aDirectedPoint to: aPoint [
+SUSTIntersectionDrawing class >> newFrom: aDirectedPoint to: aPoint [ 
 	| corners min max from to |
-	corners := ({2 negated@0 . 2 negated@4 . 2@4 . 2@0} * SUSDrawing normalLaneWidth) collect: [:each | aDirectedPoint absoluteOffset: each].
+	corners := {2 negated @ 0. 2 negated @ 4. 2 @ 4. 2 @ 0} * SUSDrawing normalLaneWidth
+				collect: [:each | aDirectedPoint absoluteOffset: each].
 	min := corners min.
 	max := corners max.
-	from := SUSDirectedPoint newWithPosition: (aDirectedPoint position - min) inDirection: aDirectedPoint direction.
+	from := SUSDirectedPoint newWithPosition: aDirectedPoint position - min inDirection: aDirectedPoint direction.
 	to := aPoint - min.
 	^ self new addDetailFrom: from to: to;
-		addPathsFrom: from to: to;
-		extent: max - min;
-		position: min;
-		yourself.
+		 addPathsFrom: from to: to;
+		 extent: max - min;
+		 position: min;
+		 yourself
 ]
 
 {
 	#category : #drawing,
-	#'squeak_changestamp' : 'PM 6/27/2024 09:57'
+	#'squeak_changestamp' : 'Len 7/10/2024 21:23'
 }
 SUSTIntersectionDrawing >> addBaseFrom: aDirectedPoint [ 
 	| vertices |
-	vertices := {2 negated @ 1. 2 negated @ 3. 1 negated @ 3. 1 @ 3. 2 @ 3. 2 @ 1. 1 @ 1. 1 @ 0. 1 negated @ 0. 1 negated @ 1.} * SUSDrawing normalLaneWidth.
+	vertices := {2 negated @ 1. 2 negated @ 3. 1 negated @ 3. 1 @ 3. 2 @ 3. 2 @ 1. 1 @ 1. 1 @ 0. 1 negated @ 0. 1 negated @ 1} * SUSDrawing normalLaneWidth.
 	self addMorphInLayer: ((PolygonMorph
 			vertices: (vertices
 					collect: [:aPoint | aDirectedPoint absoluteOffset: aPoint])
@@ -40,17 +45,15 @@ SUSTIntersectionDrawing >> addBaseFrom: aDirectedPoint [
 
 {
 	#category : #drawing,
-	#'squeak_changestamp' : 'PM 6/15/2024 14:58'
+	#'squeak_changestamp' : 'Len 7/10/2024 21:24'
 }
-SUSTIntersectionDrawing >> addCurveFrom: aDirectedPoint withVertices: vertices [
+SUSTIntersectionDrawing >> addCurveFrom: aDirectedPoint withVertices: vertices [ 
 	self addMorphInLayer: ((LineMorph
 			vertices: (vertices * SUSDrawing normalLaneWidth
 					collect: [:aPoint | aDirectedPoint absoluteOffset: aPoint])
 			color: Color transparent
 			borderWidth: SUSDrawing markWidth
-			borderColor: SUSDrawing colorMark) beSmoothCurve; 
-			morphicLayerNumber: self detailLayer;
-			yourself).
+			borderColor: SUSDrawing colorMark) beSmoothCurve; morphicLayerNumber: self detailLayer; yourself)
 ]
 
 {
@@ -71,14 +74,6 @@ SUSTIntersectionDrawing >> addDetailFrom: aDirectedPoint to: aPoint [
 		addBaseFrom: aDirectedPoint;
 		addCurvesFrom: aDirectedPoint;
 		addMarkFrom: (aDirectedPoint absoluteOffset: 2 negated@3 * SUSDrawing normalLaneWidth) to: (aDirectedPoint absoluteOffset: 2@3 * SUSDrawing normalLaneWidth)
-]
-
-{
-	#category : #drawing,
-	#'squeak_changestamp' : 'PM 6/15/2024 15:08'
-}
-SUSTIntersectionDrawing >> addPathFrom: aDirectedPoint withVertices: aCollection [
-	self addPathWithVertices: (aCollection * SUSDrawing normalLaneWidth collect: [:aPoint | aDirectedPoint absoluteOffset: aPoint ])
 ]
 
 {
