@@ -1,3 +1,17 @@
+"
+A SUSDirectedPoint is a line in 2d space identified by a postion and a direction vector, which provieds different linear algebra calculations.
+
+Instance Variables
+	direction:		Point
+	position:		Point
+
+direction
+	- Direction vector of the 2d line
+
+position
+	- Position of the 2d line
+
+"
 Class {
 	#name : #SUSDirectedPoint,
 	#superclass : #Object,
@@ -5,25 +19,27 @@ Class {
 		'position',
 		'direction'
 	],
-	#category : #'SustainableSimulations-Core'
+	#category : #'SustainableSimulations-Core',
+	#'squeak_changestamp' : 'PM 7/10/2024 13:22'
 }
 
 {
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/11/2024 02:09'
+	#category : #'instance creation',
+	#'squeak_changestamp' : 'PM 7/10/2024 13:43'
 }
-SUSDirectedPoint class >> newWithPosition: aPoint inDirection: anotherPoint [
+SUSDirectedPoint class >> newWithPosition: aPoint inDirection: anotherPoint [ 
 	^ self new position: aPoint;
-		direction: anotherPoint;
-		yourself
+		 direction: anotherPoint;
+		 yourself
 ]
 
 {
-	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/12/2024 22:05'
+	#category : #calculation,
+	#'squeak_changestamp' : 'PM 7/10/2024 13:24'
 }
-SUSDirectedPoint >> absoluteOffset: aPoint [
-	^ (self relativeOffset: aPoint)+ self position
+SUSDirectedPoint >> absoluteOffset: aPoint [ 
+	^ self position
+		+ (self relativeOffset: aPoint)
 ]
 
 {
@@ -35,26 +51,22 @@ SUSDirectedPoint >> basicType [
 ]
 
 {
-	#category : #accessing,
-	#'squeak_changestamp' : 'PM 7/7/2024 17:02'
+	#category : #calculation,
+	#'squeak_changestamp' : 'PM 7/10/2024 13:33'
 }
-SUSDirectedPoint >> calculateIntersectionPoint: aLine [
-	| x1 y1 x2 y2 dx1 dy1 dx2 dy2 denominator t1 |
-        
-        "Get coordinates and direction vectors"
-        x1 := self position x.
-        y1 := self position y.
-        x2 := aLine position x.
-        y2 := aLine position y.
-        dx1 := self direction x.
-        dy1 := self direction y.
-        dx2 := aLine direction x.
-        dy2 := aLine direction y.
-        
- 	denominator := (dx1 * dy2) - (dy1 * dx2).
-	denominator == 0 ifTrue: [ self error: 'Lines are parallel to each other' ].
-	t1 := (((x2 - x1) * dy2) - ((y2 - y1) * dx2)) / denominator.
-   	^ (x1 + (t1 * dx1))@(y1 + (t1 * dy1))
+SUSDirectedPoint >> calculateIntersectionPoint: aLine [ 
+	| x1 y1 x2 y2 dx dy crossProduct t |
+	x1 := self position x.
+	y1 := self position y.
+	x2 := aLine position x.
+	y2 := aLine position y.
+	dx := aLine direction x.
+	dy := aLine direction y.
+	crossProduct := self direction crossProduct: aLine direction.
+	crossProduct == 0
+		ifTrue: [self error: 'Lines are parallel to each other'].
+	t := x2 - x1 * dy - (y2 - y1 * dx) / crossProduct.
+	^ self direction * t + self position
 ]
 
 {
@@ -75,24 +87,40 @@ SUSDirectedPoint >> direction: anObject [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 7/3/2024 00:05'
+	#'squeak_changestamp' : 'PM 7/10/2024 13:35'
 }
-SUSDirectedPoint >> directionOf: aPoint [
-	| lineA lineB |
-	lineA := SUSDirectedPoint newWithPosition: position inDirection: (direction rotateBy: 45 degreesToRadians about: 0@0).
-	lineB := SUSDirectedPoint newWithPosition: position inDirection: (direction rotateBy: 315 degreesToRadians about: 0@0).
-	((lineA isAbove: aPoint) >= 0)
-		ifTrue: [((lineB isAbove: aPoint) >= 0) 
-			ifTrue: [^ #Right ]
-			ifFalse: [ ^ #Top]]
-		ifFalse: [((lineB isAbove: aPoint) >= 0)
-			ifTrue: [^ #Bottom]
-			ifFalse: [^ #Left]]
-
+SUSDirectedPoint >> directionLineA [
+	^ SUSDirectedPoint
+		newWithPosition: position
+		inDirection: (direction rotateBy: 45 degreesToRadians about: 0 @ 0)
 ]
 
 {
 	#category : #accessing,
+	#'squeak_changestamp' : 'PM 7/10/2024 13:35'
+}
+SUSDirectedPoint >> directionLineB [
+	^ SUSDirectedPoint
+		newWithPosition: position
+		inDirection: (direction rotateBy: 315 degreesToRadians about: 0 @ 0)
+]
+
+{
+	#category : #calculation,
+	#'squeak_changestamp' : 'PM 7/10/2024 13:36'
+}
+SUSDirectedPoint >> directionOf: aPoint [ 
+	(self directionLineA isAbove: aPoint) >= 0
+		ifTrue: [(self directionLineB isAbove: aPoint) >= 0
+				ifTrue: [^ #Right]
+				ifFalse: [^ #Top]]
+		ifFalse: [(self directionLineB isAbove: aPoint) >= 0
+				ifTrue: [^ #Bottom]
+				ifFalse: [^ #Left]]
+]
+
+{
+	#category : #initialization,
 	#'squeak_changestamp' : 'PM 6/12/2024 23:40'
 }
 SUSDirectedPoint >> initialize [
@@ -101,31 +129,34 @@ SUSDirectedPoint >> initialize [
 ]
 
 {
-	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/17/2024 09:55'
+	#category : #calculation,
+	#'squeak_changestamp' : 'PM 7/10/2024 13:36'
 }
-SUSDirectedPoint >> isAbove: aPoint [
-	"> 0 aPoint is above line, = 0 aPoint is on line,  < 0 aPoint is below line"
-	^ direction crossProduct: (aPoint - position).
+SUSDirectedPoint >> isAbove: aPoint [ 
+	"> 0 aPoint is above line, = 0 aPoint is on
+	line, < 0 aPoint is below line"
+	^ direction crossProduct: aPoint - position
 ]
 
 {
-	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/17/2024 10:31'
+	#category : #calculation,
+	#'squeak_changestamp' : 'PM 7/10/2024 13:38'
 }
-SUSDirectedPoint >> isBehind: aPoint [
-	"<0: nach Positon; = 0 genau auf linie mit positon; > 0: vor Position"
-	0@0 = direction ifTrue: [ ^ 0 ].
-	^ (aPoint - position) dotProduct: direction
-	
+SUSDirectedPoint >> isBehind: aPoint [ 
+	"<0: nach Positon; = 0 genau auf Linie mit
+	Positon; > 0: vor Position"
+	0 @ 0 == direction
+		ifTrue: [^ 0].
+	^ aPoint - position dotProduct: direction
 ]
 
 {
-	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/12/2024 19:39'
+	#category : #calculation,
+	#'squeak_changestamp' : 'PM 7/10/2024 13:37'
 }
-SUSDirectedPoint >> linearDist: aPoint [
-	^ self position dist: (self projectionOf: aPoint)
+SUSDirectedPoint >> linearDist: aPoint [ 
+	^ self position
+		dist: (self projectionOf: aPoint)
 ]
 
 {
@@ -145,23 +176,21 @@ SUSDirectedPoint >> position: anObject [
 ]
 
 {
-	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/12/2024 23:27'
+	#category : #calculation,
+	#'squeak_changestamp' : 'PM 7/10/2024 13:37'
 }
-SUSDirectedPoint >> projectionOf: aPoint [
-	direction = (0@0) ifTrue: [ ^ aPoint ].
-	^ aPoint nearestPointAlongLineFrom: self position to: (self position + direction)
+SUSDirectedPoint >> projectionOf: aPoint [ 
+	0 @ 0 == direction
+		ifTrue: [^ aPoint].
+	^ aPoint nearestPointAlongLineFrom: self position to: self position + direction
 ]
 
 {
-	#category : #accessing,
-	#'squeak_changestamp' : 'MK 6/15/2024 15:09'
+	#category : #calculation,
+	#'squeak_changestamp' : 'PM 7/10/2024 13:39'
 }
-SUSDirectedPoint >> relativeOffset: aPoint [
-	| rotatedDirection normDirection offset |
-	rotatedDirection := (direction rotateBy: 270 degreesToRadians about: 0@0) normalized.
-	normDirection := direction normalized.
-	
-	offset := ((rotatedDirection * aPoint x) + (normDirection * aPoint y)).
-	^ (offset x rounded) @ (offset y rounded)
+SUSDirectedPoint >> relativeOffset: aPoint [ 
+	| rotatedDirection |
+	rotatedDirection := (direction rotateBy: 270 degreesToRadians about: 0 @ 0) normalized.
+	^ (rotatedDirection * aPoint x + (direction normalized * aPoint y)) rounded
 ]

@@ -2,14 +2,10 @@ Class {
 	#name : #SUSSimulation,
 	#superclass : #PasteUpMorph,
 	#instVars : [
-		'roadToConnect',
 		'cars',
 		'killedCars',
 		'tunnels',
-		'simulationSpeed',
 		'roads',
-		'bezierCurve',
-		'clickHandler',
 		'clickedConnectionPoint',
 		'running',
 		'timePaused',
@@ -18,18 +14,8 @@ Class {
 		'stopped',
 		'userMessages'
 	],
-	#category : 'SustainableSimulations-Core'
+	#category : #'SustainableSimulations-Core'
 }
-
-{
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'MK 6/25/2024 08:58'
-}
-SUSSimulation class >> newWithWindow: aWindow [
-	^ self new 
-		window: aWindow;
-		yourself
-]
 
 {
 	#category : #accessing,
@@ -76,20 +62,31 @@ SUSSimulation >> addTunnel: aTunnel [
 
 {
 	#category : #'event handling',
-	#'squeak_changestamp' : 'GoChriNo 6/22/2024 09:51'
+	#'squeak_changestamp' : 'PM 7/10/2024 13:54'
 }
 SUSSimulation >> buildConnectingRoadTo: aConnectionPoint [ 
-	| builder valid |
 	aConnectionPoint flipDirection.
+	(self buildRoadOrShowErrorTo: aConnectionPoint)
+		ifTrue: [^ true].
+	aConnectionPoint flipDirection.
+	^ false
+]
+
+{
+	#category : #'event handling',
+	#'squeak_changestamp' : 'PM 7/10/2024 13:59'
+}
+SUSSimulation >> buildRoadOrShowErrorTo: aPoint [ 
+	| builder valid |
 	builder := SUSRoadBuilder
 				newForSimulation: self
 				from: clickedConnectionPoint
-				to: aConnectionPoint
+				to: aPoint
 				as: selectedSpawnType.
 	valid := builder isValid.
 	valid
 		ifTrue: [self addMorph: builder buildRoad]
-		ifFalse: [aConnectionPoint flipDirection].
+		ifFalse: [userMessages showError: builder errorMessage].
 	^ valid
 ]
 
@@ -99,6 +96,14 @@ SUSSimulation >> buildConnectingRoadTo: aConnectionPoint [
 }
 SUSSimulation >> cars [
 	^ cars
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'PM 7/10/2024 14:00'
+}
+SUSSimulation >> cars: anObject [
+	cars := anObject
 ]
 
 {
@@ -124,14 +129,14 @@ SUSSimulation >> createConnectionPointAt: aDirectedPoint [
 
 {
 	#category : #'event handling',
-	#'squeak_changestamp' : 'PM 6/18/2024 15:36'
+	#'squeak_changestamp' : 'PM 7/10/2024 13:50'
 }
 SUSSimulation >> getOrCreateConnectionPointAt: aDirectedPoint [ 
 	self submorphs
 		detect: [:each | each basicType == #SUSConnectionPoint
 				and: (each containsPoint: aDirectedPoint position)]
 		ifFound: [:aConnectionPoint | ^ aConnectionPoint]
-		ifNone: [^ self createConnectionPointAt: aDirectedPoint ]
+		ifNone: [^ self createConnectionPointAt: aDirectedPoint]
 ]
 
 {
@@ -144,24 +149,20 @@ SUSSimulation >> handlesMouseDown: anEvent [
 
 {
 	#category : #initialization,
-	#'squeak_changestamp' : 'PM 7/10/2024 13:06'
+	#'squeak_changestamp' : 'PM 7/10/2024 14:01'
 }
 SUSSimulation >> initialize [
 	super initialize.
-	
-	roadToConnect := nil.
 	cars := OrderedCollection new.
 	killedCars := OrderedCollection new.
 	roads := OrderedCollection new.
 	tunnels := OrderedCollection new.
-	simulationSpeed := 1.
-	running := true. 
+	running := true.
 	stopped := false.
 	timePaused := 0.
 	userMessages := SUSUserMessages newUserMessagesManager.
-	
 	self color: Color gray;
-		addStartingPoint
+		 addStartingPoint
 ]
 
 {
@@ -190,37 +191,37 @@ SUSSimulation >> notifyClickedAt: aConnectionPoint [
 
 {
 	#category : #simulation,
-	#'squeak_changestamp' : 'MK 6/10/2024 17:19'
+	#'squeak_changestamp' : 'PM 7/10/2024 13:51'
 }
 SUSSimulation >> pauseSimulation [
-	running ifTrue: [
-		super stopStepping.
-		timePaused := Time millisecondClock.
-		running := false]
+	running
+		ifTrue: [self stopStepping.
+			timePaused := Time millisecondClock.
+			running := false]
 ]
 
 {
 	#category : #simulation,
-	#'squeak_changestamp' : 'MK 7/9/2024 01:03'
+	#'squeak_changestamp' : 'PM 7/10/2024 13:51'
 }
 SUSSimulation >> playSimulation [
-	running ifFalse: [
-		(timePaused > 0) ifTrue: [
-			cars do: [:car | 
-				car lastTime: Time millisecondClock]].
-		super startStepping.
-		timePaused := 0.
-		running := true.
-		stopped := false]
+	running
+		ifFalse: [timePaused > 0
+				ifTrue: [cars
+						do: [:car | car lastTime: Time millisecondClock]].
+			self startStepping.
+			timePaused := 0.
+			running := true.
+			stopped := false]
 ]
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'Len 6/20/2024 20:31'
+	#'squeak_changestamp' : 'PM 7/10/2024 13:51'
 }
-SUSSimulation >> removeCar: aCar [
+SUSSimulation >> removeCar: aCar [ 
 	cars remove: aCar.
-	killedCars add: aCar.
+	killedCars add: aCar
 ]
 
 {
@@ -257,7 +258,7 @@ SUSSimulation >> startingPointPosition [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'MK 7/9/2024 01:10'
+	#'squeak_changestamp' : 'PM 7/10/2024 14:05'
 }
 SUSSimulation >> step [
 	cars
@@ -266,8 +267,6 @@ SUSSimulation >> step [
 		do: [:car | car owner abandon].
 	tunnels
 		do: [:tunnel | tunnel applyBehavior].
-	window adjustPlayPausePosition.
-	
 	stopped
 		ifTrue: [self pauseSimulation]
 ]
@@ -297,24 +296,17 @@ SUSSimulation >> stopSimulation [
 
 {
 	#category : #'event handling',
-	#'squeak_changestamp' : 'PM 7/10/2024 12:57'
+	#'squeak_changestamp' : 'PM 7/10/2024 13:56'
 }
 SUSSimulation >> tryToBuildRoadTo: aPoint [ 
-	| builder wasStartingPoint valid |
+	| wasStartingPoint valid |
 	wasStartingPoint := clickedConnectionPoint isStartingPoint.
 	wasStartingPoint
 		ifTrue: [clickedConnectionPoint direction: aPoint - clickedConnectionPoint center].
-	builder := SUSRoadBuilder
-				newForSimulation: self
-				from: clickedConnectionPoint
-				to: aPoint
-				as: selectedSpawnType.
-	valid := builder isValid.
-	valid ifTrue: [self addMorph: builder buildRoad]
-		ifFalse: [userMessages showError: builder errorMessage].
+	valid := self buildRoadOrShowErrorTo: aPoint.
 	wasStartingPoint
 		ifTrue: [valid
-				ifTrue: [clickedConnectionPoint direction: clickedConnectionPoint center - aPoint]
+				ifTrue: [clickedConnectionPoint flipDirection]
 				ifFalse: [clickedConnectionPoint direction: 0 @ 0]].
 	^ valid
 ]
@@ -325,20 +317,4 @@ SUSSimulation >> tryToBuildRoadTo: aPoint [
 }
 SUSSimulation >> userMessages [
 	^ userMessages
-]
-
-{
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'MK 6/25/2024 08:59'
-}
-SUSSimulation >> window [
-	^window
-]
-
-{
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'MK 6/25/2024 08:59'
-}
-SUSSimulation >> window: aWindow [ 
-	window := aWindow.
 ]

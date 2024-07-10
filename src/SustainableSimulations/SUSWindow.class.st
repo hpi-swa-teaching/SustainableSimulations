@@ -10,30 +10,15 @@ Class {
 
 {
 	#category : #events,
-	#'squeak_changestamp' : 'MK 7/9/2024 01:22'
+	#'squeak_changestamp' : 'PM 7/10/2024 14:10'
 }
 SUSWindow >> addButtons [
-	| row|
+	| row |
 	row := AlignmentMorph newRow addAllMorphs: {self createStraightRoadButton. self createCurvyRoadButton. self createCrossIntersectionButton. self createTIntersectionButton. self createTunnelButton. self createSpawnSimulationButton}.
-	self addMorph: row.
-	row position: 15 @ 45.
-	
+	row position: 15@45.
 	playPauseRow := AlignmentMorph newRow addAllMorphs: {self createPauseSimulationButton. self createPlaySimulationButton. self createStopSimulationButton}.
-	self addMorph: row.
-	self adjustPlayPausePosition.
-	
-	
-]
-
-{
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'MK 6/25/2024 09:04'
-}
-SUSWindow >> adjustPlayPausePosition [
-	
-	playPauseRow ifNotNil:[
-		self addMorph: playPauseRow.
-		playPauseRow position: (((self width / 2) + 80))@(self height - 20)]
+	self addMorph: row;
+		 addMorph: playPauseRow
 ]
 
 {
@@ -172,13 +157,22 @@ SUSWindow >> curvyRoadMode [
 ]
 
 {
+	#category : #simulation,
+	#'squeak_changestamp' : 'PM 7/10/2024 14:12'
+}
+SUSWindow >> extent: anExtent [
+	super extent: anExtent.
+	playPauseRow center: (self position + anExtent * (0.5@1) - (0@50)).
+]
+
+{
 	#category : #initialization,
-	#'squeak_changestamp' : 'MK 6/25/2024 09:00'
+	#'squeak_changestamp' : 'PM 7/10/2024 14:05'
 }
 SUSWindow >> initialize [
 	super initialize.
 	
-	simulation := SUSSimulation newWithWindow: self.
+	simulation := SUSSimulation new.
 	
 	self setLabel: 'Sustainable Simulations';
 		addMorph: simulation frame: (0@0 corner: 1@1);
