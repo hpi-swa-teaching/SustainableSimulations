@@ -15,13 +15,14 @@ Class {
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'GoChriNo 6/17/2024 12:12'
+	#'squeak_changestamp' : 'MK 7/8/2024 23:08'
 }
 SUSCar class >> newOnRoad: aRoad withSpeed: aNumber [
 	^ self new 
 		simulation: aRoad simulation;
 		maxSpeed: aNumber;
 		placeCarOnRoad: aRoad;
+		spawnRoad: aRoad;
 		yourself
 ]
 
@@ -257,15 +258,20 @@ SUSCar >> isOnOwnLane: aVehicle [
 
 {
 	#category : #utility,
-	#'squeak_changestamp' : 'Len 6/20/2024 20:21'
+	#'squeak_changestamp' : 'MK 7/9/2024 00:24'
 }
-SUSCar >> placeCarOnRoad: aRoad [
-
-	simulation addCar: self.
+SUSCar >> placeCarOnRoad: aRoad [ 
+	| inCars |
+	inCars := false.
+	simulation cars
+		do: [:each | self == each
+				ifTrue: [inCars := true]].
+	inCars
+		ifFalse: [simulation addCar: self].
 	lane := aRoad lanes first.
 	lane addCar: self.
-	
-	self center: (lane getPositionWithTValue: 0)
+	self
+		center: (lane getPositionWithTValue: 0)
 ]
 
 {

@@ -14,7 +14,8 @@ Class {
 		'lastTime',
 		'deltaTime',
 		'isAccelerating',
-		'route'
+		'route',
+		'spawnRoad'
 	],
 	#category : #'SustainableSimulations-Core'
 }
@@ -34,6 +35,14 @@ SUSVehicle >> acceleration: aNumber [
 }
 SUSVehicle >> deacceleration [
 	^ deacceleration
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'MK 7/8/2024 22:42'
+}
+SUSVehicle >> delete [
+	
 ]
 
 {
@@ -70,7 +79,7 @@ SUSVehicle >> initialize [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'Len 6/20/2024 20:32'
+	#'squeak_changestamp' : 'MK 7/8/2024 22:52'
 }
 SUSVehicle >> kill [
 	simulation removeCar: self
@@ -172,6 +181,22 @@ SUSVehicle >> simulation [
 }
 SUSVehicle >> simulation: aSimulation [
 	simulation := aSimulation
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'MK 7/8/2024 23:07'
+}
+SUSVehicle >> spawnRoad [
+	^spawnRoad
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'MK 7/8/2024 23:07'
+}
+SUSVehicle >> spawnRoad: aRoad [
+	spawnRoad := aRoad
 ]
 
 {

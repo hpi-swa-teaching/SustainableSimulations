@@ -10,15 +10,15 @@ Class {
 
 {
 	#category : #events,
-	#'squeak_changestamp' : 'PM 6/27/2024 10:00'
+	#'squeak_changestamp' : 'MK 7/9/2024 01:22'
 }
 SUSWindow >> addButtons [
 	| row|
-	row := AlignmentMorph newRow addAllMorphs: {self createStraightRoadButton. self createCurvyRoadButton. self createCrossIntersectionButton. self createTIntersectionButton. self createTunnelButton. self createStopSimulationButton. self createSpawnSimulationButton}.
+	row := AlignmentMorph newRow addAllMorphs: {self createStraightRoadButton. self createCurvyRoadButton. self createCrossIntersectionButton. self createTIntersectionButton. self createTunnelButton. self createSpawnSimulationButton}.
 	self addMorph: row.
 	row position: 15 @ 45.
 	
-	playPauseRow := AlignmentMorph newRow addAllMorphs: {self createPauseSimulationButton. self createPlaySimulationButton.}.
+	playPauseRow := AlignmentMorph newRow addAllMorphs: {self createPauseSimulationButton. self createPlaySimulationButton. self createStopSimulationButton}.
 	self addMorph: row.
 	self adjustPlayPausePosition.
 	
@@ -282,18 +282,18 @@ SUSWindow >> labelTunnel [
 
 {
 	#category : #simulation,
-	#'squeak_changestamp' : 'MK 6/10/2024 17:16'
+	#'squeak_changestamp' : 'MK 7/8/2024 22:32'
 }
 SUSWindow >> pauseSimulation [
-	simulation pauseSimulation.
+	simulation pauseSimulation
 ]
 
 {
 	#category : #simulation,
-	#'squeak_changestamp' : 'MK 6/10/2024 17:17'
+	#'squeak_changestamp' : 'MK 7/8/2024 22:32'
 }
 SUSWindow >> playSimulation [
-	simulation playSimulation.
+	simulation playSimulation
 ]
 
 {
@@ -307,10 +307,10 @@ SUSWindow >> spawnCarMode [
 
 {
 	#category : #simulation,
-	#'squeak_changestamp' : 'PM 5/28/2024 09:13'
+	#'squeak_changestamp' : 'MK 7/9/2024 00:59'
 }
 SUSWindow >> stopSimulation [
-	
+	simulation stopSimulation
 ]
 
 {
