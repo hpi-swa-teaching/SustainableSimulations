@@ -75,10 +75,10 @@ SUSRoadBuilder >> askForDegrees [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/18/2024 14:41'
+	#'squeak_changestamp' : 'PM 7/10/2024 12:50'
 }
 SUSRoadBuilder >> buildCrossIntersection [
-	self canBuildCrossIntersection
+	self statusCrossIntersection == 0
 		ifFalse: [^ nil].
 	^ SUSCrossIntersection
 		newOnSimulation: simulation
@@ -88,10 +88,10 @@ SUSRoadBuilder >> buildCrossIntersection [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/18/2024 14:41'
+	#'squeak_changestamp' : 'PM 7/10/2024 12:50'
 }
 SUSRoadBuilder >> buildCurvyRoad [
-	self canBuildCurvyRoad
+	self statusCurvyRoad == 0
 		ifFalse: [^ nil].
 	^ SUSCurvyRoad
 		newOnSimulation: simulation
@@ -119,10 +119,10 @@ SUSRoadBuilder >> buildRoad [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/18/2024 14:41'
+	#'squeak_changestamp' : 'PM 7/10/2024 13:01'
 }
 SUSRoadBuilder >> buildStraightRoad [
-	self canBuildStraightRoad
+	self statusStraightRoad == 0
 		ifFalse: [^ nil].
 	^ SUSStraightRoad
 		newOnSimulation: simulation
@@ -133,10 +133,10 @@ SUSRoadBuilder >> buildStraightRoad [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 7/3/2024 00:08'
+	#'squeak_changestamp' : 'PM 7/10/2024 13:02'
 }
 SUSRoadBuilder >> buildTIntersection [
-	self canBuildTIntersection
+	self statusTIntersection == 0
 		ifFalse: [^ nil].
 	^ SUSTIntersection
 		newOnSimulation: simulation
@@ -147,10 +147,10 @@ SUSRoadBuilder >> buildTIntersection [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'Len 6/20/2024 19:13'
+	#'squeak_changestamp' : 'PM 7/10/2024 13:02'
 }
 SUSRoadBuilder >> buildTunnel [
-	self canBuildTunnel
+	self statusTunnel == 0
 		ifFalse: [^ nil].
 	^ SUSTunnel
 		newOnSimulation: simulation
@@ -160,52 +160,24 @@ SUSRoadBuilder >> buildTunnel [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/18/2024 18:53'
+	#'squeak_changestamp' : 'PM 7/10/2024 12:56'
 }
-SUSRoadBuilder >> canBuildCrossIntersection [
-	^ invalid not
+SUSRoadBuilder >> errorMessage [
+	self status <= 0
+		ifTrue: [^ 'No error']
+		ifFalse: [^ self errorMessages at: self status]
 ]
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/18/2024 18:58'
+	#'squeak_changestamp' : 'PM 7/10/2024 13:00'
 }
-SUSRoadBuilder >> canBuildCurvyRoad [
-	| directedPoint midpoint |
-	self flag: #Todo. "calculate min road length"
-	invalid ifTrue: [^ false ].
-	directedPoint := from asDirectedPoint.
-	midpoint := directedPoint calculateIntersectionPoint: self toDirectedPoint.
-	^ (directedPoint isBehind: self toPoint) > 0
-		and: (directedPoint isAbove: self toPoint) ~= 0
-		and: (directedPoint isBehind: midpoint) > 0
-]
-
-{
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/18/2024 18:53'
-}
-SUSRoadBuilder >> canBuildStraightRoad [
-	^ ((from asDirectedPoint isBehind: self toPoint) > 0)
-		and: (from asDirectedPoint linearDist: self toPoint) >= self minRoadLength
-		and: invalid not
-]
-
-{
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 7/2/2024 23:44'
-}
-SUSRoadBuilder >> canBuildTIntersection [
-	^ (from asDirectedPoint directionOf: self toPoint)
-		~= #Bottom and: invalid not
-]
-
-{
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'Len 6/20/2024 19:10'
-}
-SUSRoadBuilder >> canBuildTunnel [
-	^ invalid not
+SUSRoadBuilder >> errorMessages [
+	^ {'Invalid Road'.
+	'You cannot build a road in wrong direction'.
+	'The road is too short'.
+	'You cannot build a straight curvy road. Please select the straight road'.
+	'This curve is not possible'}
 ]
 
 {
@@ -227,20 +199,10 @@ SUSRoadBuilder >> initialize [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/27/2024 10:06'
+	#'squeak_changestamp' : 'PM 7/10/2024 12:52'
 }
 SUSRoadBuilder >> isValid [
-	selectedRoadType = #StraightRoad
-		ifTrue: [^ self canBuildStraightRoad].
-	selectedRoadType = #CurvyRoad
-		ifTrue: [^ self canBuildCurvyRoad].
-	selectedRoadType = #CrossIntersection
-		ifTrue: [^ self canBuildCrossIntersection].
-	selectedRoadType = #TIntersection
-		ifTrue: [^ self canBuildTIntersection].
-	selectedRoadType = #Tunnel
-		ifTrue: [^ self canBuildTunnel].
-	^ false
+	^ self status == 0
 ]
 
 {
@@ -277,6 +239,92 @@ SUSRoadBuilder >> selectedRoadType: anObject [
 }
 SUSRoadBuilder >> simulation: anObject [
 	simulation := anObject
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'PM 7/10/2024 12:52'
+}
+SUSRoadBuilder >> status [
+	selectedRoadType = #StraightRoad
+		ifTrue: [^ self statusStraightRoad].
+	selectedRoadType = #CurvyRoad
+		ifTrue: [^ self statusCurvyRoad].
+	selectedRoadType = #CrossIntersection
+		ifTrue: [^ self statusCrossIntersection].
+	selectedRoadType = #TIntersection
+		ifTrue: [^ self statusTIntersection].
+	selectedRoadType = #Tunnel
+		ifTrue: [^ self statusTunnel].
+	^ 1
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'PM 7/10/2024 12:48'
+}
+SUSRoadBuilder >> statusCrossIntersection [
+	invalid
+		ifTrue: [^ 1].
+	^ 0
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'PM 7/10/2024 12:50'
+}
+SUSRoadBuilder >> statusCurvyRoad [
+	| directedPoint midpoint |
+	invalid
+		ifTrue: [^ 1].
+	directedPoint := from asDirectedPoint.
+	midpoint := directedPoint calculateIntersectionPoint: self toDirectedPoint.
+	(directedPoint isBehind: self toPoint) <= 0
+		ifTrue: [^ 2].
+	(directedPoint isAbove: self toPoint) == 0
+		ifTrue: [^ 4].
+	(directedPoint isBehind: midpoint) <= 0
+		ifTrue: [^ 5].
+	^ 0
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'PM 7/10/2024 13:02'
+}
+SUSRoadBuilder >> statusStraightRoad [
+	(from asDirectedPoint isBehind: self toPoint)
+			<= 0
+		ifTrue: [^ 2].
+	(from asDirectedPoint linearDist: self toPoint)
+			< self minRoadLength
+		ifTrue: [^ 3].
+	invalid
+		ifTrue: [^ 1].
+	^ 0
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'PM 7/10/2024 12:48'
+}
+SUSRoadBuilder >> statusTIntersection [
+	(from asDirectedPoint directionOf: self toPoint)
+			== #Bottom
+		ifTrue: [^ 2].
+	invalid
+		ifTrue: [^ 1].
+	^ 0
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'PM 7/10/2024 12:47'
+}
+SUSRoadBuilder >> statusTunnel [
+	invalid
+		ifTrue: [^ 1].
+	^ 0
 ]
 
 {
