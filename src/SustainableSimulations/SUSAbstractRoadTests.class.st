@@ -24,7 +24,7 @@ SUSAbstractRoadTests >> testInitializeFromTo [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'MK 6/23/2024 01:24'
+	#'squeak_changestamp' : 'PM 7/10/2024 16:12'
 }
 SUSAbstractRoadTests >> testSpawnCar [
 	| road simulation P1 P2|
@@ -39,5 +39,5 @@ SUSAbstractRoadTests >> testSpawnCar [
 	
 	road spawnCar.
 	
-	self assert: (simulation cars notEmpty).
+	self assert: (simulation vehicles notEmpty).
 ]

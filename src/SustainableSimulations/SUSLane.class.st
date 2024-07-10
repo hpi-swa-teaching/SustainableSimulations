@@ -117,22 +117,6 @@ SUSLane >> calculateLength3Vertices [
 ]
 
 {
-	#category : #accessing,
-	#'squeak_changestamp' : 'GoChriNo 6/15/2024 09:53'
-}
-SUSLane >> cars [
-	^ cars
-]
-
-{
-	#category : #accessing,
-	#'squeak_changestamp' : 'GoChriNo 6/15/2024 09:53'
-}
-SUSLane >> cars: anObject [
-	cars := anObject
-]
-
-{
 	#category : #'as yet unclassified',
 	#'squeak_changestamp' : 'GoChriNo 6/19/2024 13:36'
 }
@@ -390,4 +374,20 @@ SUSLane >> road: anObject [
 }
 SUSLane >> updateBlocked: aNumber [
 	blockedT := (length -  aNumber) / length
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'PM 7/10/2024 16:12'
+}
+SUSLane >> vehicles [
+	^ cars
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'PM 7/10/2024 16:13'
+}
+SUSLane >> vehicles: anObject [
+	cars := anObject
 ]
