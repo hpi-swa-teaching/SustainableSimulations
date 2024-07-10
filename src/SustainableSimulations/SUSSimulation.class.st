@@ -2,59 +2,67 @@
 A SUSSimulation is a traffic simulation with different roads, cars and connection points.
 
 Instance Variables
-	vehicles					OrderedCollection{SUSVehicle}
+	cars:						OrderedCollection{SUSVehicle}
 	clickedConnectionPoint:	SUSConnectionPoint|nil
-	removedVehicles			OrderedCollection{SUSVehicle}
+	killedCars:					OrderedCollection{SUSVehicle}
 	roads:						OrderedCollection{SUSAbstractRoad}
 	running:					Boolean
 	selectedSpawnType:		Symbol
 	stopped:					Boolean
 	timePaused:				Number
 	tunnels:					OrderedCollection{SUSTunnel}
+	userMessages:				{SUSUserMessages}
 
-vehicles
-	- All the vehicles which are active on the simulation
+cars
+	- xxxxx
 
 clickedConnectionPoint
-	- The active connection point, can be nil!
+	- xxxxx
 
-removedVehicles
-	- All vehicles that got removed
+killedCars
+	- xxxxx
 
 roads
-	- All Roads of the simulation
+	- xxxxx
 
 running
-	- Whether the simulation is currently running
+	- xxxxx
 
 selectedSpawnType
-	- The selected type of element to spawn. #SpawnCar to spawn a car, otherwise the short names of the Roads, e.g. #CurvyRoad or #TIntersection
+	- xxxxx
 
 stopped
-	- Whether the simulation is currently stopped
+	- xxxxx
 
 timePaused
-	- The time on which the simulation got paused
+	- xxxxx
 
 tunnels
-	- All tunnels in the Simulation. Used to spawn the cars at those locations.
+	- xxxxx
+
+userMessages
+	- xxxxx
+
+window
+	- xxxxx
+
 "
 Class {
 	#name : #SUSSimulation,
 	#superclass : #PasteUpMorph,
 	#instVars : [
+		'cars',
+		'killedCars',
 		'tunnels',
 		'roads',
 		'clickedConnectionPoint',
 		'running',
 		'timePaused',
 		'selectedSpawnType',
-		'stopped',
-		'vehicles',
-		'removedVehicles'
+		'stopped'
 	],
 	#category : #'SustainableSimulations-Core',
-	#'squeak_changestamp' : 'PM 7/10/2024 16:11'
+	#'squeak_changestamp' : 'PM 7/10/2024 16:00'
 }
 
 {
@@ -70,10 +78,10 @@ SUSSimulation >> activeConnectionPoint: anObject [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 7/10/2024 16:07'
+	#'squeak_changestamp' : 'Len 6/1/2024 20:50'
 }
 SUSSimulation >> addCar: aCar [
-	vehicles addLast: aCar
+	cars addLast: aCar
 ]
 
 {
@@ -85,7 +93,7 @@ SUSSimulation >> addRoad: aRoad [
 ]
 
 {
-	#category : #connection,
+	#category : #initialization,
 	#'squeak_changestamp' : 'PM 6/12/2024 23:39'
 }
 SUSSimulation >> addStartingPoint [
@@ -101,7 +109,7 @@ SUSSimulation >> addTunnel: aTunnel [
 ]
 
 {
-	#category : #connection,
+	#category : #'event handling',
 	#'squeak_changestamp' : 'PM 7/10/2024 13:54'
 }
 SUSSimulation >> buildConnectingRoadTo: aConnectionPoint [ 
@@ -113,8 +121,8 @@ SUSSimulation >> buildConnectingRoadTo: aConnectionPoint [
 ]
 
 {
-	#category : #connection,
-	#'squeak_changestamp' : 'PM 7/10/2024 16:04'
+	#category : #'event handling',
+	#'squeak_changestamp' : 'PM 7/10/2024 13:59'
 }
 SUSSimulation >> buildRoadOrShowErrorTo: aPoint [ 
 	| builder valid |
@@ -126,12 +134,28 @@ SUSSimulation >> buildRoadOrShowErrorTo: aPoint [
 	valid := builder isValid.
 	valid
 		ifTrue: [self addMorph: builder buildRoad]
-		ifFalse: [self showError: builder errorMessage].
+		ifFalse: [userMessages showError: builder errorMessage].
 	^ valid
 ]
 
 {
-	#category : #'event handling',
+	#category : #accessing,
+	#'squeak_changestamp' : 'Len 6/20/2024 20:27'
+}
+SUSSimulation >> cars [
+	^ cars
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'PM 7/10/2024 14:00'
+}
+SUSSimulation >> cars: anObject [
+	cars := anObject
+]
+
+{
+	#category : #simulation,
 	#'squeak_changestamp' : 'PM 7/2/2024 23:39'
 }
 SUSSimulation >> clickedWorld: anEvent [
@@ -141,7 +165,7 @@ SUSSimulation >> clickedWorld: anEvent [
 ]
 
 {
-	#category : #connection,
+	#category : #'event handling',
 	#'squeak_changestamp' : 'PM 6/18/2024 15:37'
 }
 SUSSimulation >> createConnectionPointAt: aDirectedPoint [
@@ -152,7 +176,7 @@ SUSSimulation >> createConnectionPointAt: aDirectedPoint [
 ]
 
 {
-	#category : #connection,
+	#category : #'event handling',
 	#'squeak_changestamp' : 'PM 7/10/2024 13:50'
 }
 SUSSimulation >> getOrCreateConnectionPointAt: aDirectedPoint [ 
@@ -173,17 +197,18 @@ SUSSimulation >> handlesMouseDown: anEvent [
 
 {
 	#category : #initialization,
-	#'squeak_changestamp' : 'PM 7/10/2024 16:08'
+	#'squeak_changestamp' : 'PM 7/10/2024 14:01'
 }
 SUSSimulation >> initialize [
 	super initialize.
-	vehicles := OrderedCollection new.
-	removedVehicles := OrderedCollection new.
+	cars := OrderedCollection new.
+	killedCars := OrderedCollection new.
 	roads := OrderedCollection new.
 	tunnels := OrderedCollection new.
 	running := true.
 	stopped := false.
 	timePaused := 0.
+	userMessages := SUSUserMessages newUserMessagesManager.
 	self color: Color gray;
 		 addStartingPoint
 ]
@@ -225,12 +250,12 @@ SUSSimulation >> pauseSimulation [
 
 {
 	#category : #simulation,
-	#'squeak_changestamp' : 'PM 7/10/2024 16:07'
+	#'squeak_changestamp' : 'PM 7/10/2024 13:51'
 }
 SUSSimulation >> playSimulation [
 	running
 		ifFalse: [timePaused > 0
-				ifTrue: [vehicles
+				ifTrue: [cars
 						do: [:car | car lastTime: Time millisecondClock]].
 			self startStepping.
 			timePaused := 0.
@@ -240,11 +265,11 @@ SUSSimulation >> playSimulation [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 7/10/2024 16:08'
+	#'squeak_changestamp' : 'PM 7/10/2024 13:51'
 }
 SUSSimulation >> removeCar: aCar [ 
-	vehicles remove: aCar.
-	removedVehicles add: aCar
+	cars remove: aCar.
+	killedCars add: aCar
 ]
 
 {
@@ -272,15 +297,15 @@ SUSSimulation >> selectedSpawnType: aSymbol [
 ]
 
 {
-	#category : #'error handling',
-	#'squeak_changestamp' : 'PM 7/10/2024 16:05'
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'PM 7/10/2024 16:02'
 }
 SUSSimulation >> showError: aString [
-	self inform: aString
+	self error: aString
 ]
 
 {
-	#category : #accessing,
+	#category : #simulation,
 	#'squeak_changestamp' : 'PM 6/12/2024 20:00'
 }
 SUSSimulation >> startingPointPosition [
@@ -288,13 +313,13 @@ SUSSimulation >> startingPointPosition [
 ]
 
 {
-	#category : #'stepping and presenter',
-	#'squeak_changestamp' : 'PM 7/10/2024 16:08'
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'PM 7/10/2024 14:05'
 }
 SUSSimulation >> step [
-	vehicles
+	cars
 		do: [:car | car applyBehavior].
-	removedVehicles
+	killedCars
 		do: [:car | car owner abandon].
 	tunnels
 		do: [:tunnel | tunnel applyBehavior].
@@ -303,7 +328,7 @@ SUSSimulation >> step [
 ]
 
 {
-	#category : #'stepping and presenter',
+	#category : #'as yet unclassified',
 	#'squeak_changestamp' : 'GoChriNo 6/27/2024 15:41'
 }
 SUSSimulation >> stepTime [
@@ -312,11 +337,11 @@ SUSSimulation >> stepTime [
 
 {
 	#category : #simulation,
-	#'squeak_changestamp' : 'PM 7/10/2024 16:07'
+	#'squeak_changestamp' : 'MK 7/9/2024 01:14'
 }
 SUSSimulation >> stopSimulation [
 	stopped
-		ifFalse: [vehicles copy
+		ifFalse: [cars copy
 				do: [:each | each spawnRoad = 0
 						ifTrue: [each kill]
 						ifFalse: [self
@@ -326,7 +351,7 @@ SUSSimulation >> stopSimulation [
 ]
 
 {
-	#category : #connection,
+	#category : #'event handling',
 	#'squeak_changestamp' : 'PM 7/10/2024 13:56'
 }
 SUSSimulation >> tryToBuildRoadTo: aPoint [ 
@@ -340,12 +365,4 @@ SUSSimulation >> tryToBuildRoadTo: aPoint [
 				ifTrue: [clickedConnectionPoint flipDirection]
 				ifFalse: [clickedConnectionPoint direction: 0 @ 0]].
 	^ valid
-]
-
-{
-	#category : #accessing,
-	#'squeak_changestamp' : 'PM 7/10/2024 16:12'
-}
-SUSSimulation >> vehicles [
-	^ vehicles
 ]

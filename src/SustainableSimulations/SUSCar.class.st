@@ -60,7 +60,7 @@ SUSCar >> applyBehavior [
 
 {
 	#category : #behavior,
-	#'squeak_changestamp' : 'PM 7/10/2024 16:12'
+	#'squeak_changestamp' : 'GoChriNo 6/27/2024 12:58'
 }
 SUSCar >> applyCautiousness: t [ 
 	| dist nextCar maxDist i currentLane |
@@ -89,9 +89,9 @@ SUSCar >> applyCautiousness: t [
 			currentLane := currentLane nextLanes
 						at: (route at: i).	
 			(self checkForIntersection: currentLane FromDist: dist FromIndex: i) ifTrue: [^ self].
-			currentLane vehicles isEmpty
+			currentLane cars isEmpty
 				ifTrue: [dist := dist + currentLane length]
-				ifFalse: [nextCar := currentLane vehicles last.
+				ifFalse: [nextCar := currentLane cars last.
 					nextCar == self
 						ifTrue: [nextCar := currentLane getPreviousCarOnLane: nextCar].
 					nextCar == self
@@ -207,15 +207,15 @@ SUSCar >> drawOn: aCanvas [
 
 {
 	#category : #utility,
-	#'squeak_changestamp' : 'PM 7/10/2024 16:12'
+	#'squeak_changestamp' : 'GoChriNo 6/22/2024 09:21'
 }
 SUSCar >> getNextCar [
 	| nextCar |
 	nextCar := lane getPreviousCarOnLane: self.
 	nextCar == self
 		ifTrue: [lane nextLanes
-				do: [:each | each vehicles isEmpty
-						ifFalse: [^ each vehicles last]].
+				do: [:each | each cars isEmpty
+						ifFalse: [^ each cars last]].
 			^ self].
 	^ nextCar
 ]
@@ -258,12 +258,12 @@ SUSCar >> isOnOwnLane: aVehicle [
 
 {
 	#category : #utility,
-	#'squeak_changestamp' : 'PM 7/10/2024 16:12'
+	#'squeak_changestamp' : 'MK 7/9/2024 00:24'
 }
 SUSCar >> placeCarOnRoad: aRoad [ 
 	| inCars |
 	inCars := false.
-	simulation vehicles
+	simulation cars
 		do: [:each | self == each
 				ifTrue: [inCars := true]].
 	inCars
