@@ -131,11 +131,11 @@ SUSAbstractRoad >> isBlockedFrom: aLane [
 
 {
 	#category : #utility,
-	#'squeak_changestamp' : 'GoChriNo 6/27/2024 12:45'
+	#'squeak_changestamp' : 'PM 7/10/2024 16:12'
 }
 SUSAbstractRoad >> isEmpty [
 
-	self lanes do: [:each | each cars ifNotEmpty: [^ false]].
+	self lanes do: [:each | each vehicles ifNotEmpty: [^ false]].
 	^ true.
 ]
 
@@ -167,7 +167,7 @@ SUSAbstractRoad >> postInitialize [
 
 {
 	#category : #utility,
-	#'squeak_changestamp' : 'GoChriNo 7/2/2024 12:51'
+	#'squeak_changestamp' : 'PM 7/10/2024 16:12'
 }
 SUSAbstractRoad >> searchForCarBackwardsFromLane: aLane WithMaxDist: maxDist [ 
 	| dist car currentLane |
@@ -179,9 +179,9 @@ SUSAbstractRoad >> searchForCarBackwardsFromLane: aLane WithMaxDist: maxDist [
 				ifNotNil: [^ car].
 			currentLane previousLanes isEmpty ifTrue: [^ nil].
 			currentLane := currentLane previousLanes at: 1.
-			currentLane cars isEmpty
+			currentLane vehicles isEmpty
 				ifTrue: [dist := dist + currentLane length]
-				ifFalse: [car := currentLane cars first.
+				ifFalse: [car := currentLane vehicles first.
 					dist := dist + currentLane length
 								- (currentLane getLengthToT: car lastPoint)]].
 	^ nil

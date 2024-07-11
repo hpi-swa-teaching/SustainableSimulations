@@ -37,11 +37,11 @@ SUSRoadStrategy >> isBlockedByOtherLanesFrom: aLane [
 
 {
 	#category : #strategy,
-	#'squeak_changestamp' : 'GoChriNo 7/10/2024 14:11'
+	#'squeak_changestamp' : 'PM 7/10/2024 16:12'
 }
 SUSRoadStrategy >> isBlockedByOwnLanesFrom: aLane [ 
 	(self getBlockedLanesFrom: aLane)
-		do: [:each | each cars
+		do: [:each | each vehicles
 				ifNotEmpty: [^ true]].
 	^ false
 ]
