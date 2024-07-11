@@ -10,21 +10,21 @@ Class {
 
 {
 	#category : #strategy,
-	#'squeak_changestamp' : 'GoChriNo 7/10/2024 14:08'
+	#'squeak_changestamp' : 'PM 7/11/2024 14:57'
 }
 SUSTIntersectionRightOfWayStrategy >> isBlockedByOtherLanesFrom: aLane [ 
 	| index car |
 	index := road lanes indexOf: aLane.
 	index = 3
 		ifTrue: [(road
-				searchForCarBackwardsFromLane: (road lanes at: 5)
-				WithMaxDist: 300)
+				searchVehicleBackwardsFromLane: (road lanes at: 5)
+				withMaxDist: 300)
 				ifNotNil: [^ true]].
 	index > 2
 		ifTrue: [^ false].
 	car := road
-				searchForCarBackwardsFromLane: (road lanes at: 5)
-				WithMaxDist: 300.
+				searchVehicleBackwardsFromLane: (road lanes at: 5)
+				withMaxDist: 300.
 	index = 2
 		ifTrue: [car
 				ifNil: [^ false]
@@ -33,8 +33,8 @@ SUSTIntersectionRightOfWayStrategy >> isBlockedByOtherLanesFrom: aLane [
 	car
 		ifNotNil: [^ true].
 	(road
-		searchForCarBackwardsFromLane: (road lanes at: 3)
-		WithMaxDist: 300)
+		searchVehicleBackwardsFromLane: (road lanes at: 3)
+		withMaxDist: 300)
 		ifNotNil: [^ true].
 	^ false
 ]

@@ -22,7 +22,7 @@ SUSCrossIntersectionRightOfWayStrategy >> initialize [
 
 {
 	#category : #strategy,
-	#'squeak_changestamp' : 'GoChriNo 7/10/2024 14:07'
+	#'squeak_changestamp' : 'PM 7/11/2024 14:57'
 }
 SUSCrossIntersectionRightOfWayStrategy >> isBlockedByOtherLanesFrom: aLane [ 
 	| index |
@@ -30,8 +30,8 @@ SUSCrossIntersectionRightOfWayStrategy >> isBlockedByOtherLanesFrom: aLane [
 	index \\ 3 = 1
 		ifTrue: [| car |
 			car := road
-						searchForCarBackwardsFromLane: (road lanes at: index + 5 \\ 12 + 1)
-						WithMaxDist: 400.
+						searchVehicleBackwardsFromLane: (road lanes at: index + 5 \\ 12 + 1)
+						withMaxDist: 400.
 			car
 				ifNotNil: [(car turnsLeftAt: road)
 						ifFalse: [^ true]]].
@@ -42,12 +42,12 @@ SUSCrossIntersectionRightOfWayStrategy >> isBlockedByOtherLanesFrom: aLane [
 		ifTrue: [(index - 1 / 3) floor \\ 2 == 1
 				ifTrue: [^ false]].
 	(road
-		searchForCarBackwardsFromLane: (road lanes at: index + 2 \\ 12 + 1)
-		WithMaxDist: 400)
+		searchVehicleBackwardsFromLane: (road lanes at: index + 2 \\ 12 + 1)
+		withMaxDist: 400)
 		ifNotNil: [^ true].
 	(road
-		searchForCarBackwardsFromLane: (road lanes at: index + 8 \\ 12 + 1)
-		WithMaxDist: 400)
+		searchVehicleBackwardsFromLane: (road lanes at: index + 8 \\ 12 + 1)
+		withMaxDist: 400)
 		ifNotNil: [^ true].
 	^ false
 ]

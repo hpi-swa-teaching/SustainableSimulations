@@ -322,7 +322,7 @@ SUSSimulation >> stepTime [
 
 {
 	#category : #simulation,
-	#'squeak_changestamp' : 'PM 7/11/2024 10:55'
+	#'squeak_changestamp' : 'PM 7/11/2024 11:50'
 }
 SUSSimulation >> stopSimulation [
 	stopped
@@ -330,7 +330,7 @@ SUSSimulation >> stopSimulation [
 				do: [:each | each spawnRoad = 0
 						ifTrue: [each remove]
 						ifFalse: [self
-								addMorphInLayer: (SUSCar newOnRoad: each spawnRoad withSpeed: each maxSpeed).
+								addMorphInLayer: (SUSCar newOnRoad: each spawnRoad withMaxSpeed: each maxSpeed).
 							each remove]]].
 	stopped := true
 ]

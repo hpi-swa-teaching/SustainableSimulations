@@ -2,10 +2,10 @@ Class {
 	#name : #SUSIntersection,
 	#superclass : #SUSAbstractRoad,
 	#instVars : [
-		'standingCars',
-		'longStandingCars',
 		'lastRightOfWayTime',
-		'strategy'
+		'strategy',
+		'standingVehicles',
+		'longStandingVehicles'
 	],
 	#category : #'SustainableSimulations-Roads'
 }
@@ -19,18 +19,6 @@ SUSIntersection >> createStrategy [
 ]
 
 {
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'GoChriNo 6/27/2024 12:50'
-}
-SUSIntersection >> driving: aCar [
-
-	(standingCars includes: aCar) ifTrue: [
-		standingCars remove: aCar].
-	(longStandingCars includes: aCar) ifTrue: [
-		longStandingCars remove: aCar].
-]
-
-{
 	#category : #utility,
 	#'squeak_changestamp' : 'GoChriNo 6/27/2024 13:02'
 }
@@ -40,25 +28,25 @@ SUSIntersection >> getOppositeLaneFrom: aLane [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'GoChriNo 6/27/2024 12:52'
+	#'squeak_changestamp' : 'PM 7/11/2024 14:56'
 }
 SUSIntersection >> giveRightOfWay [
 	Time millisecondClock - lastRightOfWayTime > 1000
-		ifTrue: [longStandingCars asOrderedCollection atRandom rightOfWayTime: 2000.
-			longStandingCars removeAll.
-			standingCars removeAll.
+		ifTrue: [longStandingVehicles asOrderedCollection atRandom rightOfWayTime: 2000.
+			longStandingVehicles removeAll.
+			standingVehicles removeAll.
 			lastRightOfWayTime := Time millisecondClock]
 ]
 
 {
 	#category : #initialization,
-	#'squeak_changestamp' : 'GoChriNo 7/2/2024 10:54'
+	#'squeak_changestamp' : 'PM 7/11/2024 14:56'
 }
 SUSIntersection >> initialize [
 	super initialize.
 
-	standingCars := Set new.
-	longStandingCars := Set new.
+	standingVehicles := Set new.
+	longStandingVehicles := Set new.
 	strategy := self createStrategy.
 	lastRightOfWayTime := 0
 ]
@@ -72,6 +60,17 @@ SUSIntersection >> isBlockedFrom: aLane [
 ]
 
 {
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'PM 7/11/2024 14:56'
+}
+SUSIntersection >> isVehicleDriving: aVehicle [
+	(standingVehicles includes: aVehicle) ifTrue: [
+		standingVehicles remove: aVehicle].
+	(longStandingVehicles includes: aVehicle) ifTrue: [
+		longStandingVehicles remove: aVehicle].
+]
+
+{
 	#category : #utility,
 	#'squeak_changestamp' : 'GoChriNo 6/27/2024 13:39'
 }
@@ -81,13 +80,13 @@ SUSIntersection >> shouldGiveRightOfWay [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'GoChriNo 7/10/2024 14:06'
+	#'squeak_changestamp' : 'PM 7/11/2024 14:56'
 }
 SUSIntersection >> standing: aCar [ 
-	(standingCars includes: aCar)
-		ifTrue: [longStandingCars add: aCar].
-	standingCars add: aCar.
+	(standingVehicles includes: aCar)
+		ifTrue: [longStandingVehicles add: aCar].
+	standingVehicles add: aCar.
 	self isEmpty
 		ifFalse: [^ self].
-	(strategy shouldGiveRightOfWayTime: longStandingCars) ifTrue: [self giveRightOfWay].
+	(strategy shouldGiveRightOfWayTime: longStandingVehicles) ifTrue: [self giveRightOfWay].
 ]

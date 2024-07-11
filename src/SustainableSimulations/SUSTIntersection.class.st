@@ -112,11 +112,11 @@ SUSTIntersection >> positions [
 
 {
 	#category : #utility,
-	#'squeak_changestamp' : 'GoChriNo 6/27/2024 13:41'
+	#'squeak_changestamp' : 'PM 7/11/2024 14:56'
 }
 SUSTIntersection >> shouldGiveRightOfWay [
 
-	longStandingCars size >= 3
+	longStandingVehicles size >= 3
 		ifTrue: [^ true].
 	^ false.
 ]

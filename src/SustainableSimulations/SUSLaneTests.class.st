@@ -5,7 +5,7 @@ Class {
 }
 
 {
-	#category : #'as yet unclassified',
+	#category : #testing,
 	#'squeak_changestamp' : 'MK 6/22/2024 23:59'
 }
 SUSLaneTests >> testCalculateLength [
@@ -19,7 +19,7 @@ SUSLaneTests >> testCalculateLength [
 ]
 
 {
-	#category : #'as yet unclassified',
+	#category : #testing,
 	#'squeak_changestamp' : 'MK 6/23/2024 00:05'
 }
 SUSLaneTests >> testGetLengthToT [
@@ -36,7 +36,7 @@ SUSLaneTests >> testGetLengthToT [
 ]
 
 {
-	#category : #'as yet unclassified',
+	#category : #testing,
 	#'squeak_changestamp' : 'PM 7/11/2024 11:28'
 }
 SUSLaneTests >> testGetNextCarOnLane [
@@ -53,7 +53,7 @@ SUSLaneTests >> testGetNextCarOnLane [
 ]
 
 {
-	#category : #'as yet unclassified',
+	#category : #testing,
 	#'squeak_changestamp' : 'PM 7/11/2024 11:28'
 }
 SUSLaneTests >> testGetPreviousCarOnLane [
@@ -70,7 +70,7 @@ SUSLaneTests >> testGetPreviousCarOnLane [
 ]
 
 {
-	#category : #'as yet unclassified',
+	#category : #testing,
 	#'squeak_changestamp' : 'MK 6/23/2024 00:20'
 }
 SUSLaneTests >> testGetRotation2VerticesWithTValue [

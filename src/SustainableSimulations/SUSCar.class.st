@@ -1,7 +1,14 @@
+"
+A SUSCar is the most generic vehicle, a basic red car.
+
+Instance Variables
+
+"
 Class {
 	#name : #SUSCar,
 	#superclass : #SUSVehicle,
-	#category : #'SustainableSimulations-Core'
+	#category : #'SustainableSimulations-Core',
+	#'squeak_changestamp' : 'PM 7/11/2024 16:18'
 }
 
 {
@@ -31,4 +38,12 @@ SUSCar >> initialize [
 	self extent: 30@15;
 		color: Color red;
 		addFlexShellIfNecessary
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'PM 7/11/2024 14:21'
+}
+SUSCar >> safetyDistance [
+	^ 40
 ]

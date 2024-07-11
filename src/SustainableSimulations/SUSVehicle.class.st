@@ -1,3 +1,77 @@
+"
+A SUSVehicle represents a moving entity on the road network.
+
+Instance Variables
+	acceleration:		Number
+	blockedOldLane:	SUSLane
+	currentLane:		SUSLane
+	currentRoute:		OrderedCollection{Number}
+	currentSpeed:		Number
+	deacceleration:	Number
+	deltaTime:			Number
+	isAccelerating:		Boolean
+	lastPoint:			Point
+	lastTime:			Number
+	maxSpeed:		Number
+	oldLane:			SUSLane
+	rightOfWayTime:	Number
+	simulation:			SUSSimulation
+	spawnRoad:		SUSAbstractRoad
+	targetSpeed:		Number
+	timeRoadStart:	Number
+
+acceleration
+	- The rate with which the vehicle accelerates.
+
+blockedOldLane
+	- xxxxx
+
+currentLane
+	- The lane the vehicle is currently diving on.
+
+currentRoute
+	- The indices of the next lanes the vehicle wants to drive on.
+
+currentSpeed
+	- The speed the vehicle is currently driving.
+
+deacceleration
+	- The rate with which the vehicle deaccelerates.
+
+deltaTime
+	- xxxxx
+
+isAccelerating
+	- Whether the car is currently accelerating.
+
+lastPoint
+	- The latest location of the car. Used for start/pause/stop.
+
+lastTime
+	- xxxxx
+
+maxSpeed
+	- Maximal speed the vehicle is allowed to drive.
+
+oldLane
+	- The previous lane on which the vehicle drove on.
+
+rightOfWayTime
+	- xxxxx
+
+simulation
+	- The Simulation which this road belongs to.
+
+spawnRoad
+	- The road on which the car has spawned.
+
+targetSpeed
+	- The target speed of the vehicle to follow cautiousness.
+
+timeRoadStart
+	- The time in millies when the vehicle entered the current road.
+
+"
 Class {
 	#name : #SUSVehicle,
 	#superclass : #RectangleMorph,
@@ -5,10 +79,7 @@ Class {
 		'maxSpeed',
 		'acceleration',
 		'deacceleration',
-		'speedGoal',
-		'length',
 		'simulation',
-		'lane',
 		'lastPoint',
 		'lastTime',
 		'deltaTime',
@@ -19,22 +90,32 @@ Class {
 		'timeRoadStart',
 		'blockedOldLane',
 		'oldLane',
-		'lastL',
-		'rightOfWayTime'
+		'rightOfWayTime',
+		'targetSpeed',
+		'currentLane'
 	],
-	#category : #'SustainableSimulations-Core'
+	#category : #'SustainableSimulations-Core',
+	#'squeak_changestamp' : 'PM 7/11/2024 16:17'
 }
 
 {
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 7/11/2024 11:43'
+	#category : #'instance creation',
+	#'squeak_changestamp' : 'PM 7/11/2024 11:50'
 }
-SUSVehicle class >> newOnRoad: aRoad withSpeed: aNumber [ 
+SUSVehicle class >> newOnRoad: aRoad withMaxSpeed: aNumber [ 
 	^ self new simulation: aRoad simulation;
 		 maxSpeed: aNumber;
 		 placeOnRoad: aRoad;
 		 spawnRoad: aRoad;
 		 yourself
+]
+
+{
+	#category : #acceleration,
+	#'squeak_changestamp' : 'PM 7/11/2024 14:14'
+}
+SUSVehicle >> accelerate [
+	currentSpeed := currentSpeed + (acceleration * 0.001 * deltaTime) min: targetSpeed
 ]
 
 {
@@ -57,12 +138,12 @@ SUSVehicle >> addRouteEntryAt: anIndex FromPrevLane: aLane [
 
 {
 	#category : #acceleration,
-	#'squeak_changestamp' : 'PM 7/11/2024 11:12'
+	#'squeak_changestamp' : 'PM 7/11/2024 14:14'
 }
 SUSVehicle >> applyAcceleration [
-	currentSpeed < speedGoal
-		ifTrue: [currentSpeed := currentSpeed + (acceleration * 0.001 * deltaTime) min: speedGoal]
-		ifFalse: [currentSpeed := currentSpeed - (deacceleration * 0.001 * deltaTime) max: speedGoal]
+	currentSpeed < targetSpeed
+		ifTrue: [self accelerate]
+		ifFalse: [self deaccelerate]
 ]
 
 {
@@ -78,62 +159,47 @@ SUSVehicle >> applyBehavior [
 
 {
 	#category : #behavior,
-	#'squeak_changestamp' : 'PM 7/11/2024 11:39'
+	#'squeak_changestamp' : 'PM 7/11/2024 15:33'
 }
 SUSVehicle >> applyCautiousness: t [ 
-	| dist nextCar maxDist i currentLane |
-	maxDist := (self calculateBrakingDistanceFromSpeedGoal: 0) + 100.
-	dist := 0.
+	| dist nextVehicle lookaheadDistance i nextLane |
+	lookaheadDistance := self lookaheadDistanceWithTargetSpeed: 0.
 	i := 0.
-	nextCar := lane getPreviousCarOnLane: self.
-	currentLane := lane.
-	speedGoal := maxSpeed min: lane road speedLimit.
-	nextCar == self
-		ifTrue: [dist := lane length
-						- (lane getLengthToT: t)]
-		ifFalse: [dist := (nextCar lane getLengthToT: nextCar lastPoint)
-						- (lane getLengthToT: t)].
-	self checkForSpeedLimit: dist.
-	[dist <= maxDist]
+	nextVehicle := self nextVehicle.
+	nextLane := currentLane.
+	targetSpeed := maxSpeed min: currentLane road speedLimit.
+	dist := self lookaheadDistanceOnLaneFrom: t.
+	self checkForSpeedLimitAtDistance: dist.
+	[dist <= lookaheadDistance]
 		whileTrue: [i := i + 1.
-			nextCar ~= self
-				ifTrue: [speedGoal := (nextCar currentSpeed min: maxSpeed)
-								min: lane road speedLimit.
-					^ self].
-			currentLane nextLanes isEmpty
-				ifTrue: [speedGoal := 0.
-					^ self].
-			self addRouteEntryAt: i FromPrevLane: currentLane.
-			currentLane := currentLane nextLanes
-						at: (currentRoute at: i).	
-			(self checkForIntersection: currentLane FromDist: dist FromIndex: i) ifTrue: [^ self].
-			currentLane vehicles isEmpty
-				ifTrue: [dist := dist + currentLane length]
-				ifFalse: [nextCar := currentLane vehicles last.
-					nextCar == self
-						ifTrue: [nextCar := currentLane getPreviousCarOnLane: nextCar].
-					nextCar == self
-						ifTrue: [nextCar == self
-								ifTrue: [dist := dist + currentLane length]]
-						ifFalse: [dist := dist
-										+ (currentLane getLengthToT: nextCar lastPoint).
-							maxDist := (self calculateBrakingDistanceFromSpeedGoal: nextCar currentSpeed) + 100]]]
+			nextVehicle ~= self
+				ifTrue: [^ self updateTargetSpeedWithVehicle: nextVehicle].
+			nextLane nextLanes
+				ifEmpty: [^ targetSpeed := 0].
+			self addRouteEntryAt: i FromPrevLane: nextLane.
+			nextLane := nextLane nextLanes at: (currentRoute at: i).
+			(self checkForIntersection: nextLane fromDist: dist fromIndex: i)
+				ifTrue: [^ self].
+			nextVehicle := self nextVehicleAfter: nextVehicle onLane: nextLane.
+			dist := dist + (self lookaheadDistanceAdditionToVehicle: nextVehicle onLane: nextLane).
+			nextVehicle ~= self
+				ifTrue: [lookaheadDistance := self lookaheadDistanceWithTargetSpeed: nextVehicle currentSpeed]]
 ]
 
 {
 	#category : #behavior,
-	#'squeak_changestamp' : 'PM 7/11/2024 11:39'
+	#'squeak_changestamp' : 'PM 7/11/2024 14:26'
 }
 SUSVehicle >> applyMovement [
 	| t rotation |
-	t := lane nextTprev: lastPoint advanceByLength: deltaTime * (currentSpeed / 360).
+	t := currentLane nextTprev: lastPoint advanceByLength: deltaTime * (currentSpeed / 360).
 	t >= 1
 		ifTrue: [self changeLane.
 			t := lastPoint].
 	self applyCautiousness: t.
 	self owner
-		center: (lane getPositionWithTValue: t).
-	rotation := lane getRotationWithTValue: t.
+		center: (currentLane getPositionWithTValue: t).
+	rotation := currentLane getRotationWithTValue: t.
 	rotation first = 1
 		ifTrue: [self rotationDegrees: rotation second].
 	lastPoint := t
@@ -149,57 +215,70 @@ SUSVehicle >> calculateBrakingDistanceFromSpeedGoal: aSpeed [
 
 {
 	#category : #behavior,
-	#'squeak_changestamp' : 'PM 7/11/2024 11:39'
+	#'squeak_changestamp' : 'PM 7/11/2024 14:26'
 }
 SUSVehicle >> changeLane [
-	lane nextLanes isEmpty
-		ifFalse: [
-			lane removeVehicle: self.
-			blockedOldLane := true.
-			oldLane := lane.
-			self addRouteEntryAt: 1 FromPrevLane: lane.
-			lane := lane nextLanes at: (currentRoute at: 1).
-			lane addVehicle: self.
-			currentRoute removeFirst.
-			lastPoint := 0.]
-		ifTrue: [lastPoint := 1.]
+	currentLane nextLanes isEmpty
+		ifTrue: [lastPoint := 1]
+		ifFalse: [self changeToNextLane]
 ]
 
 {
 	#category : #behavior,
-	#'squeak_changestamp' : 'PM 7/11/2024 11:38'
+	#'squeak_changestamp' : 'PM 7/11/2024 14:26'
 }
-SUSVehicle >> checkForIntersection: aLane FromDist: aDistance FromIndex: anIndex [ 
+SUSVehicle >> changeToNextLane [
+	currentLane removeVehicle: self.
+	blockedOldLane := true.
+	oldLane := currentLane.
+	self addRouteEntryAt: 1 FromPrevLane: currentLane.
+	currentLane := currentLane nextLanes at: (currentRoute at: 1).
+	currentLane addVehicle: self.
+	currentRoute removeFirst.
+	lastPoint := 0
+]
+
+{
+	#category : #behavior,
+	#'squeak_changestamp' : 'PM 7/11/2024 14:55'
+}
+SUSVehicle >> checkForIntersection: aLane fromDist: aDistance fromIndex: anIndex [ 
 	(aLane road isBlockedFrom: aLane)
-		ifFalse: [aLane road driving: self.
+		ifFalse: [aLane road isVehicleDriving: self.
 			^ false].
 	rightOfWayTime > 0
-		ifTrue: [aLane road driving: self.
+		ifTrue: [aLane road isVehicleDriving: self.
 			^ false].
 	aDistance <= ((self calculateBrakingDistanceFromSpeedGoal: 0)
-				+ 40)
-		ifFalse: [aLane road driving: self.
+				+ self safetyDistance)
+		ifFalse: [aLane road isVehicleDriving: self.
 			^ false].
-	speedGoal := 0.
-	currentSpeed = 0
+	targetSpeed := 0.
+	currentSpeed == 0
 		ifTrue: [aLane road standing: self].
 	^ true
 ]
 
 {
 	#category : #behavior,
-	#'squeak_changestamp' : 'PM 7/11/2024 11:38'
+	#'squeak_changestamp' : 'PM 7/11/2024 14:26'
 }
-SUSVehicle >> checkForSpeedLimit: aDistance [ 
-	| nextLane |
-	lane nextLanes isEmpty
-		ifFalse: [self addRouteEntryAt: 1 FromPrevLane: lane.
-			nextLane := lane nextLanes
-						at: (currentRoute at: 1).
-			aDistance <= ((self calculateBrakingDistanceFromSpeedGoal: nextLane road speedLimit)
-						+ 50)
-				ifTrue: [speedGoal := (nextLane road speedLimit min: lane road speedLimit)
-								min: maxSpeed]]
+SUSVehicle >> checkForSpeedLimitAtDistance: aNumber [ 
+	currentLane nextLanes isEmpty
+		ifFalse: [self addRouteEntryAt: 1 FromPrevLane: currentLane.
+			self checkForSpeedLimitAtDistance: aNumber
+				onLane: (currentLane nextLanes
+						at: (currentRoute at: 1))]
+]
+
+{
+	#category : #behavior,
+	#'squeak_changestamp' : 'PM 7/11/2024 14:26'
+}
+SUSVehicle >> checkForSpeedLimitAtDistance: aNumber onLane: aLane [
+	aNumber <= ((self calculateBrakingDistanceFromSpeedGoal: aLane road speedLimit)
+				+ self safetyDistance)
+		ifTrue: [targetSpeed := (aLane road speedLimit min: currentLane road speedLimit) min: maxSpeed]
 ]
 
 {
@@ -219,11 +298,11 @@ SUSVehicle >> currentSpeed: aNumber [
 ]
 
 {
-	#category : #'submorphs - add/remove',
-	#'squeak_changestamp' : 'PM 7/11/2024 11:05'
+	#category : #acceleration,
+	#'squeak_changestamp' : 'PM 7/11/2024 14:14'
 }
-SUSVehicle >> delete [
-	"Do nothing!"
+SUSVehicle >> deaccelerate [
+	currentSpeed := currentSpeed - (deacceleration * 0.001 * deltaTime) max: targetSpeed
 ]
 
 {
@@ -236,43 +315,46 @@ SUSVehicle >> deltaTime: anObject [
 
 {
 	#category : #initialization,
-	#'squeak_changestamp' : 'PM 7/11/2024 11:19'
+	#'squeak_changestamp' : 'PM 7/11/2024 15:59'
 }
 SUSVehicle >> initialize [
 	super initialize.
-	maxSpeed := 100.
-	acceleration := 1.
-	length := 1.
 	timeRoadStart := Time millisecondClock.
 	lastTime := Time millisecondClock.
-	currentSpeed := 0.
-	maxSpeed := 50.
-	speedGoal := 50.
-	acceleration := 50.
-	deacceleration := 100.
-	length := 1.
-	isAccelerating := true.
 	lastPoint := 0.
 	blockedOldLane := false.
 	currentRoute := OrderedCollection new.
 	rightOfWayTime := 0.
-	self morphicLayerNumber: 15
+	self initializeSpeeds; morphicLayerNumber: 15
+]
+
+{
+	#category : #initialization,
+	#'squeak_changestamp' : 'PM 7/11/2024 15:39'
+}
+SUSVehicle >> initializeSpeeds [
+	acceleration := 50.
+	deacceleration := 100.
+	currentSpeed := 0.
+	isAccelerating := true.
+	maxSpeed := 50.
+	targetSpeed := 50
 ]
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 7/11/2024 11:02'
+	#'squeak_changestamp' : 'PM 7/11/2024 14:26'
 }
 SUSVehicle >> lane [
-	 ^ lane
+	 ^ currentLane
 ]
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'GoChriNo 6/14/2024 15:08'
+	#'squeak_changestamp' : 'PM 7/11/2024 14:26'
 }
 SUSVehicle >> lane: anObject [
-	lane := anObject
+	currentLane := anObject
 ]
 
 {
@@ -292,6 +374,33 @@ SUSVehicle >> lastTime: anObject [
 ]
 
 {
+	#category : #behavior,
+	#'squeak_changestamp' : 'PM 7/11/2024 14:48'
+}
+SUSVehicle >> lookaheadDistanceAdditionToVehicle: aVehicle onLane: aLane [
+	aVehicle == self
+		ifTrue: [^ aLane length]
+		ifFalse: [^ aVehicle lane getLengthToT: aVehicle lastPoint].
+]
+
+{
+	#category : #behavior,
+	#'squeak_changestamp' : 'PM 7/11/2024 14:48'
+}
+SUSVehicle >> lookaheadDistanceOnLaneFrom: t [ 
+	^ (self lookaheadDistanceAdditionToVehicle: self nextVehicle onLane: currentLane)
+		- (currentLane getLengthToT: t)
+]
+
+{
+	#category : #behavior,
+	#'squeak_changestamp' : 'PM 7/11/2024 14:20'
+}
+SUSVehicle >> lookaheadDistanceWithTargetSpeed: aNumber [
+	^ 2 * self safetyDistance + (self calculateBrakingDistanceFromSpeedGoal: aNumber)
+]
+
+{
 	#category : #accessing,
 	#'squeak_changestamp' : 'PM 7/11/2024 11:14'
 }
@@ -308,15 +417,37 @@ SUSVehicle >> maxSpeed: aNumber [
 ]
 
 {
+	#category : #accessing,
+	#'squeak_changestamp' : 'PM 7/11/2024 14:27'
+}
+SUSVehicle >> nextVehicle [
+	^ currentLane getPreviousCarOnLane: self
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'PM 7/11/2024 14:41'
+}
+SUSVehicle >> nextVehicleAfter: aVehicle onLane: aLane [ 
+	| nextVehicle |
+	nextVehicle := aVehicle.
+	aLane vehicles
+		ifNotEmpty: [nextVehicle := aLane vehicles last.
+			nextVehicle == self
+				ifTrue: [nextVehicle := aLane getPreviousCarOnLane: nextVehicle]].
+	^ nextVehicle
+]
+
+{
 	#category : #simulation,
-	#'squeak_changestamp' : 'PM 7/11/2024 11:43'
+	#'squeak_changestamp' : 'PM 7/11/2024 14:26'
 }
 SUSVehicle >> placeOnRoad: aRoad [ 
 	simulation addVehicleIfNotExists: self.
-	lane := aRoad lanes first.
-	lane addVehicle: self.
+	currentLane := aRoad lanes first.
+	currentLane addVehicle: self.
 	self
-		center: (lane getPositionWithTValue: 0)
+		center: (currentLane getPositionWithTValue: 0)
 ]
 
 {
@@ -333,6 +464,14 @@ SUSVehicle >> remove [
 }
 SUSVehicle >> rightOfWayTime: aNumber [ 
 	rightOfWayTime := aNumber
+]
+
+{
+	#category : #behavior,
+	#'squeak_changestamp' : 'PM 7/11/2024 14:02'
+}
+SUSVehicle >> safetyDistance [
+	^ 50
 ]
 
 {
@@ -369,48 +508,57 @@ SUSVehicle >> spawnRoad: aRoad [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'GoChriNo 6/14/2024 15:51'
+	#'squeak_changestamp' : 'PM 7/11/2024 14:14'
 }
 SUSVehicle >> speedGoal: anObject [
-	speedGoal := anObject
+	targetSpeed := anObject
 ]
 
 {
 	#category : #behavior,
-	#'squeak_changestamp' : 'PM 7/11/2024 11:20'
+	#'squeak_changestamp' : 'PM 7/11/2024 14:26'
+}
+SUSVehicle >> turnsAt: aRoad whenIndexIs: aClosure [
+	| index nextLane |
+	index := 1.
+	nextLane := currentLane.
+	currentLane road == aRoad
+		ifTrue: [^ false].
+	[index <= currentRoute size]
+		whileTrue: [nextLane := nextLane nextLanes
+						at: (currentRoute at: index).
+			(nextLane road == aRoad and: (currentRoute at: index)
+						= (aClosure cull: nextLane))
+				ifTrue: [^ true].
+			index := index + 1].
+	^ false
+]
+
+{
+	#category : #behavior,
+	#'squeak_changestamp' : 'PM 7/11/2024 12:17'
 }
 SUSVehicle >> turnsLeftAt: aRoad [ 
-	| index currentLane |
-	index := 1.
-	currentLane := lane.
-	lane road == aRoad
-		ifFalse: [[index <= currentRoute size]
-				whileTrue: [currentLane := currentLane nextLanes
-								at: (currentRoute at: index).
-					currentLane road == aRoad
-						ifTrue: [(currentRoute at: index)
-									= 1
-								ifTrue: [^ true]].
-					index := index + 1]].
-	^ false
+	^ self
+		turnsAt: aRoad
+		whenIndexIs: [1]
 ]
 
 {
 	#category : #behavior,
-	#'squeak_changestamp' : 'PM 7/11/2024 11:21'
+	#'squeak_changestamp' : 'PM 7/11/2024 12:14'
 }
 SUSVehicle >> turnsRightAt: aRoad [ 
-	| index currentLane |
-	index := 1.
-	currentLane := lane.
-	lane road == aRoad
-		ifFalse: [[index <= currentRoute size]
-				whileTrue: [currentLane := currentLane nextLanes
-								at: (currentRoute at: index).
-					currentLane road == aRoad
-						ifTrue: [(currentRoute at: index)
-									= (currentLane previousLanes at: 1) nextLanes size
-								ifTrue: [^ true]].
-					index := index + 1]].
-	^ false
+	^ self
+		turnsAt: aRoad
+		whenIndexIs: [:aLane | (aLane previousLanes at: 1) nextLanes size]
+]
+
+{
+	#category : #behavior,
+	#'squeak_changestamp' : 'PM 7/11/2024 14:33'
+}
+SUSVehicle >> updateTargetSpeedWithVehicle: aVehicle [ 
+	targetSpeed := (aVehicle currentSpeed min: maxSpeed)
+				min: currentLane road speedLimit
 ]

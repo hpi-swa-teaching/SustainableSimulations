@@ -5,39 +5,45 @@ Class {
 }
 
 {
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'MK 6/23/2024 00:59'
+	#category : #testing,
+	#'squeak_changestamp' : 'PM 7/11/2024 15:48'
 }
 SUSAbstractRoadTests >> testInitializeFromTo [
-	|P1 P2 simulation road|
-	
+	| P1 P2 simulation road |
 	simulation := SUSSimulation new.
-	P1 := SUSConnectionPoint newForSimulation: simulation at: (SUSDirectedPoint newWithPosition: 1@1 inDirection: 1@1).
-	P2 := SUSConnectionPoint newForSimulation: simulation at: (SUSDirectedPoint newWithPosition: 2@2 inDirection: 1@1).
+	P1 := SUSConnectionPoint
+				newForSimulation: simulation
+				at: (SUSDirectedPoint newWithPosition: 1 @ 1 inDirection: 1 @ 1).
+	P2 := SUSConnectionPoint
+				newForSimulation: simulation
+				at: (SUSDirectedPoint newWithPosition: 2 @ 2 inDirection: 1 @ 1).
 	P2 := P2 asDirectedPoint.
-
-	road := SUSStraightRoad newOnSimulation: simulation from: P1 to: P2.
-	
-	self assert: (simulation roads includes: road).
-	
+	road := SUSStraightRoad
+				newOnSimulation: simulation
+				from: P1
+				to: P2.
+	self
+		assert: (simulation roads includes: road)
 ]
 
 {
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 7/10/2024 16:12'
+	#category : #testing,
+	#'squeak_changestamp' : 'PM 7/11/2024 15:48'
 }
 SUSAbstractRoadTests >> testSpawnCar [
-	| road simulation P1 P2|
-	
+	| road simulation P1 P2 |
 	simulation := SUSSimulation new.
-	
-	P1 := SUSConnectionPoint newForSimulation: simulation at: (SUSDirectedPoint newWithPosition: 1@1 inDirection: 1@1).
-	P2 := SUSConnectionPoint newForSimulation: simulation at: (SUSDirectedPoint newWithPosition: 2@2 inDirection: 1@1).
+	P1 := SUSConnectionPoint
+				newForSimulation: simulation
+				at: (SUSDirectedPoint newWithPosition: 1 @ 1 inDirection: 1 @ 1).
+	P2 := SUSConnectionPoint
+				newForSimulation: simulation
+				at: (SUSDirectedPoint newWithPosition: 2 @ 2 inDirection: 1 @ 1).
 	P2 := P2 asDirectedPoint.
-
-	road := SUSStraightRoad newOnSimulation: simulation from: P1 to: P2.
-	
-	road spawnCar.
-	
-	self assert: (simulation vehicles notEmpty).
+	road := SUSStraightRoad
+				newOnSimulation: simulation
+				from: P1
+				to: P2.
+	road spawnCarWithMaxSpeed: 50.
+	self assert: simulation vehicles notEmpty
 ]

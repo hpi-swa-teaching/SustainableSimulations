@@ -57,11 +57,11 @@ SUSTunnel >> postInitialize [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'MK 7/8/2024 23:10'
+	#'squeak_changestamp' : 'PM 7/11/2024 11:50'
 }
 SUSTunnel >> spawnCarFromTunnel [
 	| car |
-	car := SUSCar newOnRoad: self withSpeed: 50 asNumber.
+	car := SUSCar newOnRoad: self withMaxSpeed: 50 asNumber.
 	car spawnRoad: 0.
 	simulation addMorphInLayer: car
 ]

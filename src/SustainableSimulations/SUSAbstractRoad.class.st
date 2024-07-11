@@ -75,15 +75,6 @@ SUSAbstractRoad >> createLaneWithPath: aLineMorph [
 ]
 
 {
-	#category : #utility,
-	#'squeak_changestamp' : 'GoChriNo 6/27/2024 12:39'
-}
-SUSAbstractRoad >> driving: aCar [
-
-	
-]
-
-{
 	#category : #'event handling',
 	#'squeak_changestamp' : 'MK 6/10/2024 22:32'
 }
@@ -140,6 +131,16 @@ SUSAbstractRoad >> isEmpty [
 ]
 
 {
+	#category : #utility,
+	#'squeak_changestamp' : 'PM 7/11/2024 14:55'
+}
+SUSAbstractRoad >> isVehicleDriving: aVehicle [
+	^ self
+
+	
+]
+
+{
 	#category : #accessing,
 	#'squeak_changestamp' : 'Len 6/1/2024 20:34'
 }
@@ -167,23 +168,20 @@ SUSAbstractRoad >> postInitialize [
 
 {
 	#category : #utility,
-	#'squeak_changestamp' : 'PM 7/10/2024 16:12'
+	#'squeak_changestamp' : 'PM 7/11/2024 15:53'
 }
-SUSAbstractRoad >> searchForCarBackwardsFromLane: aLane WithMaxDist: maxDist [ 
-	| dist car currentLane |
+SUSAbstractRoad >> searchVehicleBackwardsFromLane: aLane withMaxDist: aNumber [ 
+	| dist currentLane car |
 	dist := 0.
 	currentLane := aLane.
-	car := nil.
-	[dist <= maxDist]
-		whileTrue: [car
-				ifNotNil: [^ car].
-			currentLane previousLanes isEmpty ifTrue: [^ nil].
-			currentLane := currentLane previousLanes at: 1.
-			currentLane vehicles isEmpty
-				ifTrue: [dist := dist + currentLane length]
-				ifFalse: [car := currentLane vehicles first.
-					dist := dist + currentLane length
-								- (currentLane getLengthToT: car lastPoint)]].
+	[dist <= aNumber and: currentLane previousLanes isEmpty not]
+		whileTrue: [currentLane := currentLane previousLanes at: 1.
+			dist := dist + currentLane length.
+			currentLane vehicles
+				ifNotEmpty: [car := currentLane vehicles first.
+					dist := dist - (currentLane getLengthToT: car lastPoint).
+					dist <= aNumber
+						ifTrue: [^ car]]].
 	^ nil
 ]
 
@@ -205,13 +203,21 @@ SUSAbstractRoad >> simulation: anObject [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/18/2024 18:56'
+	#'squeak_changestamp' : 'PM 7/11/2024 15:47'
 }
 SUSAbstractRoad >> spawnCar [
-	[simulation
-		addMorphInLayer: (SUSCar newOnRoad: self withSpeed: (UIManager default request: 'Please enter car speed' initialAnswer: 50) asNumber)]
+	[self spawnCarWithMaxSpeed: (UIManager default request: 'Please enter car speed' initialAnswer: 50) asNumber]
 		on: NumberParserError
 		do: []
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'PM 7/11/2024 15:47'
+}
+SUSAbstractRoad >> spawnCarWithMaxSpeed: aNumber [ 
+	simulation
+		addMorphInLayer: (SUSCar newOnRoad: self withMaxSpeed: aNumber)
 ]
 
 {

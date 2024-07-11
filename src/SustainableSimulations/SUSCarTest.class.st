@@ -5,19 +5,17 @@ Class {
 }
 
 {
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 7/11/2024 11:14'
+	#category : #testing,
+	#'squeak_changestamp' : 'PM 7/11/2024 15:46'
 }
 SUSCarTest >> testApplyAccelaration [
 	| car |
-
-	car := SUSCar new.
-	car currentSpeed: 10.
-	car speedGoal: 20.
-	car acceleration: 5.
-	car deltaTime: 1000. "DeltaTime in Millisekunden"
-
-	car applyAcceleration.
-
-	self assert: (car currentSpeed = (10 + (5 * 0.001 * 1000) min: 20)).
+	car := SUSCar new currentSpeed: 10;
+				 speedGoal: 20;
+				 acceleration: 5;
+				 deltaTime: 1000;
+				 applyAcceleration;
+				 yourself.
+	self assert: car currentSpeed
+			= (10 + (5 * 0.001 * 1000) min: 20)
 ]
