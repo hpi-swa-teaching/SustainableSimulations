@@ -48,11 +48,11 @@ SUSTunnel >> initialize [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'Len 6/22/2024 22:09'
+	#'squeak_changestamp' : 'PM 7/11/2024 11:30'
 }
 SUSTunnel >> postInitialize [
 	simulation addTunnel: self.
-	lanes second killRoad: true
+	lanes second isRemoveRoad: true
 ]
 
 {

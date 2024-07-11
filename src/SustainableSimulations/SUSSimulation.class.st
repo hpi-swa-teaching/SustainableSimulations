@@ -70,14 +70,6 @@ SUSSimulation >> activeConnectionPoint: anObject [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 7/10/2024 16:07'
-}
-SUSSimulation >> addCar: aCar [
-	vehicles addLast: aCar
-]
-
-{
-	#category : #accessing,
 	#'squeak_changestamp' : 'Len 6/1/2024 20:25'
 }
 SUSSimulation >> addRoad: aRoad [
@@ -98,6 +90,24 @@ SUSSimulation >> addStartingPoint [
 }
 SUSSimulation >> addTunnel: aTunnel [
 	tunnels addLast: aTunnel
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'PM 7/11/2024 11:28'
+}
+SUSSimulation >> addVehicle: aCar [
+	vehicles addLast: aCar
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'PM 7/11/2024 11:26'
+}
+SUSSimulation >> addVehicleIfNotExists: aVehicle [ 
+	(vehicles
+			anySatisfy: [:each | each == aVehicle])
+		ifFalse: [vehicles addLast: aVehicle]
 ]
 
 {
@@ -240,9 +250,9 @@ SUSSimulation >> playSimulation [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 7/10/2024 16:08'
+	#'squeak_changestamp' : 'PM 7/11/2024 11:29'
 }
-SUSSimulation >> removeCar: aCar [ 
+SUSSimulation >> removeVehicle: aCar [ 
 	vehicles remove: aCar.
 	removedVehicles add: aCar
 ]
@@ -312,16 +322,16 @@ SUSSimulation >> stepTime [
 
 {
 	#category : #simulation,
-	#'squeak_changestamp' : 'PM 7/10/2024 16:07'
+	#'squeak_changestamp' : 'PM 7/11/2024 10:55'
 }
 SUSSimulation >> stopSimulation [
 	stopped
 		ifFalse: [vehicles copy
 				do: [:each | each spawnRoad = 0
-						ifTrue: [each kill]
+						ifTrue: [each remove]
 						ifFalse: [self
 								addMorphInLayer: (SUSCar newOnRoad: each spawnRoad withSpeed: each maxSpeed).
-							each kill]]].
+							each remove]]].
 	stopped := true
 ]
 

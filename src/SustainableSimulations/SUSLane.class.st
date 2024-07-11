@@ -2,14 +2,14 @@ Class {
 	#name : #SUSLane,
 	#superclass : #Object,
 	#instVars : [
-		'cars',
 		'nextLanes',
 		'previousLanes',
 		'path',
 		'length',
 		'blockedT',
-		'killRoad',
-		'road'
+		'road',
+		'vehicles',
+		'isRemoveRoad'
 	],
 	#category : #'SustainableSimulations-Roads'
 }
@@ -39,16 +39,6 @@ SUSLane class >> newLaneWithPath: aLineMorph OnRoad: aRoad [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'Len 6/20/2024 20:23'
-}
-SUSLane >> addCar: aCar [
-	killRoad
-		ifTrue: [aCar kill]
-		ifFalse: [cars add: aCar]
-]
-
-{
-	#category : #'as yet unclassified',
 	#'squeak_changestamp' : 'Len 6/1/2024 21:09'
 }
 SUSLane >> addNextLane: aNextLane [
@@ -63,6 +53,16 @@ SUSLane >> addNextLane: aNextLane [
 SUSLane >> addPreviousLane: aPreviousLane [
 
 	previousLanes addLast: aPreviousLane
+]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'PM 7/11/2024 11:29'
+}
+SUSLane >> addVehicle: aVehicle [
+	isRemoveRoad
+		ifTrue: [aVehicle remove]
+		ifFalse: [vehicles add: aVehicle]
 ]
 
 {
@@ -143,12 +143,12 @@ SUSLane >> getLengthToT: t [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'GoChriNo 6/14/2024 15:28'
+	#'squeak_changestamp' : 'PM 7/11/2024 11:28'
 }
 SUSLane >> getNextCarOnLane: aCar [
 	| next |
 	next := false.
-	cars do: [:each |
+	vehicles do: [:each |
 		next ifTrue: [^ each].
 		aCar = each ifTrue: [next := true].
 		].
@@ -191,12 +191,12 @@ SUSLane >> getPositionWithTValue: aNumber [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'MK 6/23/2024 01:58'
+	#'squeak_changestamp' : 'PM 7/11/2024 11:28'
 }
 SUSLane >> getPreviousCarOnLane: aCar [
 	| previous |
 	previous := aCar.
-	cars do: [:each |
+	vehicles do: [:each |
 		aCar = each ifTrue: [^ previous].
 		previous := each].
 	^ aCar
@@ -258,23 +258,23 @@ SUSLane >> getRotationWithTValue: aNumber [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'GoChriNo 6/26/2024 08:26'
+	#'squeak_changestamp' : 'PM 7/11/2024 11:29'
 }
 SUSLane >> initialize [
 
-	cars := OrderedCollection new.
+	vehicles := OrderedCollection new.
 	nextLanes := OrderedCollection new.
 	previousLanes := OrderedCollection new.
 	blockedT := 1.
-	killRoad := false.
+	isRemoveRoad := false.
 ]
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'Len 6/20/2024 20:25'
+	#'squeak_changestamp' : 'PM 7/11/2024 11:30'
 }
-SUSLane >> killRoad: aBoolean [
-	killRoad := aBoolean
+SUSLane >> isRemoveRoad: aBoolean [
+	isRemoveRoad := aBoolean
 ]
 
 {
@@ -345,11 +345,10 @@ SUSLane >> previousLanes [
 
 {
 	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'Len 6/10/2024 00:11'
+	#'squeak_changestamp' : 'PM 7/11/2024 11:30'
 }
-SUSLane >> removeCar: aCar [
-
-	cars remove: aCar
+SUSLane >> removeVehicle: aVehicle [
+	vehicles remove: aVehicle
 ]
 
 {
@@ -378,16 +377,16 @@ SUSLane >> updateBlocked: aNumber [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 7/10/2024 16:12'
+	#'squeak_changestamp' : 'PM 7/11/2024 11:28'
 }
 SUSLane >> vehicles [
-	^ cars
+	^ vehicles
 ]
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 7/10/2024 16:13'
+	#'squeak_changestamp' : 'PM 7/11/2024 11:28'
 }
 SUSLane >> vehicles: anObject [
-	cars := anObject
+	vehicles := anObject
 ]
