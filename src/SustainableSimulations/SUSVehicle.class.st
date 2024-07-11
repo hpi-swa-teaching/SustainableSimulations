@@ -240,7 +240,7 @@ SUSVehicle >> changeToNextLane [
 
 {
 	#category : #behavior,
-	#'squeak_changestamp' : 'PM 7/11/2024 14:55'
+	#'squeak_changestamp' : 'PM 7/11/2024 19:43'
 }
 SUSVehicle >> checkForIntersection: aLane fromDist: aDistance fromIndex: anIndex [ 
 	(aLane road isBlockedFrom: aLane)
@@ -255,7 +255,7 @@ SUSVehicle >> checkForIntersection: aLane fromDist: aDistance fromIndex: anIndex
 			^ false].
 	targetSpeed := 0.
 	currentSpeed == 0
-		ifTrue: [aLane road standing: self].
+		ifTrue: [aLane road isStanding: self].
 	^ true
 ]
 

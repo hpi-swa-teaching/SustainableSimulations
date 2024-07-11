@@ -10,33 +10,27 @@ Class {
 
 {
 	#category : #strategy,
-	#'squeak_changestamp' : 'PM 7/11/2024 14:57'
+	#'squeak_changestamp' : 'PM 7/11/2024 19:52'
 }
 SUSCrossIntersectionRightBeforeLeftStrategy >> isBlockedByOtherLanesFrom: aLane [ 
 	| index car |
 	index := road lanes indexOf: aLane.
 	index \\ 3 = 0
 		ifTrue: [^ false].
-	(road
-		searchVehicleBackwardsFromLane: (road lanes at: index + 2 \\ 12 + 1)
-		withMaxDist: 200)
+	(self searchForCarAtIndex: index + 2 \\ 12 + 1)
 		ifNotNil: [^ true].
 	index \\ 3 = 1
-		ifTrue: [car := road
-						searchVehicleBackwardsFromLane: (road lanes at: index + 5 \\ 12 + 1)
-						withMaxDist: 200.
-			car
-				ifNotNil: [(car turnsLeftAt: road)
-						ifFalse: [^ true]]].
+		ifTrue: [car := self searchForCarAtIndex: index + 5 \\ 12 + 1.
+			(car isNil not
+					and: [(car turnsLeftAt: road) not])
+				ifTrue: [^ true]].
 	^ false
 ]
 
 {
 	#category : #strategy,
-	#'squeak_changestamp' : 'GoChriNo 7/10/2024 14:07'
+	#'squeak_changestamp' : 'PM 7/11/2024 19:52'
 }
 SUSCrossIntersectionRightBeforeLeftStrategy >> shouldGiveRightOfWayTime: aCarCollection [ 
-	aCarCollection size >= 3
-		ifTrue: [^ true].
-	^ false
+	^ aCarCollection size >= 3
 ]

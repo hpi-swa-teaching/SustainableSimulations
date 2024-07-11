@@ -1,5 +1,5 @@
 "
-A SUSRoadBuilder is xxxxxxxxx.
+A SUSRoadBuilder is the class to build and verify new roads.
 
 Instance Variables
 	from:					SUSConnectionPoint
@@ -34,7 +34,7 @@ Class {
 		'invalid'
 	],
 	#category : #'SustainableSimulations-Roads',
-	#'squeak_changestamp' : 'PM 7/11/2024 16:38'
+	#'squeak_changestamp' : 'PM 7/11/2024 18:16'
 }
 
 {

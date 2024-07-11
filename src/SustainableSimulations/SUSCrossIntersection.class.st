@@ -1,12 +1,19 @@
+"
+A SUSCrossIntersection is an intersection road in form of a cross.
+
+Instance Variables
+
+"
 Class {
 	#name : #SUSCrossIntersection,
-	#superclass : #SUSIntersection,
-	#category : #'SustainableSimulations-Roads'
+	#superclass : #SUSAbstractIntersection,
+	#category : #'SustainableSimulations-Roads',
+	#'squeak_changestamp' : 'PM 7/11/2024 20:13'
 }
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/18/2024 15:32'
+	#'squeak_changestamp' : 'PM 7/11/2024 18:44'
 }
 SUSCrossIntersection >> connectionPointPositions [
 	| positions directions |
@@ -14,13 +21,13 @@ SUSCrossIntersection >> connectionPointPositions [
 	directions := {90. 0. 270}
 				collect: [:each | from direction rotateBy: each degreesToRadians about: 0 @ 0].
 	^ {from}, ((1 to: 3)
-		collect: [:index | SUSDirectedPoint
+			collect: [:index | SUSDirectedPoint
 				newWithPosition: (from absoluteOffset: (positions at: index))
-				inDirection: (directions at: index)]).
+				inDirection: (directions at: index)])
 ]
 
 {
-	#category : #accessing,
+	#category : #drawing,
 	#'squeak_changestamp' : 'PM 7/3/2024 00:23'
 }
 SUSCrossIntersection >> createDrawing [
@@ -29,41 +36,37 @@ SUSCrossIntersection >> createDrawing [
 
 {
 	#category : #initialization,
-	#'squeak_changestamp' : 'PM 7/4/2024 10:21'
+	#'squeak_changestamp' : 'PM 7/11/2024 20:03'
 }
 SUSCrossIntersection >> createStrategy [
 	^ SUSCrossIntersectionRightBeforeLeftStrategy newFromRoad: self
 ]
 
 {
-	#category : #utility,
-	#'squeak_changestamp' : 'GoChriNo 6/27/2024 13:02'
+	#category : #accessing,
+	#'squeak_changestamp' : 'PM 7/11/2024 18:44'
 }
-SUSCrossIntersection >> getOppositeLaneFrom: aLane [
+SUSCrossIntersection >> getOppositeLaneFrom: aLane [ 
 	| index |
 	index := lanes indexOf: aLane.
-	^ lanes at: (index + 5 \\ 12 + 1).
+	^ lanes at: index + 5 \\ 12 + 1
 ]
 
 {
-	#category : #utility,
-	#'squeak_changestamp' : 'GoChriNo 6/27/2024 14:00'
+	#category : #accessing,
+	#'squeak_changestamp' : 'PM 7/11/2024 18:46'
 }
-SUSCrossIntersection >> getOppositeLanesFrom: aLane [
-	| index laneCollection|
+SUSCrossIntersection >> getOppositeLanesFrom: aLane [ 
+	| index |
 	index := lanes indexOf: aLane.
-	index := ((index - 1 / 3) floor ) * 3 + 2.
-	laneCollection := OrderedCollection new.
-	laneCollection add: (lanes at: (index + 4 \\ 12 + 1)).
-	laneCollection add: (lanes at: (index + 5 \\ 12 + 1)).
-	laneCollection add: (lanes at: (index + 6 \\ 12 + 1)).
-	^ laneCollection
+	index := (index - 1 / 3) floor * 3 + 2.
+	^ {lanes at: index + 4 \\ 12 + 1. lanes at: index + 5 \\ 12 + 1. lanes at: index + 6 \\ 12 + 1} asOrderedCollection
 ]
 
 {
-	#category : #utility,
-	#'squeak_changestamp' : 'GoChriNo 7/2/2024 10:51'
+	#category : #'right of way',
+	#'squeak_changestamp' : 'PM 7/11/2024 18:45'
 }
 SUSCrossIntersection >> isBlockedFrom: aLane [ 
-	^ (strategy isBlockedFrom: aLane)
+	^ strategy isBlockedFrom: aLane
 ]

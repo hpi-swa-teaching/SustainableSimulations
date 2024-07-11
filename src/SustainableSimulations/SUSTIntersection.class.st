@@ -1,41 +1,55 @@
+"
+A SUSTIntersection is an intersection road which looks link a T.
+
+Instance Variables
+	noExitAt:		Symbol (#Top, #Left, #Right)
+
+noExitAt
+	- In this direction there is no exit. #Bottom is the direction of the (first) connecting SUSConnectionPoint
+
+"
 Class {
 	#name : #SUSTIntersection,
-	#superclass : #SUSIntersection,
+	#superclass : #SUSAbstractIntersection,
 	#instVars : [
 		'noExitAt'
 	],
-	#category : #'SustainableSimulations-Roads'
+	#category : #'SustainableSimulations-Roads',
+	#'squeak_changestamp' : 'PM 7/11/2024 20:08'
 }
 
 {
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 7/3/2024 00:07'
+	#category : #'instance creation',
+	#'squeak_changestamp' : 'PM 7/11/2024 18:40'
 }
-SUSTIntersection class >> newOnSimulation: aSimulation from: aConnectionPoint to: aPoint noExitAt: aDirection [
+SUSTIntersection class >> newOnSimulation: aSimulation from: aConnectionPoint to: aPoint noExitAt: aDirection [ 
 	^ self new simulation: aSimulation;
-		noExitAt: aDirection;
-		initializeFrom: aConnectionPoint to: aPoint;
-		postInitialize;
-		yourself
+		 noExitAt: aDirection;
+		 initializeFrom: aConnectionPoint to: aPoint;
+		 postInitialize;
+		 yourself
 ]
 
 {
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 7/3/2024 00:07'
+	#category : #accessing,
+	#'squeak_changestamp' : 'PM 7/11/2024 20:10'
 }
 SUSTIntersection >> connectionPointPositions [
 	| positions directions |
-	positions := (self positions at: noExitAt) * SUSDrawing normalLaneWidth.
+	positions := (self positions at: noExitAt)
+				* SUSDrawing normalLaneWidth.
 	directions := (self directions at: noExitAt)
 				collect: [:each | from direction rotateBy: each degreesToRadians about: 0 @ 0].
-	^ {from}, ((1 to: 2)
-		collect: [:index | SUSDirectedPoint
-				newWithPosition: (from absoluteOffset: (positions at: index))
-				inDirection: (directions at: index)]).
+	^ {from}
+		, ((1 to: 2)
+				collect: [:index | SUSDirectedPoint
+						newWithPosition: (from
+								absoluteOffset: (positions at: index))
+						inDirection: (directions at: index)])
 ]
 
 {
-	#category : #'as yet unclassified',
+	#category : #drawing,
 	#'squeak_changestamp' : 'PM 7/3/2024 00:23'
 }
 SUSTIntersection >> createDrawing [
@@ -44,14 +58,14 @@ SUSTIntersection >> createDrawing [
 
 {
 	#category : #initialization,
-	#'squeak_changestamp' : 'PM 7/4/2024 10:22'
+	#'squeak_changestamp' : 'PM 7/11/2024 19:58'
 }
 SUSTIntersection >> createStrategy [
-	^ SUSTIntersectionRightOfWayStrategy newFromRoad: self
+	^ SUSTIntersectionRightBeforeLeftStrategy newFromRoad: self
 ]
 
 {
-	#category : #utility,
+	#category : #accessing,
 	#'squeak_changestamp' : 'PM 7/3/2024 00:20'
 }
 SUSTIntersection >> directions [
@@ -59,7 +73,7 @@ SUSTIntersection >> directions [
 ]
 
 {
-	#category : #utility,
+	#category : #accessing,
 	#'squeak_changestamp' : 'PM 7/3/2024 00:21'
 }
 SUSTIntersection >> drawingPoint [
@@ -71,7 +85,7 @@ SUSTIntersection >> drawingPoint [
 ]
 
 {
-	#category : #utility,
+	#category : #accessing,
 	#'squeak_changestamp' : 'PM 7/3/2024 00:20'
 }
 SUSTIntersection >> drawingPointIndex [
@@ -79,7 +93,7 @@ SUSTIntersection >> drawingPointIndex [
 ]
 
 {
-	#category : #utility,
+	#category : #accessing,
 	#'squeak_changestamp' : 'PM 7/3/2024 00:20'
 }
 SUSTIntersection >> drawingPointIndices [
@@ -87,15 +101,15 @@ SUSTIntersection >> drawingPointIndices [
 ]
 
 {
-	#category : #utility,
-	#'squeak_changestamp' : 'GoChriNo 7/2/2024 14:40'
+	#category : #'right of way',
+	#'squeak_changestamp' : 'PM 7/11/2024 20:10'
 }
 SUSTIntersection >> isBlockedFrom: aLane [ 
-	^ (strategy isBlockedFrom: aLane)
+	^ strategy isBlockedFrom: aLane
 ]
 
 {
-	#category : #utility,
+	#category : #accessing,
 	#'squeak_changestamp' : 'PM 7/3/2024 00:08'
 }
 SUSTIntersection >> noExitAt: aDirection [
@@ -103,7 +117,7 @@ SUSTIntersection >> noExitAt: aDirection [
 ]
 
 {
-	#category : #utility,
+	#category : #accessing,
 	#'squeak_changestamp' : 'PM 7/3/2024 00:20'
 }
 SUSTIntersection >> positions [
@@ -111,12 +125,9 @@ SUSTIntersection >> positions [
 ]
 
 {
-	#category : #utility,
-	#'squeak_changestamp' : 'PM 7/11/2024 14:56'
+	#category : #'right of way',
+	#'squeak_changestamp' : 'PM 7/11/2024 20:09'
 }
 SUSTIntersection >> shouldGiveRightOfWay [
-
-	longStandingVehicles size >= 3
-		ifTrue: [^ true].
-	^ false.
+	^ longStandingVehicles size >= 3
 ]

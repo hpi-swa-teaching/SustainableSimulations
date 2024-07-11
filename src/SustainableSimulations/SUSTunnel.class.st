@@ -1,3 +1,17 @@
+"
+A SUSTunnel is a road which repeatedly spawns cars.
+
+Instance Variables
+	frequency:		Number
+	lastTime:		Number
+
+frequency
+	- How often a car should be spawned.
+
+lastTime
+	- The last time in milliseconds at which the latest car was spawned
+
+"
 Class {
 	#name : #SUSTunnel,
 	#superclass : #SUSAbstractRoad,
@@ -5,11 +19,12 @@ Class {
 		'lastTime',
 		'frequency'
 	],
-	#category : #'SustainableSimulations-Roads'
+	#category : #'SustainableSimulations-Roads',
+	#'squeak_changestamp' : 'PM 7/11/2024 20:06'
 }
 
 {
-	#category : #accessing,
+	#category : #behavior,
 	#'squeak_changestamp' : 'MK 7/8/2024 23:11'
 }
 SUSTunnel >> applyBehavior [
@@ -29,7 +44,7 @@ SUSTunnel >> connectionPointPositions [
 ]
 
 {
-	#category : #accessing,
+	#category : #drawing,
 	#'squeak_changestamp' : 'PM 7/3/2024 00:24'
 }
 SUSTunnel >> createDrawing [
@@ -37,7 +52,7 @@ SUSTunnel >> createDrawing [
 ]
 
 {
-	#category : #accessing,
+	#category : #'initialize-release',
 	#'squeak_changestamp' : 'Len 6/23/2024 10:21'
 }
 SUSTunnel >> initialize [
@@ -47,16 +62,16 @@ SUSTunnel >> initialize [
 ]
 
 {
-	#category : #accessing,
-	#'squeak_changestamp' : 'PM 7/11/2024 11:30'
+	#category : #'initialize-release',
+	#'squeak_changestamp' : 'PM 7/11/2024 19:28'
 }
 SUSTunnel >> postInitialize [
 	simulation addTunnel: self.
-	lanes second isRemoveRoad: true
+	lanes second shouldRemoveVehicles: true
 ]
 
 {
-	#category : #accessing,
+	#category : #spawning,
 	#'squeak_changestamp' : 'PM 7/11/2024 11:50'
 }
 SUSTunnel >> spawnCarFromTunnel [

@@ -1,5 +1,11 @@
 "
 Class for the right of way street rule / strategy for cross intersections
+
+Instance variables:
+	rightOfWayType:	Number
+
+rightOfWayType
+	- Either 1 or 2 depending on the direction of the right of way rule
 "
 Class {
 	#name : #SUSCrossIntersectionRightOfWayStrategy,
@@ -8,7 +14,7 @@ Class {
 		'rightOfWayType'
 	],
 	#category : #'SustainableSimulations-RoadStrategy',
-	#'squeak_changestamp' : 'GoChriNo 7/10/2024 13:51'
+	#'squeak_changestamp' : 'PM 7/11/2024 18:54'
 }
 
 {
@@ -22,34 +28,31 @@ SUSCrossIntersectionRightOfWayStrategy >> initialize [
 
 {
 	#category : #strategy,
-	#'squeak_changestamp' : 'PM 7/11/2024 14:57'
+	#'squeak_changestamp' : 'PM 7/11/2024 19:53'
 }
 SUSCrossIntersectionRightOfWayStrategy >> isBlockedByOtherLanesFrom: aLane [ 
-	| index |
+	| index car |
 	index := road lanes indexOf: aLane.
 	index \\ 3 = 1
-		ifTrue: [| car |
-			car := road
-						searchVehicleBackwardsFromLane: (road lanes at: index + 5 \\ 12 + 1)
-						withMaxDist: 400.
-			car
-				ifNotNil: [(car turnsLeftAt: road)
-						ifFalse: [^ true]]].
-	rightOfWayType = 1
-		ifTrue: [(index - 1 / 3) floor \\ 2 == 0
-				ifTrue: [^ false]].
-	rightOfWayType = 2
-		ifTrue: [(index - 1 / 3) floor \\ 2 == 1
-				ifTrue: [^ false]].
-	(road
-		searchVehicleBackwardsFromLane: (road lanes at: index + 2 \\ 12 + 1)
-		withMaxDist: 400)
+		ifTrue: [car := self searchForCarAtIndex: index + 5 \\ 12 + 1.
+			(car isNil not
+					and: [(car turnsLeftAt: road) not])
+				ifTrue: [^ true]].
+	(index - 1 / 3) floor \\ 2 == (rightOfWayType - 1)
+		ifTrue: [^ false].
+	(self searchForCarAtIndex: index + 2 \\ 12 + 1)
 		ifNotNil: [^ true].
-	(road
-		searchVehicleBackwardsFromLane: (road lanes at: index + 8 \\ 12 + 1)
-		withMaxDist: 400)
+	(self searchForCarAtIndex: index + 8 \\ 12 + 1)
 		ifNotNil: [^ true].
 	^ false
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'PM 7/11/2024 19:17'
+}
+SUSCrossIntersectionRightOfWayStrategy >> maxSearchDistance [
+	^ 400
 ]
 
 {

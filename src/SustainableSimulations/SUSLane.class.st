@@ -2,15 +2,15 @@
 A SUSLane is a bezier curve on which a vehicle can drive.
 
 Instance Variables
-	isRemoveRoad:	Boolean
-	length:				Number
-	nextLanes:			OrderedCollection{SUSLane}
-	path:				CurveMorph
-	previousLanes:	OrderedCollection{SUSLane}
-	road:				SUSAbstractRoad
-	vehicles:			OrderedCollection{SUSVehicle}
+	shouldRemoveVehicles	Boolean
+	length:						Number
+	nextLanes:					OrderedCollection{SUSLane}
+	path:						CurveMorph
+	previousLanes:			OrderedCollection{SUSLane}
+	road:						SUSAbstractRoad
+	vehicles:					OrderedCollection{SUSVehicle}
 
-isRemoveRoad
+shouldRemoveVehicles:
 	- Whether this lane should remove vehicles as they drive on it.
 
 length
@@ -42,10 +42,10 @@ Class {
 		'length',
 		'road',
 		'vehicles',
-		'isRemoveRoad'
+		'shouldRemoveVehicles'
 	],
 	#category : #'SustainableSimulations-Roads',
-	#'squeak_changestamp' : 'PM 7/11/2024 17:43'
+	#'squeak_changestamp' : 'PM 7/11/2024 19:29'
 }
 
 {
@@ -87,10 +87,10 @@ SUSLane >> addPreviousLane: aPreviousLane [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 7/11/2024 11:29'
+	#'squeak_changestamp' : 'PM 7/11/2024 19:30'
 }
 SUSLane >> addVehicle: aVehicle [
-	isRemoveRoad
+	shouldRemoveVehicles
 		ifTrue: [aVehicle remove]
 		ifFalse: [vehicles add: aVehicle]
 ]
@@ -282,21 +282,13 @@ SUSLane >> getRotationWithTValue: aNumber [
 
 {
 	#category : #'initialize-release',
-	#'squeak_changestamp' : 'PM 7/11/2024 17:36'
+	#'squeak_changestamp' : 'PM 7/11/2024 19:30'
 }
 SUSLane >> initialize [
 	vehicles := OrderedCollection new.
 	nextLanes := OrderedCollection new.
 	previousLanes := OrderedCollection new.
-	isRemoveRoad := false
-]
-
-{
-	#category : #accessing,
-	#'squeak_changestamp' : 'PM 7/11/2024 11:30'
-}
-SUSLane >> isRemoveRoad: aBoolean [
-	isRemoveRoad := aBoolean
+	shouldRemoveVehicles := false
 ]
 
 {
@@ -386,6 +378,14 @@ SUSLane >> road [
 }
 SUSLane >> road: anObject [
 	road := anObject
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'PM 7/11/2024 19:30'
+}
+SUSLane >> shouldRemoveVehicles: aBoolean [
+	shouldRemoveVehicles := aBoolean
 ]
 
 {
