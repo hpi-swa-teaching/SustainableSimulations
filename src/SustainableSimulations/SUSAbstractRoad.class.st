@@ -160,10 +160,10 @@ SUSAbstractRoad >> mouseDown: anEvent [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/27/2024 10:08'
+	#'squeak_changestamp' : 'PM 7/11/2024 17:43'
 }
 SUSAbstractRoad >> postInitialize [
-	"Do nothing"
+	^ self
 ]
 
 {
@@ -238,9 +238,9 @@ SUSAbstractRoad >> speedLimit: anObject [
 
 {
 	#category : #drawing,
-	#'squeak_changestamp' : 'GoChriNo 6/26/2024 08:22'
+	#'squeak_changestamp' : 'PM 7/11/2024 17:44'
 }
-SUSAbstractRoad >> updateLanes: aRoad [ 
+SUSAbstractRoad >> updateLanesToRoad: aRoad [ 
 	lanes
 		do: [:each | 
 			| pos1 |
