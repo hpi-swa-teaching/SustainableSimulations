@@ -32,19 +32,19 @@ deacceleration
 	- The rate with which the vehicle deaccelerates.
 
 deltaTime
-	- xxxxx
+	- Delta time since last step.
 
 lastPoint
 	- The latest location of the car. Used for start/pause/stop.
 
 lastTime
-	- xxxxx
+	- Last step clock time in millis.
 
 maxSpeed
 	- Maximal speed the vehicle is allowed to drive.
 
 rightOfWayTime
-	- xxxxx
+	- The time in which a vehicle does not need to adhere to the right of way rulings. Used to resolve stuck vehicles on an intersection (e.g. the intersection grants a car rightOfWayTime to resolve the situation).
 
 simulation
 	- The Simulation which this road belongs to.
@@ -75,7 +75,7 @@ Class {
 		'currentLane'
 	],
 	#category : #'SustainableSimulations-Core',
-	#'squeak_changestamp' : 'PM 7/12/2024 19:26'
+	#'squeak_changestamp' : 'PM 7/12/2024 19:44'
 }
 
 {
