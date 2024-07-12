@@ -5,7 +5,7 @@ Class {
 }
 
 {
-	#category : #'as yet unclassified',
+	#category : #testing,
 	#'squeak_changestamp' : 'MK 6/15/2024 13:47'
 }
 SUSDirectedPointTests >> testCalculateIntersectionPoint [
@@ -27,7 +27,7 @@ SUSDirectedPointTests >> testCalculateIntersectionPoint [
 ]
 
 {
-	#category : #'as yet unclassified',
+	#category : #testing,
 	#'squeak_changestamp' : 'MK 6/20/2024 16:44'
 }
 SUSDirectedPointTests >> testIsAbove [
@@ -49,7 +49,7 @@ SUSDirectedPointTests >> testIsAbove [
 ]
 
 {
-	#category : #'as yet unclassified',
+	#category : #testing,
 	#'squeak_changestamp' : 'MK 6/15/2024 14:03'
 }
 SUSDirectedPointTests >> testLinearDistance [
@@ -67,7 +67,7 @@ SUSDirectedPointTests >> testLinearDistance [
 ]
 
 {
-	#category : #'as yet unclassified',
+	#category : #testing,
 	#'squeak_changestamp' : 'MK 6/15/2024 13:45'
 }
 SUSDirectedPointTests >> testParallelLines [
@@ -84,7 +84,7 @@ SUSDirectedPointTests >> testParallelLines [
 ]
 
 {
-	#category : #'as yet unclassified',
+	#category : #testing,
 	#'squeak_changestamp' : 'PM 6/17/2024 09:57'
 }
 SUSDirectedPointTests >> testPointAbove [
@@ -105,7 +105,7 @@ SUSDirectedPointTests >> testPointAbove [
 ]
 
 {
-	#category : #'as yet unclassified',
+	#category : #testing,
 	#'squeak_changestamp' : 'PM 6/17/2024 10:31'
 }
 SUSDirectedPointTests >> testPointBehind [
@@ -126,7 +126,7 @@ SUSDirectedPointTests >> testPointBehind [
 ]
 
 {
-	#category : #'as yet unclassified',
+	#category : #testing,
 	#'squeak_changestamp' : 'MK 6/15/2024 13:46'
 }
 SUSDirectedPointTests >> testProjectionOfPoint [
@@ -144,7 +144,7 @@ SUSDirectedPointTests >> testProjectionOfPoint [
 ]
 
 {
-	#category : #'as yet unclassified',
+	#category : #testing,
 	#'squeak_changestamp' : 'MK 6/15/2024 13:46'
 }
 SUSDirectedPointTests >> testProjectionOfPointWithZeroDirection [
@@ -160,7 +160,7 @@ SUSDirectedPointTests >> testProjectionOfPointWithZeroDirection [
 ]
 
 {
-	#category : #'as yet unclassified',
+	#category : #testing,
 	#'squeak_changestamp' : 'MK 6/15/2024 15:03'
 }
 SUSDirectedPointTests >> testRelativeOffset [

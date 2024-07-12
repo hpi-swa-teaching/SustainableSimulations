@@ -177,10 +177,10 @@ SUSDirectedPoint >> position: anObject [
 
 {
 	#category : #calculation,
-	#'squeak_changestamp' : 'PM 7/10/2024 13:37'
+	#'squeak_changestamp' : 'PM 7/11/2024 15:42'
 }
 SUSDirectedPoint >> projectionOf: aPoint [ 
-	0 @ 0 == direction
+	0 @ 0 = direction
 		ifTrue: [^ aPoint].
 	^ aPoint nearestPointAlongLineFrom: self position to: self position + direction
 ]

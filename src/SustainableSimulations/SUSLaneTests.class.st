@@ -5,7 +5,7 @@ Class {
 }
 
 {
-	#category : #'as yet unclassified',
+	#category : #testing,
 	#'squeak_changestamp' : 'MK 6/22/2024 23:59'
 }
 SUSLaneTests >> testCalculateLength [
@@ -19,7 +19,7 @@ SUSLaneTests >> testCalculateLength [
 ]
 
 {
-	#category : #'as yet unclassified',
+	#category : #testing,
 	#'squeak_changestamp' : 'MK 6/23/2024 00:05'
 }
 SUSLaneTests >> testGetLengthToT [
@@ -36,8 +36,8 @@ SUSLaneTests >> testGetLengthToT [
 ]
 
 {
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'MK 6/23/2024 00:10'
+	#category : #testing,
+	#'squeak_changestamp' : 'PM 7/11/2024 11:28'
 }
 SUSLaneTests >> testGetNextCarOnLane [
 	|car1 car2 lane|
@@ -46,15 +46,15 @@ SUSLaneTests >> testGetNextCarOnLane [
 	car2 := SUSCar new.
 	
 	lane := SUSLane new.
-	lane addCar: car1.
-	lane addCar: car2.
+	lane addVehicle: car1.
+	lane addVehicle: car2.
 	
 	self assert: (lane getNextCarOnLane: car1) = car2.
 ]
 
 {
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'MK 6/23/2024 00:12'
+	#category : #testing,
+	#'squeak_changestamp' : 'PM 7/11/2024 11:28'
 }
 SUSLaneTests >> testGetPreviousCarOnLane [
 	|car1 car2 lane|
@@ -63,14 +63,14 @@ SUSLaneTests >> testGetPreviousCarOnLane [
 	car2 := SUSCar new.
 	
 	lane := SUSLane new.
-	lane addCar: car1.
-	lane addCar: car2.
+	lane addVehicle: car1.
+	lane addVehicle: car2.
 	
 	self assert: (lane getPreviousCarOnLane: car2) = car1.
 ]
 
 {
-	#category : #'as yet unclassified',
+	#category : #testing,
 	#'squeak_changestamp' : 'MK 6/23/2024 00:20'
 }
 SUSLaneTests >> testGetRotation2VerticesWithTValue [

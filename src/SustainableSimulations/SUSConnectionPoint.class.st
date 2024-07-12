@@ -85,14 +85,14 @@ SUSConnectionPoint >> basicType [
 
 {
 	#category : #connection,
-	#'squeak_changestamp' : 'PM 6/18/2024 15:48'
+	#'squeak_changestamp' : 'PM 7/11/2024 17:44'
 }
 SUSConnectionPoint >> connectRoad: aRoad [ 
 	isStartingPoint
 		ifTrue: [firstRoad := aRoad]
 		ifFalse: [secondRoad := aRoad.
-			firstRoad updateLanes: secondRoad.
-			secondRoad updateLanes: firstRoad.
+			firstRoad updateLanesToRoad: secondRoad.
+			secondRoad updateLanesToRoad: firstRoad.
 			simulation removeMorph: self].
 	isStartingPoint := false
 ]

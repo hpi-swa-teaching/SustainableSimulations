@@ -1,5 +1,11 @@
 "
-Abstract Class for different right of way rules / strategys for different road types
+Abstract Class for different right of way rules / strategies for different road types
+
+Instance Variables
+	road:	SUSAbstractRoad
+		
+road
+	- The road on which the strategy is applied to.
 "
 Class {
 	#name : #SUSRoadStrategy,
@@ -8,7 +14,7 @@ Class {
 		'road'
 	],
 	#category : #'SustainableSimulations-RoadStrategy',
-	#'squeak_changestamp' : 'GoChriNo 7/10/2024 13:49'
+	#'squeak_changestamp' : 'PM 7/11/2024 18:54'
 }
 
 {
@@ -37,21 +43,28 @@ SUSRoadStrategy >> isBlockedByOtherLanesFrom: aLane [
 
 {
 	#category : #strategy,
-	#'squeak_changestamp' : 'GoChriNo 7/10/2024 14:11'
+	#'squeak_changestamp' : 'PM 7/11/2024 19:52'
 }
 SUSRoadStrategy >> isBlockedByOwnLanesFrom: aLane [ 
-	(self getBlockedLanesFrom: aLane)
-		do: [:each | each cars
-				ifNotEmpty: [^ true]].
-	^ false
+	^ (self getBlockedLanesFrom: aLane)
+		anySatisfy: [:each | each vehicles isEmpty not]
 ]
 
 {
 	#category : #strategy,
-	#'squeak_changestamp' : 'GoChriNo 7/10/2024 14:02'
+	#'squeak_changestamp' : 'PM 7/11/2024 19:44'
 }
 SUSRoadStrategy >> isBlockedFrom: aLane [ 
-	^ ((self isBlockedByOwnLanesFrom: aLane) or: (self isBlockedByOtherLanesFrom: aLane))
+	^ (self isBlockedByOwnLanesFrom: aLane)
+		or: (self isBlockedByOtherLanesFrom: aLane)
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'PM 7/11/2024 19:10'
+}
+SUSRoadStrategy >> maxSearchDistance [
+	^ 200
 ]
 
 {
@@ -68,6 +81,16 @@ SUSRoadStrategy >> road [
 }
 SUSRoadStrategy >> road: anObject [
 	road := anObject
+]
+
+{
+	#category : #strategy,
+	#'squeak_changestamp' : 'PM 7/11/2024 19:47'
+}
+SUSRoadStrategy >> searchForCarAtIndex: aNumber [ 
+	^ road
+		searchVehicleBackwardsFromLane: (road lanes at: aNumber)
+		withMaxDist: self maxSearchDistance
 ]
 
 {

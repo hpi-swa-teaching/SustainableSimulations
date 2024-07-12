@@ -1,5 +1,19 @@
 "
 A SUSDrawing is an abstract class for all Road-Drawing-Objects of the simulation.
+
+Instance variables:
+	paths:		OrderedCollection{CurveMorph}
+	from:		SUSDirectedPoint
+	to:			SUSDirectedPoint
+				
+path
+	- The different curve morphs paths on which the cars can drive.
+	
+from:
+	- This is the start point of the drawing.
+	
+to:
+	- This is the end point of the drawing.
 "
 Class {
 	#name : #SUSDrawing,
@@ -10,7 +24,7 @@ Class {
 		'to'
 	],
 	#category : #'SustainableSimulations-UI',
-	#'squeak_changestamp' : 'Len 7/10/2024 21:12'
+	#'squeak_changestamp' : 'PM 7/11/2024 18:53'
 }
 
 {

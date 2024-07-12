@@ -5,40 +5,17 @@ Class {
 }
 
 {
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'MK 6/23/2024 01:46'
+	#category : #testing,
+	#'squeak_changestamp' : 'PM 7/11/2024 15:46'
 }
 SUSCarTest >> testApplyAccelaration [
 	| car |
-
-	car := SUSCar new.
-	car speed: 10.
-	car speedGoal: 20.
-	car acceleration: 5.
-	car deltaTime: 1000. "DeltaTime in Millisekunden"
-
-	car applyAcceleration.
-
-	self assert: (car speed = (10 + (5 * 0.001 * 1000) min: 20)).
-]
-
-{
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'MK 6/23/2024 02:04'
-}
-SUSCarTest >> testGetNextCar [
-	|car1 car2 lane|
-	
-	car1 := SUSCar new.
-	car2 := SUSCar new.
-	
-	lane := SUSLane new.
-	lane addCar: car1.
-	lane addCar: car2.
-	
-	car1 lane: lane.
-	car2 lane: lane.
-	
-	self assert: (car2 getNextCar) = car1.
-	
+	car := SUSCar new currentSpeed: 10;
+				 speedGoal: 20;
+				 acceleration: 5;
+				 deltaTime: 1000;
+				 applyAcceleration;
+				 yourself.
+	self assert: car currentSpeed
+			= (10 + (5 * 0.001 * 1000) min: 20)
 ]

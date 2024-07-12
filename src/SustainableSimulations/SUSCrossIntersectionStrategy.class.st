@@ -26,61 +26,34 @@ SUSCrossIntersectionStrategy >> getBlockedLanesFrom: aLane [
 
 {
 	#category : #strategy,
-	#'squeak_changestamp' : 'GoChriNo 7/10/2024 13:53'
+	#'squeak_changestamp' : 'PM 7/11/2024 19:01'
+}
+SUSCrossIntersectionStrategy >> getBlockedLanesWithAt: anArray from: aLane [
+	^ (anArray
+		collect: [:each | road lanes at: (road lanes indexOf: aLane)
+					+ each \\ 12 + 1]) asOrderedCollection
+]
+
+{
+	#category : #strategy,
+	#'squeak_changestamp' : 'PM 7/11/2024 19:01'
 }
 SUSCrossIntersectionStrategy >> getBlockedLanesWithLeftTurnFrom: aLane [ 
-	| index blockedLanes |
-	index := road lanes indexOf: aLane.
-	blockedLanes := OrderedCollection new.
-	blockedLanes
-		add: (road lanes at: index + 2 \\ 12 + 1).
-	blockedLanes
-		add: (road lanes at: index + 3 \\ 12 + 1).
-	blockedLanes
-		add: (road lanes at: index + 6 \\ 12 + 1).
-	blockedLanes
-		add: (road lanes at: index + 7 \\ 12 + 1).
-	blockedLanes
-		add: (road lanes at: index + 8 \\ 12 + 1).
-	blockedLanes
-		add: (road lanes at: index + 9 \\ 12 + 1).
-	^ blockedLanes
+	^ self getBlockedLanesWithAt: {2. 3. 6. 7. 8. 9} from: aLane
 ]
 
 {
 	#category : #strategy,
-	#'squeak_changestamp' : 'GoChriNo 7/10/2024 13:53'
+	#'squeak_changestamp' : 'PM 7/11/2024 19:01'
 }
-SUSCrossIntersectionStrategy >> getBlockedLanesWithNoTurnFrom: aLane [ 
-	| index blockedLanes |
-	index := road lanes indexOf: aLane.
-	blockedLanes := OrderedCollection new.
-	blockedLanes
-		add: (road lanes at: index + 1 \\ 12 + 1).
-	blockedLanes
-		add: (road lanes at: index + 2 \\ 12 + 1).
-	blockedLanes
-		add: (road lanes at: index + 3 \\ 12 + 1).
-	blockedLanes
-		add: (road lanes at: index + 4 \\ 12 + 1).
-	blockedLanes
-		add: (road lanes at: index + 7 \\ 12 + 1).
-	blockedLanes
-		add: (road lanes at: index + 8 \\ 12 + 1).
-	^ blockedLanes
+SUSCrossIntersectionStrategy >> getBlockedLanesWithNoTurnFrom: aLane [
+	^ self getBlockedLanesWithAt: {1. 2. 3. 4. 7. 8} from: aLane
 ]
 
 {
 	#category : #strategy,
-	#'squeak_changestamp' : 'GoChriNo 7/10/2024 13:53'
+	#'squeak_changestamp' : 'PM 7/11/2024 19:02'
 }
 SUSCrossIntersectionStrategy >> getBlockedLanesWithRightTurnFrom: aLane [ 
-	| index blockedLanes |
-	index := road lanes indexOf: aLane.
-	blockedLanes := OrderedCollection new.
-	blockedLanes
-		add: (road lanes at: index + 3 \\ 12 + 1).
-	blockedLanes
-		add: (road lanes at: index + 7 \\ 12 + 1).
-	^ blockedLanes
+	^ self getBlockedLanesWithAt: {3. 7} from: aLane
 ]

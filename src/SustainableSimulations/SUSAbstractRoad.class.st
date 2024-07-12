@@ -14,18 +14,18 @@ Class {
 }
 
 {
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'Len 6/20/2024 19:58'
+	#category : #'instance creation',
+	#'squeak_changestamp' : 'PM 7/11/2024 18:35'
 }
-SUSAbstractRoad class >> newOnSimulation: aSimulation from: aConnectionPoint to: aPoint [
+SUSAbstractRoad class >> newOnSimulation: aSimulation from: aConnectionPoint to: aPoint [ 
 	^ self new simulation: aSimulation;
-		initializeFrom: aConnectionPoint to: aPoint;
-		postInitialize;
-		yourself
+		 initializeFrom: aConnectionPoint to: aPoint;
+		 postInitialize;
+		 yourself
 ]
 
 {
-	#category : #accessing,
+	#category : #connection,
 	#'squeak_changestamp' : 'PM 6/18/2024 15:35'
 }
 SUSAbstractRoad >> addConnectionPoints [
@@ -36,8 +36,8 @@ SUSAbstractRoad >> addConnectionPoints [
 ]
 
 {
-	#category : #accessing,
-	#'squeak_changestamp' : 'PM 7/3/2024 00:23'
+	#category : #drawing,
+	#'squeak_changestamp' : 'PM 7/11/2024 18:18'
 }
 SUSAbstractRoad >> addDrawing [
 	| drawing |
@@ -46,19 +46,19 @@ SUSAbstractRoad >> addDrawing [
 		do: [:each | self createLaneWithPath: each].
 	self extent: drawing extent;
 		 position: drawing position;
-		addMorph: drawing
+		 addMorph: drawing
 ]
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/18/2024 15:29'
+	#'squeak_changestamp' : 'PM 7/11/2024 20:14'
 }
 SUSAbstractRoad >> connectionPointPositions [
-	^ { from . to }
+	^ {from. to}
 ]
 
 {
-	#category : #accessing,
+	#category : #drawing,
 	#'squeak_changestamp' : 'PM 6/18/2024 14:54'
 }
 SUSAbstractRoad >> createDrawing [
@@ -66,77 +66,79 @@ SUSAbstractRoad >> createDrawing [
 ]
 
 {
-	#category : #accessing,
-	#'squeak_changestamp' : 'GoChriNo 6/25/2024 10:24'
+	#category : #drawing,
+	#'squeak_changestamp' : 'PM 7/11/2024 18:32'
 }
-SUSAbstractRoad >> createLaneWithPath: aLineMorph [
-	
+SUSAbstractRoad >> createLaneWithPath: aLineMorph [ 
 	lanes add: (SUSLane newLaneWithPath: aLineMorph OnRoad: self)
 ]
 
 {
-	#category : #utility,
-	#'squeak_changestamp' : 'GoChriNo 6/27/2024 12:39'
-}
-SUSAbstractRoad >> driving: aCar [
-
-	
-]
-
-{
 	#category : #'event handling',
-	#'squeak_changestamp' : 'MK 6/10/2024 22:32'
+	#'squeak_changestamp' : 'PM 7/11/2024 18:32'
 }
 SUSAbstractRoad >> handlesMouseDown: anEvent [
- 	^true
+ 	^ true
 ]
 
 {
 	#category : #initialization,
-	#'squeak_changestamp' : 'GoChriNo 6/25/2024 10:26'
+	#'squeak_changestamp' : 'PM 7/11/2024 18:32'
 }
 SUSAbstractRoad >> initialize [
 	super initialize.
-	
 	lanes := OrderedCollection new.
 	speedLimit := 50.
-	
 	self color: Color transparent;
-		sticky: true
+		 sticky: true
 ]
 
 {
-	#category : #accessing,
-	#'squeak_changestamp' : 'PM 7/3/2024 00:23'
+	#category : #initialization,
+	#'squeak_changestamp' : 'PM 7/11/2024 18:32'
 }
 SUSAbstractRoad >> initializeFrom: aConnectionPoint to: aPoint [ 
 	from := aConnectionPoint asDirectedPoint.
 	aPoint basicType == #SUSConnectionPoint
 		ifTrue: [to := aPoint asDirectedPoint]
 		ifFalse: [to := aPoint].
-	self addDrawing;
-		addConnectionPoints.
+	self addDrawing; addConnectionPoints.
 	adjacentRoads := Array new: connectionPoints size.
 	simulation addRoad: self
 ]
 
 {
 	#category : #utility,
-	#'squeak_changestamp' : 'GoChriNo 6/27/2024 11:25'
+	#'squeak_changestamp' : 'PM 7/11/2024 18:31'
 }
 SUSAbstractRoad >> isBlockedFrom: aLane [
-
-	^ false.
+	^ false
 ]
 
 {
-	#category : #utility,
-	#'squeak_changestamp' : 'GoChriNo 6/27/2024 12:45'
+	#category : #accessing,
+	#'squeak_changestamp' : 'PM 7/11/2024 18:30'
 }
 SUSAbstractRoad >> isEmpty [
+	^ lanes allSatisfy: [: each | each vehicles isEmpty ]
+]
 
-	self lanes do: [:each | each cars ifNotEmpty: [^ false]].
-	^ true.
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'PM 7/11/2024 14:55'
+}
+SUSAbstractRoad >> isVehicleDriving: aVehicle [
+	^ self
+
+	
+]
+
+{
+	#category : #connection,
+	#'squeak_changestamp' : 'PM 7/11/2024 20:19'
+}
+SUSAbstractRoad >> laneConnectionThreshold [
+	^ 20
 ]
 
 {
@@ -148,7 +150,7 @@ SUSAbstractRoad >> lanes [
 ]
 
 {
-	#category : #accessing,
+	#category : #'event handling',
 	#'squeak_changestamp' : 'PM 7/10/2024 16:03'
 }
 SUSAbstractRoad >> mouseDown: anEvent [ 
@@ -158,32 +160,29 @@ SUSAbstractRoad >> mouseDown: anEvent [
 ]
 
 {
-	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/27/2024 10:08'
+	#category : #initialization,
+	#'squeak_changestamp' : 'PM 7/11/2024 17:43'
 }
 SUSAbstractRoad >> postInitialize [
-	"Do nothing"
+	^ self
 ]
 
 {
 	#category : #utility,
-	#'squeak_changestamp' : 'GoChriNo 7/2/2024 12:51'
+	#'squeak_changestamp' : 'PM 7/11/2024 15:53'
 }
-SUSAbstractRoad >> searchForCarBackwardsFromLane: aLane WithMaxDist: maxDist [ 
-	| dist car currentLane |
+SUSAbstractRoad >> searchVehicleBackwardsFromLane: aLane withMaxDist: aNumber [ 
+	| dist currentLane car |
 	dist := 0.
 	currentLane := aLane.
-	car := nil.
-	[dist <= maxDist]
-		whileTrue: [car
-				ifNotNil: [^ car].
-			currentLane previousLanes isEmpty ifTrue: [^ nil].
-			currentLane := currentLane previousLanes at: 1.
-			currentLane cars isEmpty
-				ifTrue: [dist := dist + currentLane length]
-				ifFalse: [car := currentLane cars first.
-					dist := dist + currentLane length
-								- (currentLane getLengthToT: car lastPoint)]].
+	[dist <= aNumber and: currentLane previousLanes isEmpty not]
+		whileTrue: [currentLane := currentLane previousLanes at: 1.
+			dist := dist + currentLane length.
+			currentLane vehicles
+				ifNotEmpty: [car := currentLane vehicles first.
+					dist := dist - (currentLane getLengthToT: car lastPoint).
+					dist <= aNumber
+						ifTrue: [^ car]]].
 	^ nil
 ]
 
@@ -204,14 +203,22 @@ SUSAbstractRoad >> simulation: anObject [
 ]
 
 {
-	#category : #accessing,
-	#'squeak_changestamp' : 'PM 6/18/2024 18:56'
+	#category : #spawning,
+	#'squeak_changestamp' : 'PM 7/11/2024 15:47'
 }
 SUSAbstractRoad >> spawnCar [
-	[simulation
-		addMorphInLayer: (SUSCar newOnRoad: self withSpeed: (UIManager default request: 'Please enter car speed' initialAnswer: 50) asNumber)]
+	[self spawnCarWithMaxSpeed: (UIManager default request: 'Please enter car speed' initialAnswer: 50) asNumber]
 		on: NumberParserError
 		do: []
+]
+
+{
+	#category : #spawning,
+	#'squeak_changestamp' : 'PM 7/11/2024 15:47'
+}
+SUSAbstractRoad >> spawnCarWithMaxSpeed: aNumber [ 
+	simulation
+		addMorphInLayer: (SUSCar newOnRoad: self withMaxSpeed: aNumber)
 ]
 
 {
@@ -223,26 +230,23 @@ SUSAbstractRoad >> speedLimit [
 ]
 
 {
-	#category : #accessing,
-	#'squeak_changestamp' : 'GoChriNo 6/25/2024 10:26'
+	#category : #connection,
+	#'squeak_changestamp' : 'PM 7/11/2024 20:21'
 }
-SUSAbstractRoad >> speedLimit: anObject [
-	speedLimit := anObject
+SUSAbstractRoad >> updateLanesFromLane: aLane toLane: anotherLane [
+	((aLane getPositionWithTValue: 1)
+			dist: (anotherLane getPositionWithTValue: 0))
+			< self laneConnectionThreshold
+		ifTrue: [aLane addNextLane: anotherLane.
+			anotherLane addPreviousLane: aLane]
 ]
 
 {
-	#category : #drawing,
-	#'squeak_changestamp' : 'GoChriNo 6/26/2024 08:22'
+	#category : #connection,
+	#'squeak_changestamp' : 'PM 7/11/2024 20:21'
 }
-SUSAbstractRoad >> updateLanes: aRoad [ 
+SUSAbstractRoad >> updateLanesToRoad: aRoad [ 
 	lanes
-		do: [:each | 
-			| pos1 |
-			pos1 := each getPositionWithTValue: 1.
-			aRoad lanes
-				do: [:anotherEach | (pos1
-							dist: (anotherEach getPositionWithTValue: 0))
-							< 20
-						ifTrue: [each addNextLane: anotherEach.
-							anotherEach addPreviousLane: each]]]
+		do: [:aLane | aRoad lanes
+				do: [:anotherLane | self updateLanesFromLane: aLane toLane: anotherLane]]
 ]

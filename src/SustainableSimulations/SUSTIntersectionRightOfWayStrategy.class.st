@@ -10,33 +10,31 @@ Class {
 
 {
 	#category : #strategy,
-	#'squeak_changestamp' : 'GoChriNo 7/10/2024 14:08'
+	#'squeak_changestamp' : 'PM 7/11/2024 19:55'
 }
 SUSTIntersectionRightOfWayStrategy >> isBlockedByOtherLanesFrom: aLane [ 
 	| index car |
 	index := road lanes indexOf: aLane.
-	index = 3
-		ifTrue: [(road
-				searchForCarBackwardsFromLane: (road lanes at: 5)
-				WithMaxDist: 300)
-				ifNotNil: [^ true]].
+	car := self searchForCarAtIndex: 5.
+	(index = 3 and: car isNil not)
+		ifTrue: [^ true].
 	index > 2
 		ifTrue: [^ false].
-	car := road
-				searchForCarBackwardsFromLane: (road lanes at: 5)
-				WithMaxDist: 300.
-	index = 2
-		ifTrue: [car
-				ifNil: [^ false]
-				ifNotNil: [(car turnsRightAt: road)
-						ifTrue: [^ false]]].
+	(index = 2
+			and: (car isNil
+					or: [car turnsRightAt: road]))
+		ifTrue: [^ false].
 	car
 		ifNotNil: [^ true].
-	(road
-		searchForCarBackwardsFromLane: (road lanes at: 3)
-		WithMaxDist: 300)
-		ifNotNil: [^ true].
-	^ false
+	^ (self searchForCarAtIndex: 3) isNil not
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'PM 7/11/2024 19:57'
+}
+SUSTIntersectionRightOfWayStrategy >> maxSearchDistance [
+	^ 300
 ]
 
 {

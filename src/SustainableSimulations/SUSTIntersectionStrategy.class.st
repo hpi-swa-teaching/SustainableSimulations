@@ -10,43 +10,32 @@ Class {
 
 {
 	#category : #strategy,
-	#'squeak_changestamp' : 'GoChriNo 7/10/2024 14:07'
+	#'squeak_changestamp' : 'PM 7/11/2024 19:26'
 }
 SUSTIntersectionStrategy >> getBlockedLanesFrom: aLane [ 
-	| index |
-	index := road lanes indexOf: aLane.
-	index \\ 2 = 1
+	(road lanes indexOf: aLane)
+			\\ 2 = 1
 		ifTrue: [^ self getBlockedLanesWithFirstTurnFrom: aLane]
 		ifFalse: [^ self getBlockedLanesWithSecondTurnFrom: aLane]
 ]
 
 {
 	#category : #strategy,
-	#'squeak_changestamp' : 'GoChriNo 7/10/2024 14:07'
+	#'squeak_changestamp' : 'PM 7/11/2024 19:20'
 }
 SUSTIntersectionStrategy >> getBlockedLanesWithFirstTurnFrom: aLane [ 
-	| index blockedLanes |
-	index := road lanes indexOf: aLane.
-	blockedLanes := OrderedCollection new.
-	index := index + 1 \\ 6 + 1.
-	blockedLanes
-		add: (road lanes at: index).
-	blockedLanes
-		add: (road lanes at: index \\ 6 + 1).
-	blockedLanes
-		add: (road lanes at: index + 1 \\ 6 + 1).
-	^ blockedLanes
+	| index |
+	index := (road lanes indexOf: aLane)
+				+ 1 \\ 6 + 1.
+	^ ({index. index \\ 6 + 1. index + 1 \\ 6 + 1}
+		collect: [:each | road lanes at: each]) asOrderedCollection
 ]
 
 {
 	#category : #strategy,
-	#'squeak_changestamp' : 'GoChriNo 7/10/2024 14:07'
+	#'squeak_changestamp' : 'PM 7/11/2024 19:19'
 }
 SUSTIntersectionStrategy >> getBlockedLanesWithSecondTurnFrom: aLane [ 
-	| index blockedLanes |
-	index := road lanes indexOf: aLane.
-	blockedLanes := OrderedCollection new.
-	blockedLanes
-		add: (road lanes at: index + 2 \\ 6 + 1).
-	^ blockedLanes
+	^ {road lanes at: (road lanes indexOf: aLane)
+			+ 2 \\ 6 + 1} asOrderedCollection
 ]

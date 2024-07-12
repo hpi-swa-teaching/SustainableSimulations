@@ -1,5 +1,15 @@
 "
-A SUSWindow is the main Window for the simulation and handles all buttons.
+A SUSWindow is the main window for the simulation and it contains all buttons.
+
+Instance Variables
+	simulation:			SUSSimulation
+	playPauseRow:	AlignmentMorph
+
+simulation
+	- The simulation where everything happens
+	
+playPauseRow
+	- The row of the play/pause/stop buttons. It is saved so it can be realigned into the bottom center.
 "
 Class {
 	#name : #SUSWindow,
@@ -9,7 +19,7 @@ Class {
 		'playPauseRow'
 	],
 	#category : #'SustainableSimulations-UI',
-	#'squeak_changestamp' : 'Len 7/10/2024 21:34'
+	#'squeak_changestamp' : 'PM 7/11/2024 18:50'
 }
 
 {

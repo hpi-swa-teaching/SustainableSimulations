@@ -1,3 +1,28 @@
+"
+A SUSRoadBuilder is the class to build and verify new roads.
+
+Instance Variables
+	from:					SUSConnectionPoint
+	invalid:					Boolean
+	selectedRoadType:	Symbol
+	simulation:				SUSSimulation
+	to:						Point|SUSDirectedPoint|SUSConnectionPoint
+
+from
+	- From which connection point the road should be built.
+
+invalid
+	- If the road that should be built is invalid.
+
+selectedRoadType
+	- The selected road type which is the short name of the road class, e.g. #StraightRoad or #TIntersection
+
+simulation
+	- The Simulation on which the road should be built on.
+
+to
+	- The Point to which the road should be built on. If it is a Point it gets converted into a SUSDirectedPoint when the selectedRoadType is changed.
+"
 Class {
 	#name : #SUSRoadBuilder,
 	#superclass : #Object,
@@ -8,19 +33,20 @@ Class {
 		'to',
 		'invalid'
 	],
-	#category : #'SustainableSimulations-Roads'
+	#category : #'SustainableSimulations-Roads',
+	#'squeak_changestamp' : 'PM 7/11/2024 18:16'
 }
 
 {
-	#category : #'as yet unclassified',
-	#'squeak_changestamp' : 'PM 6/18/2024 13:42'
+	#category : #'instance creation',
+	#'squeak_changestamp' : 'PM 7/11/2024 16:30'
 }
-SUSRoadBuilder class >> newForSimulation: aSimulation from: aPoint to: anotherPoint as: aSymbol [
+SUSRoadBuilder class >> newForSimulation: aSimulation from: aPoint to: anotherPoint as: aSymbol [ 
 	^ self new simulation: aSimulation;
-		from: aPoint;
-		to: anotherPoint;
-		selectedRoadType: aSymbol;
-		yourself
+		 from: aPoint;
+		 to: anotherPoint;
+		 selectedRoadType: aSymbol;
+		 yourself
 ]
 
 {
@@ -34,7 +60,7 @@ SUSRoadBuilder >> addDirectionToTo [
 ]
 
 {
-	#category : #'as yet unclassified',
+	#category : #accessing,
 	#'squeak_changestamp' : 'PM 6/18/2024 14:15'
 }
 SUSRoadBuilder >> addFromDirectionToTo [
@@ -42,7 +68,7 @@ SUSRoadBuilder >> addFromDirectionToTo [
 ]
 
 {
-	#category : #'as yet unclassified',
+	#category : #'user input',
 	#'squeak_changestamp' : 'PM 6/18/2024 19:16'
 }
 SUSRoadBuilder >> addUserDirectionToTo [
@@ -60,7 +86,7 @@ SUSRoadBuilder >> addUserDirectionToTo [
 ]
 
 {
-	#category : #'as yet unclassified',
+	#category : #'user input',
 	#'squeak_changestamp' : 'MK 6/23/2024 02:17'
 }
 SUSRoadBuilder >> askForDegrees [
@@ -74,7 +100,7 @@ SUSRoadBuilder >> askForDegrees [
 ]
 
 {
-	#category : #'as yet unclassified',
+	#category : #building,
 	#'squeak_changestamp' : 'PM 7/10/2024 12:50'
 }
 SUSRoadBuilder >> buildCrossIntersection [
@@ -87,7 +113,7 @@ SUSRoadBuilder >> buildCrossIntersection [
 ]
 
 {
-	#category : #'as yet unclassified',
+	#category : #building,
 	#'squeak_changestamp' : 'PM 7/10/2024 12:50'
 }
 SUSRoadBuilder >> buildCurvyRoad [
@@ -100,7 +126,7 @@ SUSRoadBuilder >> buildCurvyRoad [
 ]
 
 {
-	#category : #'as yet unclassified',
+	#category : #building,
 	#'squeak_changestamp' : 'PM 6/27/2024 10:07'
 }
 SUSRoadBuilder >> buildRoad [
@@ -118,7 +144,7 @@ SUSRoadBuilder >> buildRoad [
 ]
 
 {
-	#category : #'as yet unclassified',
+	#category : #building,
 	#'squeak_changestamp' : 'PM 7/10/2024 13:01'
 }
 SUSRoadBuilder >> buildStraightRoad [
@@ -132,7 +158,7 @@ SUSRoadBuilder >> buildStraightRoad [
 ]
 
 {
-	#category : #'as yet unclassified',
+	#category : #building,
 	#'squeak_changestamp' : 'PM 7/10/2024 13:02'
 }
 SUSRoadBuilder >> buildTIntersection [
@@ -146,7 +172,7 @@ SUSRoadBuilder >> buildTIntersection [
 ]
 
 {
-	#category : #'as yet unclassified',
+	#category : #building,
 	#'squeak_changestamp' : 'PM 7/10/2024 13:02'
 }
 SUSRoadBuilder >> buildTunnel [
@@ -159,7 +185,7 @@ SUSRoadBuilder >> buildTunnel [
 ]
 
 {
-	#category : #'as yet unclassified',
+	#category : #accessing,
 	#'squeak_changestamp' : 'PM 7/10/2024 12:56'
 }
 SUSRoadBuilder >> errorMessage [
@@ -169,7 +195,7 @@ SUSRoadBuilder >> errorMessage [
 ]
 
 {
-	#category : #'as yet unclassified',
+	#category : #accessing,
 	#'squeak_changestamp' : 'PM 7/10/2024 13:00'
 }
 SUSRoadBuilder >> errorMessages [
@@ -189,7 +215,7 @@ SUSRoadBuilder >> from: anObject [
 ]
 
 {
-	#category : #'as yet unclassified',
+	#category : #'initialize-release',
 	#'squeak_changestamp' : 'PM 6/18/2024 18:52'
 }
 SUSRoadBuilder >> initialize [
@@ -198,7 +224,7 @@ SUSRoadBuilder >> initialize [
 ]
 
 {
-	#category : #'as yet unclassified',
+	#category : #validation,
 	#'squeak_changestamp' : 'PM 7/10/2024 12:52'
 }
 SUSRoadBuilder >> isValid [
@@ -206,7 +232,7 @@ SUSRoadBuilder >> isValid [
 ]
 
 {
-	#category : #'as yet unclassified',
+	#category : #accessing,
 	#'squeak_changestamp' : 'PM 6/12/2024 19:45'
 }
 SUSRoadBuilder >> minRoadLength [
@@ -242,7 +268,7 @@ SUSRoadBuilder >> simulation: anObject [
 ]
 
 {
-	#category : #'as yet unclassified',
+	#category : #validation,
 	#'squeak_changestamp' : 'PM 7/10/2024 12:52'
 }
 SUSRoadBuilder >> status [
@@ -260,7 +286,7 @@ SUSRoadBuilder >> status [
 ]
 
 {
-	#category : #'as yet unclassified',
+	#category : #validation,
 	#'squeak_changestamp' : 'PM 7/10/2024 12:48'
 }
 SUSRoadBuilder >> statusCrossIntersection [
@@ -270,7 +296,7 @@ SUSRoadBuilder >> statusCrossIntersection [
 ]
 
 {
-	#category : #'as yet unclassified',
+	#category : #validation,
 	#'squeak_changestamp' : 'PM 7/10/2024 12:50'
 }
 SUSRoadBuilder >> statusCurvyRoad [
@@ -289,7 +315,7 @@ SUSRoadBuilder >> statusCurvyRoad [
 ]
 
 {
-	#category : #'as yet unclassified',
+	#category : #validation,
 	#'squeak_changestamp' : 'PM 7/10/2024 13:02'
 }
 SUSRoadBuilder >> statusStraightRoad [
@@ -305,7 +331,7 @@ SUSRoadBuilder >> statusStraightRoad [
 ]
 
 {
-	#category : #'as yet unclassified',
+	#category : #validation,
 	#'squeak_changestamp' : 'PM 7/10/2024 12:48'
 }
 SUSRoadBuilder >> statusTIntersection [
@@ -318,7 +344,7 @@ SUSRoadBuilder >> statusTIntersection [
 ]
 
 {
-	#category : #'as yet unclassified',
+	#category : #validation,
 	#'squeak_changestamp' : 'PM 7/10/2024 12:47'
 }
 SUSRoadBuilder >> statusTunnel [
