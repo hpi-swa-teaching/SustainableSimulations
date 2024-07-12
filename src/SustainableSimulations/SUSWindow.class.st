@@ -208,21 +208,21 @@ SUSWindow >> labelIntersection [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'Len 7/10/2024 21:31'
+	#'squeak_changestamp' : 'PM 7/12/2024 19:17'
 }
 SUSWindow >> labelPauseSimulation [
-	| pauseSymbolMorph |
-	pauseSymbolMorph := Morph new.
-	pauseSymbolMorph
+	^ Morph new
 		bounds: (0 @ 0 extent: 20 @ 20);
 		 color: Color transparent;
 		 addMorph: (Morph new
 			bounds: (3 @ 3 extent: 5 @ 14);
-			 color: Color gray darker darker);
+			 color: Color gray darker darker;
+			 yourself);
 		 addMorph: (Morph new
 			bounds: (12 @ 3 extent: 5 @ 14);
-			 color: Color gray darker darker).
-	^ pauseSymbolMorph
+			 color: Color gray darker darker;
+			 yourself);
+		 yourself
 ]
 
 {
@@ -253,18 +253,17 @@ SUSWindow >> labelSpawnCar [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'Len 7/10/2024 21:31'
+	#'squeak_changestamp' : 'PM 7/12/2024 19:17'
 }
 SUSWindow >> labelStopSimulation [
-	| stopSymbolMorph |
-	stopSymbolMorph := Morph new.
-	stopSymbolMorph
+	^ Morph new
 		bounds: (0 @ 0 extent: 20 @ 20);
 		 color: Color transparent;
 		 addMorph: (Morph new
 			bounds: (3 @ 3 extent: 14 @ 14);
-			 color: Color gray darker darker).
-	^ stopSymbolMorph
+			 color: Color gray darker darker;
+			 yourself);
+		 yourself
 ]
 
 {

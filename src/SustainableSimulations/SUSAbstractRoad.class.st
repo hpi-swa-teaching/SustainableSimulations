@@ -1,16 +1,46 @@
+"
+A SUSAbstractRoad represents a generic road in the simulation, which gets built from one conneciton point to another location.
+
+Instance Variables
+	connectionPoints:	OrderedCollection{SUSConnectionPoint}
+	from:				SUSConnectionPoint
+	lanes:				OrderedCollection{SUSLane}
+	simulation:			SUSSimulation
+	speedLimit:		Number
+	to:					SUSConnectionPoint|SUSDirectedPoint
+
+connectionPoints
+	- The SUSConnectionPoints to which other roads can connect
+
+from
+	- We have built this road from this SUSConnectionPoint.
+
+lanes
+	- The lanes of this road on which vehicles can drive on.
+
+simulation
+	- The simulation the road belongs to.
+
+speedLimit
+	- The maximal speed vehicles are allowed to drive on this road.
+
+to
+	- We have built this road to this point
+
+"
 Class {
 	#name : #SUSAbstractRoad,
 	#superclass : #Morph,
 	#instVars : [
 		'simulation',
-		'adjacentRoads',
 		'lanes',
 		'connectionPoints',
 		'from',
 		'to',
 		'speedLimit'
 	],
-	#category : #'SustainableSimulations-Roads'
+	#category : #'SustainableSimulations-Roads',
+	#'squeak_changestamp' : 'PM 7/12/2024 19:22'
 }
 
 {
@@ -95,7 +125,7 @@ SUSAbstractRoad >> initialize [
 
 {
 	#category : #initialization,
-	#'squeak_changestamp' : 'PM 7/11/2024 18:32'
+	#'squeak_changestamp' : 'PM 7/12/2024 19:18'
 }
 SUSAbstractRoad >> initializeFrom: aConnectionPoint to: aPoint [ 
 	from := aConnectionPoint asDirectedPoint.
@@ -103,7 +133,6 @@ SUSAbstractRoad >> initializeFrom: aConnectionPoint to: aPoint [
 		ifTrue: [to := aPoint asDirectedPoint]
 		ifFalse: [to := aPoint].
 	self addDrawing; addConnectionPoints.
-	adjacentRoads := Array new: connectionPoints size.
 	simulation addRoad: self
 ]
 
@@ -169,14 +198,14 @@ SUSAbstractRoad >> postInitialize [
 
 {
 	#category : #utility,
-	#'squeak_changestamp' : 'PM 7/11/2024 15:53'
+	#'squeak_changestamp' : 'PM 7/12/2024 19:13'
 }
 SUSAbstractRoad >> searchVehicleBackwardsFromLane: aLane withMaxDist: aNumber [ 
 	| dist currentLane car |
 	dist := 0.
 	currentLane := aLane.
 	[dist <= aNumber and: currentLane previousLanes isEmpty not]
-		whileTrue: [currentLane := currentLane previousLanes at: 1.
+		whileTrue: [currentLane := currentLane previousLanes first.
 			dist := dist + currentLane length.
 			currentLane vehicles
 				ifNotEmpty: [car := currentLane vehicles first.

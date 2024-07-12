@@ -3,28 +3,21 @@ A SUSVehicle represents a moving entity on the road network.
 
 Instance Variables
 	acceleration:		Number
-	blockedOldLane:	SUSLane
 	currentLane:		SUSLane
 	currentRoute:		OrderedCollection{Number}
 	currentSpeed:		Number
 	deacceleration:	Number
 	deltaTime:			Number
-	isAccelerating:		Boolean
 	lastPoint:			Point
 	lastTime:			Number
 	maxSpeed:		Number
-	oldLane:			SUSLane
 	rightOfWayTime:	Number
 	simulation:			SUSSimulation
 	spawnRoad:		SUSAbstractRoad
 	targetSpeed:		Number
-	timeRoadStart:	Number
 
 acceleration
 	- The rate with which the vehicle accelerates.
-
-blockedOldLane
-	- xxxxx
 
 currentLane
 	- The lane the vehicle is currently diving on.
@@ -41,9 +34,6 @@ deacceleration
 deltaTime
 	- xxxxx
 
-isAccelerating
-	- Whether the car is currently accelerating.
-
 lastPoint
 	- The latest location of the car. Used for start/pause/stop.
 
@@ -52,9 +42,6 @@ lastTime
 
 maxSpeed
 	- Maximal speed the vehicle is allowed to drive.
-
-oldLane
-	- The previous lane on which the vehicle drove on.
 
 rightOfWayTime
 	- xxxxx
@@ -68,9 +55,6 @@ spawnRoad
 targetSpeed
 	- The target speed of the vehicle to follow cautiousness.
 
-timeRoadStart
-	- The time in millies when the vehicle entered the current road.
-
 "
 Class {
 	#name : #SUSVehicle,
@@ -83,19 +67,15 @@ Class {
 		'lastPoint',
 		'lastTime',
 		'deltaTime',
-		'isAccelerating',
 		'spawnRoad',
 		'currentRoute',
 		'currentSpeed',
-		'timeRoadStart',
-		'blockedOldLane',
-		'oldLane',
 		'rightOfWayTime',
 		'targetSpeed',
 		'currentLane'
 	],
 	#category : #'SustainableSimulations-Core',
-	#'squeak_changestamp' : 'PM 7/11/2024 16:17'
+	#'squeak_changestamp' : 'PM 7/12/2024 19:26'
 }
 
 {
@@ -225,14 +205,12 @@ SUSVehicle >> changeLane [
 
 {
 	#category : #behavior,
-	#'squeak_changestamp' : 'PM 7/11/2024 14:26'
+	#'squeak_changestamp' : 'PM 7/12/2024 19:25'
 }
 SUSVehicle >> changeToNextLane [
 	currentLane removeVehicle: self.
-	blockedOldLane := true.
-	oldLane := currentLane.
 	self addRouteEntryAt: 1 FromPrevLane: currentLane.
-	currentLane := currentLane nextLanes at: (currentRoute at: 1).
+	currentLane := currentLane nextLanes at: currentRoute first.
 	currentLane addVehicle: self.
 	currentRoute removeFirst.
 	lastPoint := 0
@@ -261,14 +239,14 @@ SUSVehicle >> checkForIntersection: aLane fromDist: aDistance fromIndex: anIndex
 
 {
 	#category : #behavior,
-	#'squeak_changestamp' : 'PM 7/11/2024 14:26'
+	#'squeak_changestamp' : 'PM 7/12/2024 19:14'
 }
 SUSVehicle >> checkForSpeedLimitAtDistance: aNumber [ 
 	currentLane nextLanes isEmpty
 		ifFalse: [self addRouteEntryAt: 1 FromPrevLane: currentLane.
-			self checkForSpeedLimitAtDistance: aNumber
-				onLane: (currentLane nextLanes
-						at: (currentRoute at: 1))]
+			self
+				checkForSpeedLimitAtDistance: aNumber
+				onLane: (currentLane nextLanes at: currentRoute first)]
 ]
 
 {
@@ -315,14 +293,12 @@ SUSVehicle >> deltaTime: anObject [
 
 {
 	#category : #initialization,
-	#'squeak_changestamp' : 'PM 7/11/2024 15:59'
+	#'squeak_changestamp' : 'PM 7/12/2024 19:26'
 }
 SUSVehicle >> initialize [
 	super initialize.
-	timeRoadStart := Time millisecondClock.
 	lastTime := Time millisecondClock.
 	lastPoint := 0.
-	blockedOldLane := false.
 	currentRoute := OrderedCollection new.
 	rightOfWayTime := 0.
 	self initializeSpeeds; morphicLayerNumber: 15
@@ -330,13 +306,12 @@ SUSVehicle >> initialize [
 
 {
 	#category : #initialization,
-	#'squeak_changestamp' : 'PM 7/11/2024 15:39'
+	#'squeak_changestamp' : 'PM 7/12/2024 19:23'
 }
 SUSVehicle >> initializeSpeeds [
 	acceleration := 50.
 	deacceleration := 100.
 	currentSpeed := 0.
-	isAccelerating := true.
 	maxSpeed := 50.
 	targetSpeed := 50
 ]
@@ -546,12 +521,12 @@ SUSVehicle >> turnsLeftAt: aRoad [
 
 {
 	#category : #behavior,
-	#'squeak_changestamp' : 'PM 7/11/2024 12:14'
+	#'squeak_changestamp' : 'PM 7/12/2024 19:14'
 }
 SUSVehicle >> turnsRightAt: aRoad [ 
 	^ self
 		turnsAt: aRoad
-		whenIndexIs: [:aLane | (aLane previousLanes at: 1) nextLanes size]
+		whenIndexIs: [:aLane | aLane previousLanes first nextLanes size]
 ]
 
 {

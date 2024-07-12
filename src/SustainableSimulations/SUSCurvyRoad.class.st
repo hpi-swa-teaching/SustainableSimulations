@@ -13,8 +13,8 @@ Class {
 
 {
 	#category : #drawing,
-	#'squeak_changestamp' : 'PM 7/3/2024 00:23'
+	#'squeak_changestamp' : 'PM 7/12/2024 19:07'
 }
 SUSCurvyRoad >> createDrawing [
-	^ SUSCurvyRoadDrawing newFrom: from to: to.
+	^ SUSCurvyRoadDrawing newFrom: from to: to
 ]

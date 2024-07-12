@@ -55,11 +55,10 @@ SUSCurvyRoadDrawing >> addDetailFrom: aDirectedPoint to: anotherDirectedPoint [
 
 {
 	#category : #drawing,
-	#'squeak_changestamp' : 'Len 7/10/2024 21:17'
+	#'squeak_changestamp' : 'PM 7/12/2024 19:09'
 }
 SUSCurvyRoadDrawing >> addPathsFrom: aDirectedPoint to: anotherDirectedPoint [ 
-	| pointA pointB pointC pointD pointE pointF isUp |
-	isUp := (aDirectedPoint isAbove: anotherDirectedPoint position) < 0.
+	| pointA pointB pointC pointD pointE pointF |
 	pointA := aDirectedPoint absoluteOffset: 0.5 * SUSDrawing normalLaneWidth @ 0.
 	pointD := aDirectedPoint absoluteOffset: 0.5 * SUSDrawing normalLaneWidth negated @ 0.
 	pointC := anotherDirectedPoint absoluteOffset: 0.5 * SUSDrawing normalLaneWidth @ 0.

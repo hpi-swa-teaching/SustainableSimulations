@@ -87,13 +87,14 @@ SUSRoadBuilder >> addUserDirectionToTo [
 
 {
 	#category : #'user input',
-	#'squeak_changestamp' : 'MK 6/23/2024 02:17'
+	#'squeak_changestamp' : 'PM 7/12/2024 19:11'
 }
 SUSRoadBuilder >> askForDegrees [
 	| degrees |
+	degrees := -1.
 	[degrees := (UIManager default request: 'Please enter rotation degrees (0 < x < 180)' initialAnswer: 90) asNumber]
 		on: NumberParserError
-		do: [:e | degrees := -1].
+		do: [].
 	(degrees < 0 or: degrees > 179)
 		ifTrue: [^ -1]
 		ifFalse: [^ degrees]

@@ -135,14 +135,12 @@ SUSLane >> calculateLength3Vertices [
 
 {
 	#category : #calculation,
-	#'squeak_changestamp' : 'PM 7/11/2024 17:31'
+	#'squeak_changestamp' : 'PM 7/12/2024 19:12'
 }
 SUSLane >> getLengthToT3: t [ 
-	| A B C v1 v2 |
+	| A B v2 |
 	A := path pointInWorld: path vertices first.
 	B := path pointInWorld: (path vertices at: 2).
-	C := path pointInWorld: path vertices last.
-	v1 := 2 * A - (4 * B) + (2 * C).
 	v2 := (2 * A) negated + (2 * B).
 	^ t * v2 r
 ]
@@ -159,18 +157,10 @@ SUSLane >> getLengthToT: t [
 
 {
 	#category : #accessing,
-	#'squeak_changestamp' : 'PM 7/11/2024 17:31'
+	#'squeak_changestamp' : 'PM 7/12/2024 19:29'
 }
 SUSLane >> getNextCarOnLane: aCar [ 
-	| next |
-	next := false.
-	vehicles
-		do: [:each | 
-			next
-				ifTrue: [^ each].
-			aCar = each
-				ifTrue: [next := true]].
-	^ aCar
+	^ vehicles after: aCar ifAbsent: [ aCar ]
 ]
 
 {
