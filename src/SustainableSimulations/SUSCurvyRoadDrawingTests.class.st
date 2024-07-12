@@ -1,15 +1,19 @@
+"
+Tests for methods of SUSCurvyRoadDrawing
+"
 Class {
 	#name : #SUSCurvyRoadDrawingTests,
 	#superclass : #TestCase,
-	#category : #'SustainableSimulations-Tests'
+	#category : #'SustainableSimulations-Tests',
+	#'squeak_changestamp' : 'MK 7/12/2024 11:24'
 }
 
 {
 	#category : #testing,
-	#'squeak_changestamp' : 'PM 7/11/2024 15:44'
+	#'squeak_changestamp' : 'MK 7/12/2024 16:01'
 }
 SUSCurvyRoadDrawingTests >> testCalculateBezierVerticesFrom [
-	| drawing vertices directedPoint directedPoint2 expectedVertices |
+	| drawing vertices directedPoint directedPoint2 |
 	directedPoint := SUSDirectedPoint newWithPosition: 6 @ 10 inDirection: 10 @ 10.
 	directedPoint2 := SUSDirectedPoint newWithPosition: 16 @ 5 inDirection: 20 @ 10.
 	drawing := SUSCurvyRoadDrawing newFrom: directedPoint to: directedPoint2.
@@ -17,8 +21,7 @@ SUSCurvyRoadDrawingTests >> testCalculateBezierVerticesFrom [
 				calculateBezierVerticesFrom: directedPoint
 				to: directedPoint2
 				withOffset: 42.
-	expectedVertices := {-24 @ 40. -39 @ 25. -3 @ 43}.
-	self assert: vertices = expectedVertices
+	self assert: vertices = {-24 @ 40. -39 @ 25. -3 @ 43}
 ]
 
 {

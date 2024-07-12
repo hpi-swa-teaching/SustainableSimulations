@@ -1,12 +1,16 @@
+"
+Tests for methods of SUSConnectionPoint
+"
 Class {
 	#name : #SUSConnectionPointTests,
 	#superclass : #TestCase,
-	#category : #'SustainableSimulations-Tests'
+	#category : #'SustainableSimulations-Tests',
+	#'squeak_changestamp' : 'MK 7/12/2024 11:24'
 }
 
 {
 	#category : #testing,
-	#'squeak_changestamp' : 'PM 7/11/2024 15:45'
+	#'squeak_changestamp' : 'MK 7/12/2024 16:00'
 }
 SUSConnectionPointTests >> testAsDirectedPoint [
 	| connectionPoint directedPoint |

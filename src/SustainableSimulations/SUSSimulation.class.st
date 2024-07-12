@@ -224,7 +224,7 @@ SUSSimulation >> notifyClickedAt: aConnectionPoint [
 
 {
 	#category : #simulation,
-	#'squeak_changestamp' : 'PM 7/10/2024 13:51'
+	#'squeak_changestamp' : 'MK 7/12/2024 17:25'
 }
 SUSSimulation >> pauseSimulation [
 	running
@@ -235,17 +235,16 @@ SUSSimulation >> pauseSimulation [
 
 {
 	#category : #simulation,
-	#'squeak_changestamp' : 'PM 7/10/2024 16:07'
+	#'squeak_changestamp' : 'MK 7/12/2024 17:30'
 }
 SUSSimulation >> playSimulation [
 	running
-		ifFalse: [timePaused > 0
-				ifTrue: [vehicles
-						do: [:car | car lastTime: Time millisecondClock]].
+		ifFalse: [vehicles
+				do: [:car | car lastTime: Time millisecondClock].
 			self startStepping.
-			timePaused := 0.
 			running := true.
-			stopped := false]
+			stopped := false.
+			timePaused := Time millisecondClock - timePaused]
 ]
 
 {
@@ -333,6 +332,14 @@ SUSSimulation >> stopSimulation [
 								addMorphInLayer: (SUSCar newOnRoad: each spawnRoad withMaxSpeed: each maxSpeed).
 							each remove]]].
 	stopped := true
+]
+
+{
+	#category : #accessing,
+	#'squeak_changestamp' : 'MK 7/12/2024 16:53'
+}
+SUSSimulation >> timePaused [
+	^timePaused
 ]
 
 {

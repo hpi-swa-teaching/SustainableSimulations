@@ -1,5 +1,5 @@
 "
-A SUSTIntersection is an intersection road which looks link a T.
+A SUSTIntersection is an intersection road which looks like a T.
 
 Instance Variables
 	noExitAt:		Symbol (#Top, #Left, #Right)
@@ -15,7 +15,7 @@ Class {
 		'noExitAt'
 	],
 	#category : #'SustainableSimulations-Roads',
-	#'squeak_changestamp' : 'PM 7/11/2024 20:08'
+	#'squeak_changestamp' : 'MK 7/12/2024 13:36'
 }
 
 {

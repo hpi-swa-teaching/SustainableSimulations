@@ -25,11 +25,11 @@ Class {
 
 {
 	#category : #behavior,
-	#'squeak_changestamp' : 'MK 7/8/2024 23:11'
+	#'squeak_changestamp' : 'MK 7/12/2024 17:28'
 }
 SUSTunnel >> applyBehavior [
 	| deltaTime |
-	deltaTime := Time millisecondClock - lastTime.
+	deltaTime := Time millisecondClock - lastTime - simulation timePaused.
 	deltaTime >= (frequency * 1000)
 		ifTrue: [self spawnCarFromTunnel.
 			lastTime := Time millisecondClock]

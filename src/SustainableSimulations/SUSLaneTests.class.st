@@ -1,86 +1,82 @@
+"
+Tests for methods of SUSLane
+"
 Class {
 	#name : #SUSLaneTests,
 	#superclass : #TestCase,
-	#category : #'SustainableSimulations-Tests'
+	#category : #'SustainableSimulations-Tests',
+	#'squeak_changestamp' : 'MK 7/12/2024 11:25'
 }
 
 {
 	#category : #testing,
-	#'squeak_changestamp' : 'MK 6/22/2024 23:59'
+	#'squeak_changestamp' : 'MK 7/12/2024 17:35'
 }
 SUSLaneTests >> testCalculateLength [
 	| lane path |
-	
-	path := LineMorph new. "initialisiert mit 0@0 bis 50@50"
+	path := LineMorph new.
+	"initialisiert mit 0@0 bis
+	50@50 "
 	lane := SUSLane newLaneWithPath: path.
 	lane calculateLength.
-
-	self assert: (lane length > 70 and: lane length < 71).
+	self
+		assert: (lane length > 70 and: lane length < 71)
 ]
 
 {
 	#category : #testing,
-	#'squeak_changestamp' : 'MK 6/23/2024 00:05'
+	#'squeak_changestamp' : 'MK 7/12/2024 16:18'
 }
 SUSLaneTests >> testGetLengthToT [
-	|lane path t|
-	
-	path := LineMorph new. "initialisiert mit 0@0 bis 50@50"
+	| lane path t |
+	path := LineMorph new.
+	"initialisiert mit 0@0 bis
+	50@50 "
 	lane := SUSLane newLaneWithPath: path.
 	lane calculateLength.
-	
 	t := 0.5.
-	
-	self assert: t* lane length = (lane getLengthToT: 0.5)
-
+	self assert: t * lane length
+			= (lane getLengthToT: 0.5)
 ]
 
 {
 	#category : #testing,
-	#'squeak_changestamp' : 'PM 7/11/2024 11:28'
+	#'squeak_changestamp' : 'MK 7/12/2024 16:18'
 }
 SUSLaneTests >> testGetNextCarOnLane [
-	|car1 car2 lane|
-	
+	| car1 car2 lane |
 	car1 := SUSCar new.
 	car2 := SUSCar new.
-	
 	lane := SUSLane new.
-	lane addVehicle: car1.
-	lane addVehicle: car2.
-	
-	self assert: (lane getNextCarOnLane: car1) = car2.
+	lane addVehicle: car1;
+		addVehicle: car2.
+	self assert: (lane getNextCarOnLane: car1)
+			= car2
 ]
 
 {
 	#category : #testing,
-	#'squeak_changestamp' : 'PM 7/11/2024 11:28'
+	#'squeak_changestamp' : 'MK 7/12/2024 16:19'
 }
 SUSLaneTests >> testGetPreviousCarOnLane [
-	|car1 car2 lane|
-	
+	| car1 car2 lane |
 	car1 := SUSCar new.
 	car2 := SUSCar new.
-	
 	lane := SUSLane new.
-	lane addVehicle: car1.
-	lane addVehicle: car2.
-	
-	self assert: (lane getPreviousCarOnLane: car2) = car1.
+	lane addVehicle: car1;
+		addVehicle: car2.
+	self assert: (lane getPreviousCarOnLane: car2)
+			= car1
 ]
 
 {
 	#category : #testing,
-	#'squeak_changestamp' : 'MK 6/23/2024 00:20'
+	#'squeak_changestamp' : 'MK 7/12/2024 16:23'
 }
 SUSLaneTests >> testGetRotation2VerticesWithTValue [
-	|lane path rotation expectedRotation|
-	
+	| lane path rotation |
 	path := LineMorph new.
 	lane := SUSLane newLaneWithPath: path.
-	
 	rotation := lane getRotation2VerticesWithTValue: 0.
-	expectedRotation := {1. ((50 - 0) / (50 - 0)) arcTan radiansToDegrees}.
-	
-	self assert: (rotation = expectedRotation).
+	self assert: rotation = {1. 45}
 ]

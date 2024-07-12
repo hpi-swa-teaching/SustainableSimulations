@@ -1,180 +1,133 @@
+"
+Tests for methods of SUSDirectedPoint
+"
 Class {
 	#name : #SUSDirectedPointTests,
 	#superclass : #TestCase,
-	#category : #'SustainableSimulations-Tests'
+	#category : #'SustainableSimulations-Tests',
+	#'squeak_changestamp' : 'MK 7/12/2024 11:24'
 }
 
 {
 	#category : #testing,
-	#'squeak_changestamp' : 'MK 6/15/2024 13:47'
+	#'squeak_changestamp' : 'MK 7/12/2024 16:15'
 }
 SUSDirectedPointTests >> testCalculateIntersectionPoint [
-	| line1 line2 intersectionPoint expectedPoint |
-	
+	| line1 line2 |
 	line1 := SUSDirectedPoint new.
-	line1 position: 0@0.
-	line1 direction: 1@1.
-
-    
+	line1 position: 0 @ 0;
+		 direction: 1 @ 1.
 	line2 := SUSDirectedPoint new.
-	line2 position: 0@1.
-	line2 direction: 1@(-1).
-
-	expectedPoint := 0.5@0.5.
-	intersectionPoint := line1 calculateIntersectionPoint: line2.
-
-	self assert: intersectionPoint = expectedPoint.
+	line2 position: 0 @ 1;
+		 direction: 1 @ -1.
+	self assert: (line1 calculateIntersectionPoint: line2)
+			= (0.5 @ 0.5)
 ]
 
 {
 	#category : #testing,
-	#'squeak_changestamp' : 'MK 6/20/2024 16:44'
+	#'squeak_changestamp' : 'MK 7/12/2024 16:04'
 }
 SUSDirectedPointTests >> testIsAbove [
-
-	| directedPoint pointOnLine pointAbove pointBelow |
-
+	| directedPoint |
 	directedPoint := SUSDirectedPoint new.
-	directedPoint position: 0@0.
-	directedPoint direction: 1@0.
-
-	pointOnLine := 1@0.
-	self assert: (directedPoint isAbove: pointOnLine) = 0.
-
-	pointAbove := 1@1.
-	self assert: (directedPoint isAbove: pointAbove) > 0.
-
-	pointBelow := 1@(-1).
-	self assert: (directedPoint isAbove: pointBelow) < 0.
+	directedPoint position: 0 @ 0;
+		 direction: 1 @ 0.
+	self assert: (directedPoint isAbove: 1 @ 0)
+			= 0.
+	self assert: (directedPoint isAbove: 1 @ 1)
+			> 0.
+	self assert: (directedPoint isAbove: 1 @ -1)
+			< 0
 ]
 
 {
 	#category : #testing,
-	#'squeak_changestamp' : 'MK 6/15/2024 14:03'
+	#'squeak_changestamp' : 'MK 7/12/2024 16:07'
 }
 SUSDirectedPointTests >> testLinearDistance [
-
-	| directedPoint point distance expectedDistance |
+	| directedPoint |
 	directedPoint := SUSDirectedPoint new.
-	directedPoint position: 0@0.
-	directedPoint direction: 2@2.
-	
-	point := 2@0.
-	expectedDistance := 1.414213562.
-	distance := directedPoint linearDist: point.
-	
-	self assert: (distance - expectedDistance abs < 0.0001)
+	directedPoint position: 0 @ 0;
+		 direction: 2 @ 2.
+	self assert: (directedPoint linearDist: 2 @ 0)
+			= 2 sqrt
 ]
 
 {
 	#category : #testing,
-	#'squeak_changestamp' : 'MK 6/15/2024 13:45'
+	#'squeak_changestamp' : 'MK 7/12/2024 16:11'
 }
 SUSDirectedPointTests >> testParallelLines [
 	| line1 line2 |
 	line1 := SUSDirectedPoint new.
-	line1 position: 0@0.
-	line1 direction: 1@1.
-
+	line1 position: 0 @ 0;
+		 direction: 1 @ 1.
 	line2 := SUSDirectedPoint new.
-	line2 position: 1@1.
-	line2 direction: 1@1.
-
-	self should: [ line1 calculateIntersectionPoint: line2 ] raise: Error.
+	line2 position: 1 @ 1;
+		 direction: 1 @ 1.
+	self 
+		should: [line1 calculateIntersectionPoint: line2]
+		raise: Error
 ]
 
 {
 	#category : #testing,
-	#'squeak_changestamp' : 'PM 6/17/2024 09:57'
-}
-SUSDirectedPointTests >> testPointAbove [
-	| directedPoint pointOnLine pointAbove pointBelow |
-
-	directedPoint := SUSDirectedPoint new.
-	directedPoint position: 0@0.
-	directedPoint direction: 1@0.
-
-	pointOnLine := 2@0.
-	self assert: (directedPoint isAbove: pointOnLine) = 0.
-
-	pointAbove := 2@1.
-	self assert: (directedPoint isAbove: pointAbove) > 0.
-	
-	pointBelow := 2@3 negated.
-	self assert: (directedPoint isAbove: pointBelow) < 0.
-]
-
-{
-	#category : #testing,
-	#'squeak_changestamp' : 'PM 6/17/2024 10:31'
+	#'squeak_changestamp' : 'MK 7/12/2024 16:13'
 }
 SUSDirectedPointTests >> testPointBehind [
-	| directedPoint pointBehind pointAhead pointOnLine |
-
+	| directedPoint |
 	directedPoint := SUSDirectedPoint new.
-	directedPoint position: 0@0.
-	directedPoint direction: 1@0.
-
-	pointBehind := 1 negated@2.
-	self assert: ((directedPoint isBehind: pointBehind) < 0).
-
-	pointAhead := 3@2.
-	self assert: ((directedPoint isBehind: pointAhead) > 0).
-	
-	pointOnLine := 0@1 negated.
-	self assert: ((directedPoint isBehind: pointOnLine) = 0)
+	directedPoint position: 0 @ 0;
+		 direction: 1 @ 0.
+	self assert: (directedPoint isBehind: -1 @ 2)
+			< 0.
+	self assert: (directedPoint isBehind: 3 @ 2)
+			> 0.
+	self assert: (directedPoint isBehind: 0 @ -1)
+			= 0
 ]
 
 {
 	#category : #testing,
-	#'squeak_changestamp' : 'MK 6/15/2024 13:46'
+	#'squeak_changestamp' : 'MK 7/12/2024 16:15'
 }
 SUSDirectedPointTests >> testProjectionOfPoint [
-	| directedPoint point projection expectedProjection |
-
+	| directedPoint |
 	directedPoint := SUSDirectedPoint new.
-	directedPoint position: 0@0.
-	directedPoint direction: 1@1.
-
-	point := 1@0.
-
-	expectedProjection := 0.5@0.5.
-	projection := directedPoint projectionOf: point.
-	self assert: projection = expectedProjection.
+	directedPoint position: 0 @ 0;
+		 direction: 1 @ 1.
+	self assert: (directedPoint projectionOf: 1 @ 0)
+			= (0.5 @ 0.5)
 ]
 
 {
 	#category : #testing,
-	#'squeak_changestamp' : 'MK 6/15/2024 13:46'
+	#'squeak_changestamp' : 'MK 7/12/2024 16:16'
 }
 SUSDirectedPointTests >> testProjectionOfPointWithZeroDirection [
-	| directedPoint point projection |
-
+	| directedPoint |
 	directedPoint := SUSDirectedPoint new.
-	directedPoint position: 0@0.
-	directedPoint direction: 0@0.
-
-	point := 1@0.
-	projection := directedPoint projectionOf: point.
-	self assert: projection = point.
+	directedPoint position: 0 @ 0;
+		 direction: 0 @ 0.
+	self assert: (directedPoint projectionOf: 1 @ 0)
+			= (1 @ 0)
 ]
 
 {
 	#category : #testing,
-	#'squeak_changestamp' : 'MK 6/15/2024 15:03'
+	#'squeak_changestamp' : 'MK 7/12/2024 16:17'
 }
 SUSDirectedPointTests >> testRelativeOffset [
-	| directedPoint point result expectedOffset |
-	
+	| directedPoint result expectedOffset |
 	directedPoint := SUSDirectedPoint new.
-	directedPoint position: 0@0.
-	directedPoint direction: 1@0.
-
-	point := 3@4.
-	expectedOffset := 4@3.
-	result := directedPoint relativeOffset: point.
-	
-	Transcript show: result; cr; 
-		show: expectedOffset; cr.
+	directedPoint position: 0 @ 0;
+		 direction: 1 @ 0.
+	expectedOffset := 4 @ 3.
+	result := directedPoint relativeOffset: 3 @ 4.
+	Transcript show: result;
+		 cr;
+		 show: expectedOffset;
+		 cr.
 	self assert: result = expectedOffset.
 ]
