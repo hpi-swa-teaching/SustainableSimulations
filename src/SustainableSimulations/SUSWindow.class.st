@@ -308,6 +308,14 @@ SUSWindow >> playSimulation [
 
 {
 	#category : #events,
+	#'squeak_changestamp' : 'PM 7/12/2024 20:06'
+}
+SUSWindow >> simulation [
+	^ simulation
+]
+
+{
+	#category : #events,
 	#'squeak_changestamp' : 'Len 7/10/2024 21:32'
 }
 SUSWindow >> spawnCarMode [

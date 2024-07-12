@@ -180,10 +180,10 @@ SUSAbstractRoad >> lanes [
 
 {
 	#category : #'event handling',
-	#'squeak_changestamp' : 'PM 7/10/2024 16:03'
+	#'squeak_changestamp' : 'PM 7/12/2024 21:30'
 }
 SUSAbstractRoad >> mouseDown: anEvent [ 
-	simulation selectedSpawnType = #SpawnCar
+	simulation selectedSpawnType == #SpawnCar
 		ifTrue: [self spawnCar]
 		ifFalse: [simulation showError: 'You cannot build a road directly on top of another road']
 ]

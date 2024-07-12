@@ -10,18 +10,42 @@ Class {
 
 {
 	#category : #testing,
-	#'squeak_changestamp' : 'MK 7/12/2024 16:15'
+	#'squeak_changestamp' : 'PM 7/12/2024 21:23'
+}
+SUSDirectedPointTests >> testAbsoluteOffset [
+	| directedPoint |
+	directedPoint := SUSDirectedPoint newWithPosition: 10 @ 10 inDirection: 1 @ 0.
+	self assert: (directedPoint absoluteOffset: 3 @ 4)
+			= (14 @ 13)
+]
+
+{
+	#category : #testing,
+	#'squeak_changestamp' : 'PM 7/12/2024 21:29'
 }
 SUSDirectedPointTests >> testCalculateIntersectionPoint [
 	| line1 line2 |
-	line1 := SUSDirectedPoint new.
-	line1 position: 0 @ 0;
-		 direction: 1 @ 1.
-	line2 := SUSDirectedPoint new.
-	line2 position: 0 @ 1;
-		 direction: 1 @ -1.
+	line1 := SUSDirectedPoint newWithPosition: 0 @ 0 inDirection: 1 @ 1.
+	line2 := SUSDirectedPoint newWithPosition: 0 @ 1 inDirection: 1 @ -1.
 	self assert: (line1 calculateIntersectionPoint: line2)
 			= (0.5 @ 0.5)
+]
+
+{
+	#category : #testing,
+	#'squeak_changestamp' : 'PM 7/12/2024 21:26'
+}
+SUSDirectedPointTests >> testDirectionOf [
+	| directedPoint |
+	directedPoint := SUSDirectedPoint newWithPosition: 10 @ 10 inDirection: 1 @ 0.
+	self assert: (directedPoint directionOf: 30 @ 15)
+			== #Top;
+		 assert: (directedPoint directionOf: 0 @ 11)
+			== #Bottom;
+		 assert: (directedPoint directionOf: 10 @ 20)
+			== #Right;
+		 assert: (directedPoint directionOf: 9 @ 0)
+			== #Left
 ]
 
 {
@@ -116,18 +140,11 @@ SUSDirectedPointTests >> testProjectionOfPointWithZeroDirection [
 
 {
 	#category : #testing,
-	#'squeak_changestamp' : 'MK 7/12/2024 16:17'
+	#'squeak_changestamp' : 'PM 7/12/2024 21:22'
 }
 SUSDirectedPointTests >> testRelativeOffset [
-	| directedPoint result expectedOffset |
-	directedPoint := SUSDirectedPoint new.
-	directedPoint position: 0 @ 0;
-		 direction: 1 @ 0.
-	expectedOffset := 4 @ 3.
-	result := directedPoint relativeOffset: 3 @ 4.
-	Transcript show: result;
-		 cr;
-		 show: expectedOffset;
-		 cr.
-	self assert: result = expectedOffset.
+	| directedPoint |
+	directedPoint := SUSDirectedPoint newWithPosition: 0 @ 0 inDirection: 1 @ 0.
+	self assert: (directedPoint relativeOffset: 3 @ 4)
+			= (4 @ 3)
 ]

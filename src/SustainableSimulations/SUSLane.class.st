@@ -156,14 +156,6 @@ SUSLane >> getLengthToT: t [
 ]
 
 {
-	#category : #accessing,
-	#'squeak_changestamp' : 'PM 7/12/2024 19:29'
-}
-SUSLane >> getNextCarOnLane: aCar [ 
-	^ vehicles after: aCar ifAbsent: [ aCar ]
-]
-
-{
 	#category : #calculation,
 	#'squeak_changestamp' : 'PM 7/11/2024 17:31'
 }
