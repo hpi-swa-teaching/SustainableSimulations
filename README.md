@@ -1,4 +1,8 @@
-<h1 align="center" style=font-size:200px>Sustainable Simulations</h1>
+<p align="center">
+    <img src="assets/header.png" alt="Sustainable Simulations Header">
+</p>
+
+<h1 align="center">Sustainable Simulations</h1>
 
 <p align="center">
     <a href="https://github.com/hpi-swa-teaching/TelegramClient/commits/" title="Last Commit"><img src="https://img.shields.io/github/last-commit/hpi-swa-teaching/SustainableSimulations?style=flat"></a>
