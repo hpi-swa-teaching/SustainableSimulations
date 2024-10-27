@@ -30,7 +30,7 @@ SUSTunnelDrawing class >> newFrom: aDirectedPoint to: aPoint [
 
 {
 	#category : #drawing,
-	#'squeak_changestamp' : 'Len 7/10/2024 21:26'
+	#'squeak_changestamp' : 'Lennard 10/27/2024 16:05'
 }
 SUSTunnelDrawing >> addBaseFrom: aDirectedPoint [ 
 	| vertices |
@@ -42,6 +42,7 @@ SUSTunnelDrawing >> addBaseFrom: aDirectedPoint [
 			borderWidth: 4
 			borderColor: SUSDrawing colorRoad) morphicLayerNumber: self baseLayer;
 			 yourself)
+			
 ]
 
 {
